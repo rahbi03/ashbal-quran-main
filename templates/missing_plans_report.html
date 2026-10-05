@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تقرير المقررات الأسبوعية - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .glass-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .header h2 {
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 1.6rem;
+        }
+        .info-box {
+            background: #e7f3ff;
+            border-right: 4px solid #17a2b8;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+        .student-item {
+            background: white;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem;
+            border-right: 4px solid #dc3545;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .student-item h5 {
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+            font-size: 1rem;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            background: #d4edda;
+            border-radius: 1.5rem;
+            color: #155724;
+        }
+        .count-badge {
+            background: #dc3545;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .btn-add-plan {
+            background: #28a745;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .btn-back {
+            background: #6c757d;
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: 0.2s;
+            margin-top: 1rem;
+        }
+        .btn-back:hover {
+            background: #5a6268;
+            color: white;
+        }
+        @media (max-width: 768px) {
+            .student-item { flex-direction: column; text-align: center; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-container">
+        <div class="header">
+            <h2><i class="fas fa-calendar-week text-info ms-2"></i> تقرير المقررات الأسبوعية</h2>
+            <p>الطلاب الذين ليس لديهم مقرر أسبوعي</p>
+        </div>
+
+        {% if selected_date %}
+            <div class="info-box">
+                <i class="fas fa-calendar-alt text-info ms-2"></i>
+                <strong>الأسبوع:</strong> {{ selected_date.strftime('%Y-%m-%d') }} 
+                ({{ ['الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد'][selected_date.weekday()] }})
+                {% if selected_teacher_id %}
+                    | <strong>المعلم:</strong> {{ teachers|selectattr("id", "equalto", selected_teacher_id|int)|map(attribute="full_name")|first or 'الكل' }}
+                {% else %}
+                    | <strong>المعلم:</strong> جميع المعلمين
+                {% endif %}
+                | <strong>عدد الطلاب بدون مقرر:</strong> <span class="count-badge">{{ students_without_plan|length }}</span>
+            </div>
+
+            {% if students_without_plan %}
+                <div class="students-list">
+                    {% for student in students_without_plan %}
+                    <div class="student-item">
+                        <div>
+                            <h5><i class="fas fa-user-graduate text-danger ms-2"></i> {{ student.full_name }}</h5>
+                            {% if student.phone %}
+                                <div><i class="fas fa-phone ms-1"></i> {{ student.phone }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex gap-2">
+                            {% if student.phone %}
+                                {% set whatsapp = student.phone|phone_to_whatsapp %}
+                                {% if whatsapp %}
+                                    <a href="https://wa.me/{{ whatsapp }}" target="_blank" class="btn-whatsapp">
+                                        <i class="fab fa-whatsapp"></i> تواصل
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                            <a href="{{ url_for('add_plan', student_id=student.id) }}" class="btn-add-plan">
+                                <i class="fas fa-plus"></i> إضافة مقرر
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-check-circle fa-3x mb-2"></i>
+                    <h5>جميع الطلاب لديهم مقررات أسبوعية</h5>
+                    <p class="mb-0">لا يوجد طلاب بدون مقرر في هذا الأسبوع</p>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-state" style="background: #f8f9fa; color: #6c757d;">
+                <i class="fas fa-exclamation-triangle fa-3x mb-2"></i>
+                <h5>لا توجد بيانات</h5>
+                <p class="mb-0">لم يتم تمرير بيانات التقرير بشكل صحيح</p>
+            </div>
+        {% endif %}
+
+        <div class="text-center mt-3">
+            <a href="{{ url_for('missing_reports') }}" class="btn-back">
+                <i class="fas fa-arrow-right ms-1"></i> تقرير جديد
+            </a>
+            {% if is_teacher %}
+                <a href="{{ url_for('teacher_dashboard') }}" class="btn-back" style="background: #28a745;">
+                    <i class="fas fa-home ms-1"></i> لوحة المعلم
+                </a>
+            {% else %}
+                <a href="{{ url_for('admin') }}" class="btn-back" style="background: #28a745;">
+                    <i class="fas fa-home ms-1"></i> لوحة الإدارة
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

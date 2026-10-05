@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تفاصيل المقرر — أشبال القرآن</title>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#1a5c40">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════
+   نفس نظام ألوان لوحة الطالب — ثيم الفجر الهادئ
+══════════════════════════════════════════════ */
+:root {
+  --bg:        #f2f0eb;
+  --surface:   #faf9f6;
+  --white:     #ffffff;
+  --jade:      #1a5c40;
+  --jade-md:   #226b4a;
+  --jade-lt:   #cde8da;
+  --jade-xs:   #ebf5f0;
+  --gold:      #c49a2a;
+  --gold-lt:   #fdf3d0;
+  --gold-xs:   #fffbee;
+  --amber:     #d97706;
+  --amber-lt:  #fef3c7;
+  --ink:       #1c2b22;
+  --muted:     #6b7d72;
+  --border:    #dde8e2;
+  --danger:    #c0392b;
+  --danger-lt: #fdecea;
+  --blue:      #1d4ed8;
+  --blue-lt:   #dbeafe;
+
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  direction: rtl;
+  padding-bottom: 3rem;
+}
+
+/* ══ TOAST ═════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; top: 1.1rem; left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999; display: flex; flex-direction: column;
+  gap: .5rem; pointer-events: none;
+  width: 92%; max-width: 430px;
+}
+.toast-item {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .75rem 1.1rem; border-radius: 1.2rem;
+  font-size: .9rem; font-weight: 700;
+  box-shadow: 0 6px 24px rgba(0,0,0,.13);
+  pointer-events: auto;
+  animation: toastIn .35s cubic-bezier(.22,1,.36,1) forwards;
+  border-right: 4px solid transparent;
+}
+.toast-item.t-success { background:#edfaf1; border-color:#28a745; color:#1a5e2a; }
+.toast-item.t-error   { background:#fef0f0; border-color:#dc3545; color:#7b1a1a; }
+.toast-item.t-warning { background:#fffbec; border-color:#ffc107; color:#7a5000; }
+.toast-item.t-info    { background:#eaf4ff; border-color:#17a2b8; color:#0c4a6e; }
+.toast-item.toast-out { animation: toastOut .35s ease forwards; }
+@keyframes toastIn  { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes toastOut { from{opacity:1} to{opacity:0;transform:translateY(-10px)} }
+
+/* ══ HEADER STRIP ═══════════════════════════════ */
+.header-strip {
+  background: var(--jade);
+  padding: 1.1rem 1.2rem 3.8rem;
+  position: relative; overflow: hidden;
+}
+.header-strip::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 70% at 115% -10%, rgba(255,255,255,.06) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at -15% 110%, rgba(255,255,255,.04) 0%, transparent 55%);
+}
+.header-strip::after {
+  content: ''; position: absolute; inset: 0; opacity: .045; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(255,255,255,1) 18px, rgba(255,255,255,1) 19px),
+    repeating-linear-gradient(-45deg, transparent, transparent 18px, rgba(255,255,255,1) 18px, rgba(255,255,255,1) 19px);
+}
+.header-inner {
+  position: relative; z-index: 2; max-width: 520px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: .8rem;
+}
+.header-student {
+  display: flex; align-items: center; gap: .7rem; flex: 1;
+}
+.header-avatar {
+  width: 42px; height: 42px;
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 1.1rem; flex-shrink: 0;
+}
+.header-student-name {
+  font-family: 'Amiri', serif;
+  font-size: 1.25rem; font-weight: 700; color: #fff; line-height: 1.2;
+}
+.header-student-level {
+  font-size: .72rem; color: rgba(255,255,255,.65); margin-top: .1rem;
+}
+.btn-back-hdr {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.25);
+  color: #fff; font-family: 'Cairo', sans-serif;
+  font-size: .78rem; font-weight: 600;
+  padding: .42rem .9rem; border-radius: 99px;
+  text-decoration: none; transition: background .18s; flex-shrink: 0;
+}
+.btn-back-hdr:hover { background: rgba(255,255,255,.25); color: #fff; }
+
+/* ══ SHEET ══════════════════════════════════════ */
+.sheet {
+  max-width: 520px; margin: -2.6rem auto 0;
+  padding: 0 .9rem; position: relative; z-index: 5;
+}
+
+/* ══ PLAN MASTER CARD ═══════════════════════════ */
+.plan-master {
+  background: var(--white);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: .85rem;
+  animation: fadeUp .45s .05s ease both;
+}
+.plan-master-head {
+  background: var(--jade);
+  padding: 1rem 1.2rem;
+  display: flex; align-items: center;
+  justify-content: space-between; gap: .7rem; flex-wrap: wrap;
+}
+.plan-type-pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .8rem; font-weight: 700; padding: .3rem .9rem;
+  border-radius: 99px;
+}
+.type-hifz { background: var(--gold-lt);  color: var(--gold);  border: 1px solid #f0d060; }
+.type-sard { background: var(--blue-lt);  color: var(--blue);  border: 1px solid #93c5fd; }
+.type-phase-pill { background: var(--purple-lt); color: var(--purple); border: 1px solid #c4b5fd; }
+.type-poem { background: #eef2ff;  color: #4f46e5;  border: 1px solid #c7d2fe; }
+
+.plan-status-pill {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  color: #fff; font-size: .72rem; font-weight: 600;
+  padding: .28rem .8rem; border-radius: 99px;
+}
+.plan-master-body { padding: 1.1rem 1.2rem; }
+
+.date-row {
+  display: flex; align-items: center; gap: .5rem;
+  flex-wrap: wrap; margin-bottom: .9rem;
+}
+.date-pill {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--muted); font-size: .75rem; font-weight: 600;
+  padding: .3rem .85rem; border-radius: 99px;
+}
+
+/* معلومة المعلم */
+.teacher-row {
+  display: flex; align-items: center; gap: .7rem;
+  background: var(--jade-xs); border: 1px solid var(--jade-lt);
+  border-radius: var(--r-md); padding: .7rem .9rem;
+  margin-bottom: .9rem;
+}
+.teacher-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: var(--jade-lt);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: .9rem; flex-shrink: 0;
+}
+.teacher-label { font-size: .68rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px; display: block; margin-bottom: .1rem; }
+.teacher-name { font-size: .88rem; font-weight: 700; color: var(--ink); }
+
+/* تفاصيل المقرر */
+.plan-details-grid {
+  display: grid; grid-template-columns: 1fr; gap: .5rem; margin-bottom: .9rem;
+}
+.plan-detail-row {
+  display: flex; align-items: flex-start; gap: .6rem;
+  background: var(--bg); border-radius: var(--r-sm);
+  padding: .6rem .85rem; border: 1px solid var(--border);
+}
+.plan-detail-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--jade-xs);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: .78rem; flex-shrink: 0; margin-top: .05rem;
+}
+.plan-detail-label {
+  font-size: .67rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px;
+  display: block; margin-bottom: .15rem;
+}
+.plan-detail-value {
+  font-size: .88rem; color: var(--ink); font-weight: 600; line-height: 1.45;
+}
+
+.notes-row {
+  display: flex; align-items: flex-start; gap: .6rem;
+  background: var(--amber-lt); border: 1px solid #fde68a;
+  border-radius: var(--r-sm); padding: .65rem .9rem;
+}
+  .notes-row i { color: var(--amber); margin-top: .1rem; flex-shrink: 0; }
+  .notes-row span { font-size: .85rem; color: var(--ink); line-height: 1.5; }
+
+  /* شارة المقرر المُرحَّل */
+  .rollover-banner {
+    display: flex; align-items: center; gap: .7rem;
+    background: #fffbeb; border: 2px solid #f59e0b; border-radius: var(--r-sm);
+    padding: .75rem .9rem; margin-bottom: 1rem;
+  }
+  .rollover-banner > i { color: #d97706; font-size: 1.1rem; flex-shrink: 0; }
+  .rollover-banner > div { display: flex; flex-direction: column; line-height: 1.45; flex: 1; min-width: 0; }
+  .rollover-banner strong { color: #92400e; font-size: .88rem; font-weight: 700; }
+  .rollover-banner span { color: #a16207; font-size: .76rem; }
+  .rollover-link {
+    flex-shrink: 0; font-size: .74rem; color: #b45309; text-decoration: none;
+    background: #fef3c7; border: 1px solid #fcd34d; border-radius: 2rem; padding: .3rem .7rem;
+    white-space: nowrap;
+  }
+  .rollover-link:hover { background: #fde68a; }
+
+/* ══ SECTION TITLE ══════════════════════════════ */
+.sec-title {
+  display: flex; align-items: center; gap: .6rem;
+  margin: 1.1rem 0 .65rem;
+}
+.sec-title-icon {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: var(--jade-xs);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: .95rem;
+}
+.sec-title-text { font-weight: 800; font-size: .98rem; color: var(--ink); }
+.sec-title-count {
+  margin-right: auto; font-size: .72rem; font-weight: 700;
+  color: var(--jade); background: var(--jade-xs);
+  padding: .18rem .65rem; border-radius: 99px;
+  border: 1px solid var(--jade-lt);
+}
+
+/* ══ BTN ADD REPORT ═════════════════════════════ */
+.btn-add-report {
+  display: flex; align-items: center; justify-content: center; gap: .55rem;
+  width: 100%; background: var(--jade); color: #fff;
+  border-radius: var(--r-md); padding: .95rem 1rem;
+  font-family: 'Cairo', sans-serif; font-size: .95rem; font-weight: 700;
+  text-decoration: none; margin-bottom: .75rem;
+  transition: background .18s, transform .12s;
+}
+.btn-add-report:hover { background: var(--jade-md); color: #fff; }
+.btn-add-report:active { transform: scale(.98); }
+.btn-add-report i { font-size: 1rem; }
+
+/* ══ REPORT CARD ════════════════════════════════ */
+.report-card {
+  background: var(--white);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: .7rem;
+  animation: fadeUp .4s ease both;
+  transition: box-shadow .18s;
+}
+.report-card:hover { box-shadow: 0 4px 18px rgba(26,92,64,.09); }
+
+.report-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .6rem; padding: .8rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.report-date-group { display: flex; align-items: center; gap: .45rem; }
+.report-date-badge {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: var(--jade-xs); border: 1px solid var(--jade-lt);
+  color: var(--jade); font-size: .72rem; font-weight: 700;
+  padding: .25rem .75rem; border-radius: 99px;
+}
+.report-day-badge {
+  font-size: .72rem; color: var(--muted); font-weight: 600;
+  background: var(--bg); border: 1px solid var(--border);
+  padding: .22rem .65rem; border-radius: 99px;
+}
+.report-actions { display: flex; gap: .35rem; }
+.action-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; text-decoration: none; font-size: .75rem;
+  transition: transform .15s;
+}
+.action-btn:hover { transform: scale(1.1); color: #fff; }
+.action-btn.edit { background: var(--jade); }
+.action-btn.view { background: #7c3aed; }
+
+.report-body { padding: .85rem 1rem; }
+
+/* achievement chips */
+.ach-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .45rem;
+}
+.ach-grid .full { grid-column: 1 / -1; }
+.ach-chip {
+  display: flex; align-items: center; gap: .45rem;
+  border-radius: 99px; padding: .35rem .8rem;
+  font-size: .73rem; font-weight: 600; border: 1px solid;
+}
+.ach-done    { background: var(--jade-xs); color: var(--jade);    border-color: var(--jade-lt); }
+.ach-pending { background: var(--bg);      color: var(--muted);   border-color: var(--border); }
+.ach-chip i  { font-size: .8rem; }
+
+/* نص إضافي */
+.report-text-box {
+  background: var(--bg); border-radius: var(--r-sm);
+  padding: .65rem .85rem; margin-top: .6rem;
+  border-right: 3px solid var(--jade-lt);
+  font-size: .83rem; color: var(--ink); line-height: 1.55;
+}
+.report-text-box + .report-text-box { margin-top: .4rem; }
+.report-text-box strong { color: var(--jade); font-size: .75rem;
+  text-transform: uppercase; letter-spacing: .3px; display: block; margin-bottom: .2rem; }
+
+/* ملاحظات السرد */
+.report-notes-box {
+  background: var(--amber-lt); border: 1px solid #fde68a;
+  border-radius: var(--r-sm); padding: .6rem .85rem;
+  margin-top: .5rem; font-size: .82rem; color: var(--ink);
+  display: flex; align-items: flex-start; gap: .5rem;
+}
+.report-notes-box i { color: var(--amber); margin-top: .1rem; }
+
+/* ══ EVALUATION CARD ════════════════════════════ */
+.eval-card {
+  background: var(--white);
+  border-radius: var(--r-xl);
+  border: 1.5px solid var(--jade-lt);
+  overflow: hidden;
+  margin-bottom: .85rem;
+  animation: fadeUp .45s ease both;
+}
+.eval-card-head {
+  background: var(--jade);
+  padding: .9rem 1.2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.eval-teacher {
+  display: flex; align-items: center; gap: .6rem;
+}
+.eval-teacher-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.3);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: .9rem;
+}
+.eval-teacher-name { font-size: .88rem; font-weight: 700; color: #fff; }
+.eval-date-pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.25);
+  color: rgba(255,255,255,.9); font-size: .72rem; font-weight: 600;
+  padding: .28rem .8rem; border-radius: 99px;
+}
+
+.eval-card-body { padding: 1.1rem 1.2rem; }
+
+/* شبكة الدرجات */
+.scores-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: .55rem; margin-bottom: .85rem;
+}
+.score-cell {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: .7rem .5rem;
+  text-align: center;
+}
+.score-cell-label {
+  font-size: .67rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px;
+  display: block; margin-bottom: .35rem;
+}
+.score-cell-val {
+  font-size: 1.55rem; font-weight: 800; color: var(--jade);
+  line-height: 1; margin-bottom: .3rem;
+}
+.pass-pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .65rem; font-weight: 700; padding: .22rem .65rem;
+  border-radius: 99px; border: 1px solid;
+}
+.pass-yes { background: var(--jade-xs); color: var(--jade);   border-color: var(--jade-lt); }
+.pass-no  { background: var(--danger-lt); color: var(--danger); border-color: #f5c6cb; }
+
+/* درجة السرد — كبيرة */
+.sard-score-box {
+  text-align: center; background: var(--bg);
+  border: 1px solid var(--border); border-radius: var(--r-lg);
+  padding: 1.1rem; margin-bottom: .85rem;
+}
+.sard-score-num {
+  font-size: 2.8rem; font-weight: 800; color: var(--jade);
+  line-height: 1; margin-bottom: .5rem;
+}
+.sard-score-label {
+  font-size: .72rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .4px; margin-bottom: .6rem;
+}
+
+/* ملاحظات التقييم */
+.eval-notes-box {
+  display: flex; align-items: flex-start; gap: .6rem;
+  background: var(--amber-lt); border: 1px solid #fde68a;
+  border-radius: var(--r-sm); padding: .7rem .9rem;
+  font-size: .83rem; color: var(--ink);
+}
+.eval-notes-box i { color: var(--amber); margin-top: .1rem; flex-shrink: 0; }
+
+/* ══ EMPTY STATES ═══════════════════════════════ */
+.empty-card {
+  background: var(--white);
+  border: 1.5px dashed var(--jade-lt);
+  border-radius: var(--r-xl); padding: 2.2rem 1.5rem;
+  text-align: center;
+}
+.empty-icon { font-size: 2.2rem; color: var(--jade-lt); margin-bottom: .6rem; }
+.empty-title { font-size: .95rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem; }
+.empty-sub { font-size: .8rem; color: var(--muted); }
+
+/* ══ BACK BUTTON ════════════════════════════════ */
+.btn-back {
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  width: 100%; background: var(--white);
+  border: 1.5px solid var(--border); border-radius: var(--r-lg);
+  padding: .9rem; font-family: 'Cairo', sans-serif;
+  font-size: .9rem; font-weight: 700; color: var(--ink);
+  text-decoration: none; margin-top: 1.1rem;
+  transition: background .18s, border-color .18s;
+}
+.btn-back:hover { background: var(--jade-xs); border-color: var(--jade-lt); color: var(--jade); }
+
+/* ══ ANIMATIONS ══════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* stagger delays */
+.report-card:nth-child(1)  { animation-delay: .04s; }
+.report-card:nth-child(2)  { animation-delay: .08s; }
+.report-card:nth-child(3)  { animation-delay: .12s; }
+.report-card:nth-child(4)  { animation-delay: .16s; }
+.report-card:nth-child(5)  { animation-delay: .20s; }
+.report-card:nth-child(6)  { animation-delay: .24s; }
+.report-card:nth-child(7)  { animation-delay: .28s; }
+
+@media (max-width: 380px) {
+  .scores-grid { grid-template-columns: 1fr 1fr; }
+  .ach-grid    { grid-template-columns: 1fr; }
+  .ach-grid .full { grid-column: 1; }
+}
+</style>
+</head>
+<body>
+
+    <!-- ══ Toast Notifications ══ -->
+    <div class="toast-wrap" id="toastWrap">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}
+        <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}"
+             data-toast="{{ loop.index }}">
+            <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}{% endif %}
+    {% endwith %}
+    </div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}{% for category, message in messages %}
+  <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}" data-toast="{{ loop.index }}">
+    <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %}{% endif %}
+{% endwith %}
+</div>
+
+<!-- HEADER -->
+{% set end_date  = plan.start_date + timedelta(days=6) %}
+{% set today     = now.date() %}
+{% set is_current = plan.start_date <= today and end_date >= today %}
+{% set is_past    = end_date < today %}
+{% set is_future  = plan.start_date > today %}
+
+<div class="header-strip">
+  <div class="header-inner">
+    <div class="header-student">
+      <div class="header-avatar"><i class="fas fa-user-graduate"></i></div>
+      <div>
+        <div class="header-student-name">{{ plan.student.full_name }}</div>
+        <div class="header-student-level">{{ plan.student.memorization_level or 'حفظ القرآن الكريم' }}</div>
+      </div>
+    </div>
+    <a href="{{ url_for('student_dashboard') if user_type == 'student' else url_for('view_student_plans', student_id=plan.student.id) }}" class="btn-back-hdr">
+      <i class="fas fa-arrow-right"></i> عودة
+    </a>
+  </div>
+</div>
+
+<!-- SHEET -->
+<div class="sheet">
+
+  <!-- ══ بطاقة المقرر الرئيسية ══ -->
+  <div class="plan-master">
+    <div class="plan-master-head">
+      <span class="plan-type-pill {{ 'type-hifz' if plan.plan_type == 'حفظ' else ('type-sard' if plan.plan_type == 'سرد' else ('type-phase-pill' if plan.plan_type == 'تقييم مرحلة' else 'type-poem')) }}">
+        <i class="fas fa-{{ 'book-open' if plan.plan_type == 'حفظ' else ('microphone-alt' if plan.plan_type == 'سرد' else ('star' if plan.plan_type == 'تقييم مرحلة' else 'feather-alt')) }}"></i>
+        {{ plan.plan_type }}
+      </span>
+      <span class="plan-status-pill">
+        {% if is_current %}<i class="fas fa-circle" style="font-size:.45rem;"></i> الأسبوع الحالي
+        {% elif is_past   %}<i class="fas fa-history"></i> مقرر سابق
+        {% else           %}<i class="fas fa-hourglass-half"></i> مقرر قادم{% endif %}
+      </span>
+    </div>
+
+    <div class="plan-master-body">
+      <!-- التواريخ -->
+      <div class="date-row">
+        <span class="date-pill"><i class="fas fa-calendar-alt"></i> من {{ plan.start_date.strftime('%d/%m/%Y') if plan.start_date.strftime else plan.start_date }}</span>
+        <span class="date-pill"><i class="fas fa-calendar-check"></i> إلى {{ end_date.strftime('%d/%m/%Y') if end_date.strftime else end_date }}</span>
+      </div>
+
+      <!-- المعلم -->
+      <div class="teacher-row">
+        <div class="teacher-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+        <div>
+          <span class="teacher-label">المعلم المسؤول</span>
+          <div class="teacher-name">{{ plan.teacher.full_name if plan.teacher else 'غير معروف' }}</div>
+        </div>
+      </div>
+
+      <!-- تفاصيل المقرر -->
+      <div class="plan-details-grid">
+        {% if plan.plan_type == 'حفظ' %}
+          {% if plan.new_memorization %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-star-and-crescent"></i></div>
+            <div>
+              <span class="plan-detail-label">الجديد</span>
+              <div class="plan-detail-value">{{ plan.new_memorization }}</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if plan.recent_review %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-redo-alt"></i></div>
+            <div>
+              <span class="plan-detail-label">القريب</span>
+              <div class="plan-detail-value">{{ plan.recent_review }}</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if plan.previous_review %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-history"></i></div>
+            <div>
+              <span class="plan-detail-label">القديم</span>
+              <div class="plan-detail-value">{{ plan.previous_review }}</div>
+            </div>
+          </div>
+          {% endif %}
+        {% elif plan.plan_type == 'قصيدة' %}
+          {% if plan.poem %}
+          <div class="plan-detail-row" style="background:#eef2ff;">
+            <div class="plan-detail-icon"><i class="fas fa-feather-alt"></i></div>
+            <div>
+              <span class="plan-detail-label">القصيدة</span>
+              <div class="plan-detail-value">{{ plan.poem.poem_title or ('قصيدة ' ~ plan.poem.poem_number) }}</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if plan.poem and plan.poem.poet %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-user"></i></div>
+            <div>
+              <span class="plan-detail-label">الشاعر</span>
+              <div class="plan-detail-value">{{ plan.poem.poet }}</div>
+            </div>
+          </div>
+          {% endif %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-align-left"></i></div>
+            <div>
+              <span class="plan-detail-label">الأبيات</span>
+              <div class="plan-detail-value">{{ plan.verse_start }} - {{ plan.verse_end }}</div>
+            </div>
+          </div>
+        {% else %}
+          {% if plan.revision_text %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-microphone-alt"></i></div>
+            <div>
+              <span class="plan-detail-label">نص السرد</span>
+              <div class="plan-detail-value">{{ plan.revision_text }}</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if plan.revision_notes %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-sticky-note"></i></div>
+            <div>
+              <span class="plan-detail-label">ملاحظات السرد</span>
+              <div class="plan-detail-value">{{ plan.revision_notes }}</div>
+            </div>
+          </div>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      {% if plan.notes %}
+      <div class="notes-row">
+        <i class="fas fa-sticky-note"></i>
+        <span>{{ plan.notes }}</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- شارة الترحيل: مقرر رُسخ للأسبوع التالي بسبب الرسب في الأسبوع السابق -->
+  {% if plan.rolled_over %}
+  <div class="rollover-banner">
+    <i class="fas fa-rotate-right"></i>
+    <div>
+      <strong>هذا المقرر معاد</strong>
+      <span>نُسخ تلقائياً إلى الأسبوع القادم بعد الرسب{% if plan.roll_reason %} في {{ {'new':'الحفظ الجديد','old':'الحفظ القديم','both':'الحفظ الجديد والقديم','sard':'السرد','poem':'القصيدة'}.get(plan.roll_reason, 'المقرر') }}{% endif %}{% if plan.roll_notes %} — {{ plan.roll_notes }}{% endif %}</span>
+    </div>
+    {% if plan.rolled_from_id %}
+    <a href="{{ url_for('view_plan_details', plan_id=plan.rolled_from_id) }}" class="rollover-link">عرض المقرر الأصلي</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if plan.plan_type != 'قصيدة' %}
+  <!-- ══════════════════════════════════════════
+       التقارير اليومية — في الأعلى
+  ══════════════════════════════════════════════ -->
+  <div class="sec-title" style="animation: fadeUp .4s .1s ease both;">
+    <div class="sec-title-icon"><i class="fas fa-calendar-check"></i></div>
+    <span class="sec-title-text">التقارير اليومية</span>
+    {% if plan.daily_reports %}
+    <span class="sec-title-count">{{ plan.daily_reports|length }}</span>
+    {% endif %}
+  </div>
+
+  <!-- زر إضافة تقرير -->
+  {% if user_type == 'student' and is_current %}
+  <a href="{{ url_for('add_daily_report', plan_id=plan.id) }}" class="btn-add-report">
+    <i class="fas fa-plus-circle"></i>
+    إضافة تقرير يومي جديد
+  </a>
+  {% endif %}
+
+  {% if plan.daily_reports %}
+    {% for report in plan.daily_reports %}
+    <div class="report-card">
+      <!-- رأس التقرير -->
+      <div class="report-head">
+        <div class="report-date-group">
+          <span class="report-date-badge">
+            <i class="fas fa-calendar-day"></i>
+            {{ report.report_date.strftime('%d/%m/%Y') if report.report_date.strftime else report.report_date }}
+          </span>
+          <span class="report-day-badge">{{ report.day_name }}</span>
+        </div>
+        <div class="report-actions">
+          {% if user_type == 'student' and is_current %}
+            <a href="{{ url_for('edit_daily_report', report_id=report.id) }}" class="action-btn edit" title="تعديل">
+              <i class="fas fa-pen"></i>
+            </a>
+          {% endif %}
+          {% if user_type in ('student', 'teacher', 'admin') %}
+            <a href="{{ url_for('teacher_view_report', report_id=report.id) }}" class="action-btn view" title="عرض">
+              <i class="fas fa-eye"></i>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- محتوى التقرير -->
+      <div class="report-body">
+        {% if plan.plan_type == 'حفظ' %}
+          {% set wd = report.report_date.weekday() %}
+          {% if wd in (3, 4) %}
+            <!-- خميس / جمعة — عرض نصي -->
+            {% if report.phase_memorization %}
+            <div class="report-text-box">
+              <strong>مراجعة الحفظ الجديد كاملاً</strong>
+              {{ report.phase_memorization }}
+            </div>
+            {% endif %}
+            {% if report.previous_memorization %}
+            <div class="report-text-box">
+              <strong>{% if wd == 3 %}مراجعة يومي الأحد والاثنين{% else %}مراجعة يومي الثلاثاء والأربعاء{% endif %}</strong>
+              {{ report.previous_memorization }}
+            </div>
+            {% endif %}
+          {% else %}
+            <!-- أيام عادية — chips -->
+            <div class="ach-grid">
+              <div class="ach-chip {{ 'ach-done' if report.listening else 'ach-pending' }}">
+                <i class="fas fa-headphones"></i>
+                <span>الاستماع: {{ 'تم ✓' if report.listening else 'لم يتم' }}</span>
+              </div>
+              <div class="ach-chip {{ 'ach-done' if report.recitation_mastery else 'ach-pending' }}">
+                <i class="fas fa-book-reader"></i>
+                <span>ضبط التلاوة: {{ 'تم ✓' if report.recitation_mastery else 'لم يتم' }}</span>
+              </div>
+              <div class="ach-chip {{ 'ach-done' if report.listened_new else 'ach-pending' }}">
+                <i class="fas fa-volume-up"></i>
+                <span>استماع الجديد: {{ 'تم ✓' if report.listened_new else 'لم يتم' }}</span>
+              </div>
+              <div class="ach-chip {{ 'ach-done' if report.repeated_new else 'ach-pending' }}">
+                <i class="fas fa-redo-alt"></i>
+                <span>تكرار الجديد: {{ 'تم ✓' if report.repeated_new else 'لم يتم' }}</span>
+              </div>
+              <div class="ach-chip full {{ 'ach-done' if report.reviewed_week else 'ach-pending' }}">
+                <i class="fas fa-sync-alt"></i>
+                <span>مراجعة الأسبوع: {{ 'تم ✓' if report.reviewed_week else 'لم يتم' }}</span>
+              </div>
+            </div>
+            {% if report.phase_memorization %}
+            <div class="report-text-box" style="margin-top:.6rem;">
+              <strong>حفظ المرحلة</strong>{{ report.phase_memorization }}
+            </div>
+            {% endif %}
+            {% if report.previous_memorization %}
+            <div class="report-text-box">
+              <strong>الحفظ السابق</strong>{{ report.previous_memorization }}
+            </div>
+            {% endif %}
+          {% endif %}
+
+        {% else %}
+          <!-- سرد -->
+          <div class="ach-grid" style="grid-template-columns:1fr;">
+            <div class="ach-chip {{ 'ach-done' if report.recitation_done else 'ach-pending' }}">
+              <i class="fas fa-microphone-alt"></i>
+              <span>السرد: {{ 'تم ✓' if report.recitation_done else 'لم يتم' }}</span>
+            </div>
+          </div>
+          {% if report.recitation_text %}
+          <div class="report-text-box" style="margin-top:.6rem;">
+            <strong>نص السرد</strong>{{ report.recitation_text }}
+          </div>
+          {% endif %}
+        {% endif %}
+
+        {% if report.recitation_notes %}
+        <div class="report-notes-box">
+          <i class="fas fa-comment-alt"></i>
+          <span>{{ report.recitation_notes }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+  {% else %}
+  <div class="empty-card" style="margin-bottom:.85rem;">
+    <div class="empty-icon"><i class="fas fa-calendar-times"></i></div>
+    <div class="empty-title">لا توجد تقارير يومية</div>
+    <div class="empty-sub">لم يُرسَل أي تقرير لهذا المقرر بعد</div>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="empty-card" style="margin-bottom:.85rem;background:#eef2ff;border:1px dashed #c7d2fe;">
+    <div class="empty-icon"><i class="fas fa-feather-alt"></i></div>
+    <div class="empty-title">مقرر قصيدة</div>
+    <div class="empty-sub">لا توجد تقارير يومية لمقررات القصائد — تُعرض النتيجة في قسم التقييم أدناه</div>
+  </div>
+  {% endif %}
+
+  <!-- ══════════════════════════════════════════
+       التقييم — في الأسفل
+  ══════════════════════════════════════════════ -->
+  <div class="sec-title" style="animation: fadeUp .4s .15s ease both; margin-top: .4rem;">
+    <div class="sec-title-icon" style="background:var(--gold-lt); color:var(--gold);">
+      <i class="fas fa-award"></i>
+    </div>
+    <span class="sec-title-text">نتيجة التقييم</span>
+  </div>
+
+  {% if plan.evaluations %}
+    {% for eval in plan.evaluations %}
+    <div class="eval-card">
+      <div class="eval-card-head">
+        <div class="eval-teacher">
+          <div class="eval-teacher-avatar"><i class="fas fa-chalkboard-teacher"></i></div>
+          <div class="eval-teacher-name">{{ eval.teacher.full_name if eval.teacher else 'غير معروف' }}</div>
+        </div>
+        <span class="eval-date-pill">
+          <i class="fas fa-calendar-day"></i>
+          {{ eval.evaluation_date.strftime('%d/%m/%Y') if eval.evaluation_date.strftime else eval.evaluation_date }}
+        </span>
+      </div>
+
+      <div class="eval-card-body">
+        {% if plan.plan_type == 'حفظ' %}
+        <div class="scores-grid">
+          <div class="score-cell">
+            <span class="score-cell-label">الجديد</span>
+            <div class="score-cell-val">{{ eval.new_score or 0 }}</div>
+            <span class="pass-pill {{ 'pass-yes' if eval.new_pass else 'pass-no' }}">
+              <i class="fas fa-{{ 'check' if eval.new_pass else 'times' }}"></i>
+              {{ 'يجاز' if eval.new_pass else 'لا يجاز' }}
+            </span>
+          </div>
+          <div class="score-cell">
+            <span class="score-cell-label">القريب</span>
+            <div class="score-cell-val">{{ eval.recent_score or 0 }}</div>
+          </div>
+          <div class="score-cell">
+            <span class="score-cell-label">القديم</span>
+            <div class="score-cell-val">{{ eval.previous_score or 0 }}</div>
+            <span class="pass-pill {{ 'pass-yes' if eval.previous_pass else 'pass-no' }}">
+              <i class="fas fa-{{ 'check' if eval.previous_pass else 'times' }}"></i>
+              {{ 'يجاز' if eval.previous_pass else 'لا يجاز' }}
+            </span>
+          </div>
+        </div>
+        {% set plan_pts = (eval.new_score or 0) + (eval.recent_score or 0) + (eval.previous_score or 0) %}
+        {% set plan_stars = 5 if plan_pts >= 270 else (4 if plan_pts >= 216 else (3 if plan_pts >= 162 else (2 if plan_pts >= 108 else (1 if plan_pts >= 54 else 0)))) %}
+        <div style="background:var(--jade-xs);border:1px solid var(--jade-lt);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:.85rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;">
+          <div>
+            <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.2rem;">مجموع درجات المقرر</div>
+            <div style="font-size:2rem;font-weight:800;color:var(--jade);line-height:1;">{{ plan_pts }}<span style="font-size:.9rem;color:var(--muted);font-weight:500;">/300</span></div>
+          </div>
+          <div style="text-align:left;">
+            <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.35rem;">جودة المقرر</div>
+            <div style="display:flex;gap:3px;">
+              {% for i in range(5) %}
+              <i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.85rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        {% elif plan.plan_type == 'سرد' %}
+        {% set plan_pts = eval.revision_score or 0 %}
+        {% set plan_stars = 5 if plan_pts >= 90 else (4 if plan_pts >= 72 else (3 if plan_pts >= 54 else (2 if plan_pts >= 36 else (1 if plan_pts >= 18 else 0)))) %}
+        <div class="sard-score-box">
+          <div class="sard-score-label">درجة السرد</div>
+          <div class="sard-score-num">{{ plan_pts }}<span style="font-size:.9rem;color:var(--muted);font-weight:500;">/100</span></div>
+          <div style="display:flex;gap:4px;justify-content:center;margin:.5rem 0;">
+            {% for i in range(5) %}
+            <i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:1rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>
+            {% endfor %}
+          </div>
+          <span class="pass-pill {{ 'pass-yes' if eval.revision_pass else 'pass-no' }}">
+            <i class="fas fa-{{ 'check' if eval.revision_pass else 'times' }}"></i>
+            {{ 'يجاز' if eval.revision_pass else 'لا يجاز' }}
+          </span>
+        </div>
+
+        {% elif plan.plan_type == 'قصيدة' %}
+        <div class="sard-score-box" style="background:linear-gradient(135deg,#eef2ff,#f5f3ff);border:1px solid #c7d2fe;">
+          <div class="sard-score-label" style="color:#4f46e5;">نتيجة مقرر القصيدة</div>
+          <div style="font-size:1.35rem;font-weight:800;color:#4f46e5;padding:.4rem 0;display:flex;align-items:center;justify-content:center;gap:.5rem;">
+            <i class="fas fa-{{ 'check-circle' if eval.new_pass else 'times-circle' }}"></i>
+            {{ 'أُجيز بنجاح ✅' if eval.new_pass else 'لم يُجز ❌' }}
+          </div>
+          <span class="pass-pill {{ 'pass-yes' if eval.new_pass else 'pass-no' }}">
+            <i class="fas fa-{{ 'check' if eval.new_pass else 'times' }}"></i>
+            {{ 'مجاز' if eval.new_pass else 'غير مجاز' }}
+          </span>
+        </div>
+
+        {% else %}
+        {% set plan_pts = eval.new_score or 0 %}
+        {% set plan_stars = 5 if plan_pts >= 72 else (4 if plan_pts >= 57 else (3 if plan_pts >= 43 else (2 if plan_pts >= 28 else (1 if plan_pts >= 14 else 0)))) %}
+        <div class="sard-score-box">
+          <div class="sard-score-label">درجة المرحلة</div>
+          <div class="sard-score-num">{{ plan_pts }}<span style="font-size:.9rem;color:var(--muted);font-weight:500;">/80</span></div>
+          <div style="display:flex;gap:4px;justify-content:center;margin:.5rem 0;">
+            {% for i in range(5) %}
+            <i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:1rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>
+            {% endfor %}
+          </div>
+          <span class="pass-pill {{ 'pass-yes' if eval.new_pass else 'pass-no' }}">
+            <i class="fas fa-{{ 'check' if eval.new_pass else 'times' }}"></i>
+            {{ 'يجاز' if eval.new_pass else 'لا يجاز' }}
+          </span>
+        </div>
+        {% endif %}
+
+        {% if eval.evaluation_notes %}
+        <div class="eval-notes-box">
+          <i class="fas fa-comment-alt"></i>
+          <span>{{ eval.evaluation_notes }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+  {% else %}
+  <div class="empty-card" style="margin-bottom:.85rem;">
+    <div class="empty-icon"><i class="fas fa-star"></i></div>
+    <div class="empty-title">لم يتم التقييم بعد</div>
+    <div class="empty-sub">سيُضاف التقييم من قِبل معلمك</div>
+  </div>
+  {% endif %}
+
+  <!-- زر العودة -->
+  <a href="{{ url_for('student_dashboard') if user_type == 'student' else url_for('view_student_plans', student_id=plan.student.id) }}" class="btn-back">
+    <i class="fas fa-arrow-right"></i>
+    العودة للقائمة
+  </a>
+
+</div><!-- /sheet -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script>
+    (function(){
+        var items = document.querySelectorAll('[data-toast]');
+        items.forEach(function(el, i){
+            setTimeout(function(){
+                el.classList.add('toast-out');
+                setTimeout(function(){ el.remove(); }, 400);
+            }, 3000 + i * 350);
+        });
+    })();
+    </script>
+<script>
+(function(){
+  /* إخفاء toast تلقائياً */
+  document.querySelectorAll('[data-toast]').forEach(function(el, i){
+    setTimeout(function(){
+      el.classList.add('toast-out');
+      setTimeout(function(){ el.remove(); }, 380);
+    }, 3000 + i * 350);
+  });
+})();
+</script>
+</body>
+</html>{% if false %}<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تفاصيل المقرر — أشبال القرآن</title>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#1a5c40">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════
+   نفس نظام ألوان لوحة الطالب — ثيم الفجر الهادئ
+══════════════════════════════════════════════ */
+:root {
+  --bg:        #f2f0eb;
+  --surface:   #faf9f6;
+  --white:     #ffffff;
+  --jade:      #1a5c40;
+  --jade-md:   #226b4a;
+  --jade-lt:   #cde8da;
+  --jade-xs:   #ebf5f0;
+  --gold:      #c49a2a;
+  --gold-lt:   #fdf3d0;
+  --gold-xs:   #fffbee;
+  --amber:     #d97706;
+  --amber-lt:  #fef3c7;
+  --ink:       #1c2b22;
+  --muted:     #6b7d72;
+  --border:    #dde8e2;
+  --danger:    #c0392b;
+  --danger-lt: #fdecea;
+  --blue:      #1d4ed8;
+  --blue-lt:   #dbeafe;
+
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  direction: rtl;
+  padding-bottom: 3rem;
+}
+
+/* ══ TOAST ═════════════════════════════════════ */
+.toast-wrap {
+  position: fixed; top: 1.1rem; left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999; display: flex; flex-direction: column;
+  gap: .5rem; pointer-events: none;
+  width: 92%; max-width: 430px;
+}
+.toast-item {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .75rem 1.1rem; border-radius: 1.2rem;
+  font-size: .9rem; font-weight: 700;
+  box-shadow: 0 6px 24px rgba(0,0,0,.13);
+  pointer-events: auto;
+  animation: toastIn .35s cubic-bezier(.22,1,.36,1) forwards;
+  border-right: 4px solid transparent;
+}
+.toast-item.t-success { background:#edfaf1; border-color:#28a745; color:#1a5e2a; }
+.toast-item.t-error   { background:#fef0f0; border-color:#dc3545; color:#7b1a1a; }
+.toast-item.t-warning { background:#fffbec; border-color:#ffc107; color:#7a5000; }
+.toast-item.t-info    { background:#eaf4ff; border-color:#17a2b8; color:#0c4a6e; }
+.toast-item.toast-out { animation: toastOut .35s ease forwards; }
+@keyframes toastIn  { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes toastOut { from{opacity:1} to{opacity:0;transform:translateY(-10px)} }
+
+/* ══ HEADER STRIP ═══════════════════════════════ */
+.header-strip {
+  background: var(--jade);
+  padding: 1.1rem 1.2rem 3.8rem;
+  position: relative; overflow: hidden;
+}
+.header-strip::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 70% at 115% -10%, rgba(255,255,255,.06) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at -15% 110%, rgba(255,255,255,.04) 0%, transparent 55%);
+}
+.header-strip::after {
+  content: ''; position: absolute; inset: 0; opacity: .045; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(255,255,255,1) 18px, rgba(255,255,255,1) 19px),
+    repeating-linear-gradient(-45deg, transparent, transparent 18px, rgba(255,255,255,1) 18px, rgba(255,255,255,1) 19px);
+}
+.header-inner {
+  position: relative; z-index: 2; max-width: 520px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: .8rem;
+}
+.header-student {
+  display: flex; align-items: center; gap: .7rem; flex: 1;
+}
+.header-avatar {
+  width: 42px; height: 42px;
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 1.1rem; flex-shrink: 0;
+}
+.header-student-name {
+  font-family: 'Amiri', serif;
+  font-size: 1.25rem; font-weight: 700; color: #fff; line-height: 1.2;
+}
+.header-student-level {
+  font-size: .72rem; color: rgba(255,255,255,.65); margin-top: .1rem;
+}
+.btn-back-hdr {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.25);
+  color: #fff; font-family: 'Cairo', sans-serif;
+  font-size: .78rem; font-weight: 600;
+  padding: .42rem .9rem; border-radius: 99px;
+  text-decoration: none; transition: background .18s; flex-shrink: 0;
+}
+.btn-back-hdr:hover { background: rgba(255,255,255,.25); color: #fff; }
+
+/* ══ SHEET ══════════════════════════════════════ */
+.sheet {
+  max-width: 520px; margin: -2.6rem auto 0;
+  padding: 0 .9rem; position: relative; z-index: 5;
+}
+
+/* ══ PLAN MASTER CARD ═══════════════════════════ */
+.plan-master {
+  background: var(--white);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: .85rem;
+  animation: fadeUp .45s .05s ease both;
+}
+.plan-master-head {
+  background: var(--jade);
+  padding: 1rem 1.2rem;
+  display: flex; align-items: center;
+  justify-content: space-between; gap: .7rem; flex-wrap: wrap;
+}
+.plan-type-pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .8rem; font-weight: 700; padding: .3rem .9rem;
+  border-radius: 99px;
+}
+.type-hifz { background: var(--gold-lt);  color: var(--gold);  border: 1px solid #f0d060; }
+.type-sard { background: var(--blue-lt);  color: var(--blue);  border: 1px solid #93c5fd; }
+.type-phase-pill { background: var(--purple-lt); color: var(--purple); border: 1px solid #c4b5fd; }
+.type-poem { background: #eef2ff;  color: #4f46e5;  border: 1px solid #c7d2fe; }
+
+.plan-status-pill {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  color: #fff; font-size: .72rem; font-weight: 600;
+  padding: .28rem .8rem; border-radius: 99px;
+}
+.plan-master-body { padding: 1.1rem 1.2rem; }
+
+.date-row {
+  display: flex; align-items: center; gap: .5rem;
+  flex-wrap: wrap; margin-bottom: .9rem;
+}
+.date-pill {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--muted); font-size: .75rem; font-weight: 600;
+  padding: .3rem .85rem; border-radius: 99px;
+}
+
+/* معلومة المعلم */
+.teacher-row {
+  display: flex; align-items: center; gap: .7rem;
+  background: var(--jade-xs); border: 1px solid var(--jade-lt);
+  border-radius: var(--r-md); padding: .7rem .9rem;
+  margin-bottom: .9rem;
+}
+.teacher-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: var(--jade-lt);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: .9rem; flex-shrink: 0;
+}
+.teacher-label { font-size: .68rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px; display: block; margin-bottom: .1rem; }
+.teacher-name { font-size: .88rem; font-weight: 700; color: var(--ink); }
+
+/* تفاصيل المقرر */
+.plan-details-grid {
+  display: grid; grid-template-columns: 1fr; gap: .5rem; margin-bottom: .9rem;
+}
+.plan-detail-row {
+  display: flex; align-items: flex-start; gap: .6rem;
+  background: var(--bg); border-radius: var(--r-sm);
+  padding: .6rem .85rem; border: 1px solid var(--border);
+}
+.plan-detail-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--jade-xs);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: .78rem; flex-shrink: 0; margin-top: .05rem;
+}
+.plan-detail-label {
+  font-size: .67rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px;
+  display: block; margin-bottom: .15rem;
+}
+.plan-detail-value {
+  font-size: .88rem; color: var(--ink); font-weight: 600; line-height: 1.45;
+}
+
+.notes-row {
+  display: flex; align-items: flex-start; gap: .6rem;
+  background: var(--amber-lt); border: 1px solid #fde68a;
+  border-radius: var(--r-sm); padding: .65rem .9rem;
+}
+  .notes-row i { color: var(--amber); margin-top: .1rem; flex-shrink: 0; }
+  .notes-row span { font-size: .85rem; color: var(--ink); line-height: 1.5; }
+
+  /* شارة المقرر المُرحَّل */
+  .rollover-banner {
+    display: flex; align-items: center; gap: .7rem;
+    background: #fffbeb; border: 2px solid #f59e0b; border-radius: var(--r-sm);
+    padding: .75rem .9rem; margin-bottom: 1rem;
+  }
+  .rollover-banner > i { color: #d97706; font-size: 1.1rem; flex-shrink: 0; }
+  .rollover-banner > div { display: flex; flex-direction: column; line-height: 1.45; flex: 1; min-width: 0; }
+  .rollover-banner strong { color: #92400e; font-size: .88rem; font-weight: 700; }
+  .rollover-banner span { color: #a16207; font-size: .76rem; }
+  .rollover-link {
+    flex-shrink: 0; font-size: .74rem; color: #b45309; text-decoration: none;
+    background: #fef3c7; border: 1px solid #fcd34d; border-radius: 2rem; padding: .3rem .7rem;
+    white-space: nowrap;
+  }
+  .rollover-link:hover { background: #fde68a; }
+
+/* ══ SECTION TITLE ══════════════════════════════ */
+.sec-title {
+  display: flex; align-items: center; gap: .6rem;
+  margin: 1.1rem 0 .65rem;
+}
+.sec-title-icon {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: var(--jade-xs);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: .95rem;
+}
+.sec-title-text { font-weight: 800; font-size: .98rem; color: var(--ink); }
+.sec-title-count {
+  margin-right: auto; font-size: .72rem; font-weight: 700;
+  color: var(--jade); background: var(--jade-xs);
+  padding: .18rem .65rem; border-radius: 99px;
+  border: 1px solid var(--jade-lt);
+}
+
+/* ══ BTN ADD REPORT ═════════════════════════════ */
+.btn-add-report {
+  display: flex; align-items: center; justify-content: center; gap: .55rem;
+  width: 100%; background: var(--jade); color: #fff;
+  border-radius: var(--r-md); padding: .95rem 1rem;
+  font-family: 'Cairo', sans-serif; font-size: .95rem; font-weight: 700;
+  text-decoration: none; margin-bottom: .75rem;
+  transition: background .18s, transform .12s;
+}
+.btn-add-report:hover { background: var(--jade-md); color: #fff; }
+.btn-add-report:active { transform: scale(.98); }
+.btn-add-report i { font-size: 1rem; }
+
+/* ══ REPORT CARD ════════════════════════════════ */
+.report-card {
+  background: var(--white);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: .7rem;
+  animation: fadeUp .4s ease both;
+  transition: box-shadow .18s;
+}
+.report-card:hover { box-shadow: 0 4px 18px rgba(26,92,64,.09); }
+
+.report-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .6rem; padding: .8rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.report-date-group { display: flex; align-items: center; gap: .45rem; }
+.report-date-badge {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: var(--jade-xs); border: 1px solid var(--jade-lt);
+  color: var(--jade); font-size: .72rem; font-weight: 700;
+  padding: .25rem .75rem; border-radius: 99px;
+}
+.report-day-badge {
+  font-size: .72rem; color: var(--muted); font-weight: 600;
+  background: var(--bg); border: 1px solid var(--border);
+  padding: .22rem .65rem; border-radius: 99px;
+}
+.report-actions { display: flex; gap: .35rem; }
+.action-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; text-decoration: none; font-size: .75rem;
+  transition: transform .15s;
+}
+.action-btn:hover { transform: scale(1.1); color: #fff; }
+.action-btn.edit { background: var(--jade); }
+.action-btn.view { background: #7c3aed; }
+
+.report-body { padding: .85rem 1rem; }
+
+/* achievement chips */
+.ach-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .45rem;
+}
+.ach-grid .full { grid-column: 1 / -1; }
+.ach-chip {
+  display: flex; align-items: center; gap: .45rem;
+  border-radius: 99px; padding: .35rem .8rem;
+  font-size: .73rem; font-weight: 600; border: 1px solid;
+}
+.ach-done    { background: var(--jade-xs); color: var(--jade);    border-color: var(--jade-lt); }
+.ach-pending { background: var(--bg);      color: var(--muted);   border-color: var(--border); }
+.ach-chip i  { font-size: .8rem; }
+
+/* نص إضافي */
+.report-text-box {
+  background: var(--bg); border-radius: var(--r-sm);
+  padding: .65rem .85rem; margin-top: .6rem;
+  border-right: 3px solid var(--jade-lt);
+  font-size: .83rem; color: var(--ink); line-height: 1.55;
+}
+.report-text-box + .report-text-box { margin-top: .4rem; }
+.report-text-box strong { color: var(--jade); font-size: .75rem;
+  text-transform: uppercase; letter-spacing: .3px; display: block; margin-bottom: .2rem; }
+
+/* ملاحظات السرد */
+.report-notes-box {
+  background: var(--amber-lt); border: 1px solid #fde68a;
+  border-radius: var(--r-sm); padding: .6rem .85rem;
+  margin-top: .5rem; font-size: .82rem; color: var(--ink);
+  display: flex; align-items: flex-start; gap: .5rem;
+}
+.report-notes-box i { color: var(--amber); margin-top: .1rem; }
+
+/* ══ EVALUATION CARD ════════════════════════════ */
+.eval-card {
+  background: var(--white);
+  border-radius: var(--r-xl);
+  border: 1.5px solid var(--jade-lt);
+  overflow: hidden;
+  margin-bottom: .85rem;
+  animation: fadeUp .45s ease both;
+}
+.eval-card-head {
+  background: var(--jade);
+  padding: .9rem 1.2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.eval-teacher {
+  display: flex; align-items: center; gap: .6rem;
+}
+.eval-teacher-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.3);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: .9rem;
+}
+.eval-teacher-name { font-size: .88rem; font-weight: 700; color: #fff; }
+.eval-date-pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.25);
+  color: rgba(255,255,255,.9); font-size: .72rem; font-weight: 600;
+  padding: .28rem .8rem; border-radius: 99px;
+}
+
+.eval-card-body { padding: 1.1rem 1.2rem; }
+
+/* شبكة الدرجات */
+.scores-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: .55rem; margin-bottom: .85rem;
+}
+.score-cell {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: .7rem .5rem;
+  text-align: center;
+}
+.score-cell-label {
+  font-size: .67rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px;
+  display: block; margin-bottom: .35rem;
+}
+.score-cell-val {
+  font-size: 1.55rem; font-weight: 800; color: var(--jade);
+  line-height: 1; margin-bottom: .3rem;
+}
+.pass-pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .65rem; font-weight: 700; padding: .22rem .65rem;
+  border-radius: 99px; border: 1px solid;
+}
+.pass-yes { background: var(--jade-xs); color: var(--jade);   border-color: var(--jade-lt); }
+.pass-no  { background: var(--danger-lt); color: var(--danger); border-color: #f5c6cb; }
+
+/* درجة السرد — كبيرة */
+.sard-score-box {
+  text-align: center; background: var(--bg);
+  border: 1px solid var(--border); border-radius: var(--r-lg);
+  padding: 1.1rem; margin-bottom: .85rem;
+}
+.sard-score-num {
+  font-size: 2.8rem; font-weight: 800; color: var(--jade);
+  line-height: 1; margin-bottom: .5rem;
+}
+.sard-score-label {
+  font-size: .72rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .4px; margin-bottom: .6rem;
+}
+
+/* ملاحظات التقييم */
+.eval-notes-box {
+  display: flex; align-items: flex-start; gap: .6rem;
+  background: var(--amber-lt); border: 1px solid #fde68a;
+  border-radius: var(--r-sm); padding: .7rem .9rem;
+  font-size: .83rem; color: var(--ink);
+}
+.eval-notes-box i { color: var(--amber); margin-top: .1rem; flex-shrink: 0; }
+
+/* ══ EMPTY STATES ═══════════════════════════════ */
+.empty-card {
+  background: var(--white);
+  border: 1.5px dashed var(--jade-lt);
+  border-radius: var(--r-xl); padding: 2.2rem 1.5rem;
+  text-align: center;
+}
+.empty-icon { font-size: 2.2rem; color: var(--jade-lt); margin-bottom: .6rem; }
+.empty-title { font-size: .95rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem; }
+.empty-sub { font-size: .8rem; color: var(--muted); }
+
+/* ══ BACK BUTTON ════════════════════════════════ */
+.btn-back {
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  width: 100%; background: var(--white);
+  border: 1.5px solid var(--border); border-radius: var(--r-lg);
+  padding: .9rem; font-family: 'Cairo', sans-serif;
+  font-size: .9rem; font-weight: 700; color: var(--ink);
+  text-decoration: none; margin-top: 1.1rem;
+  transition: background .18s, border-color .18s;
+}
+.btn-back:hover { background: var(--jade-xs); border-color: var(--jade-lt); color: var(--jade); }
+
+/* ══ ANIMATIONS ══════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* stagger delays */
+.report-card:nth-child(1)  { animation-delay: .04s; }
+.report-card:nth-child(2)  { animation-delay: .08s; }
+.report-card:nth-child(3)  { animation-delay: .12s; }
+.report-card:nth-child(4)  { animation-delay: .16s; }
+.report-card:nth-child(5)  { animation-delay: .20s; }
+.report-card:nth-child(6)  { animation-delay: .24s; }
+.report-card:nth-child(7)  { animation-delay: .28s; }
+
+@media (max-width: 380px) {
+  .scores-grid { grid-template-columns: 1fr 1fr; }
+  .ach-grid    { grid-template-columns: 1fr; }
+  .ach-grid .full { grid-column: 1; }
+}
+</style>
+</head>
+<body>
+
+    <!-- ══ Toast Notifications ══ -->
+    <div class="toast-wrap" id="toastWrap">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}
+        <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}"
+             data-toast="{{ loop.index }}">
+            <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}{% endif %}
+    {% endwith %}
+    </div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}{% for category, message in messages %}
+  <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}" data-toast="{{ loop.index }}">
+    <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %}{% endif %}
+{% endwith %}
+</div>
+
+<!-- HEADER -->
+{% set end_date  = plan.start_date + timedelta(days=6) %}
+{% set today     = now.date() %}
+{% set is_current = plan.start_date <= today and end_date >= today %}
+{% set is_past    = end_date < today %}
+{% set is_future  = plan.start_date > today %}
+
+<div class="header-strip">
+  <div class="header-inner">
+    <div class="header-student">
+      <div class="header-avatar"><i class="fas fa-user-graduate"></i></div>
+      <div>
+        <div class="header-student-name">{{ plan.student.full_name }}</div>
+        <div class="header-student-level">{{ plan.student.memorization_level or 'حفظ القرآن الكريم' }}</div>
+      </div>
+    </div>
+    <a href="{{ url_for('student_dashboard') if user_type == 'student' else url_for('view_student_plans', student_id=plan.student.id) }}" class="btn-back-hdr">
+      <i class="fas fa-arrow-right"></i> عودة
+    </a>
+  </div>
+</div>
+
+<!-- SHEET -->
+<div class="sheet">
+
+  <!-- ══ بطاقة المقرر الرئيسية ══ -->
+  <div class="plan-master">
+    <div class="plan-master-head">
+      <span class="plan-type-pill {{ 'type-hifz' if plan.plan_type == 'حفظ' else ('type-sard' if plan.plan_type == 'سرد' else ('type-phase-pill' if plan.plan_type == 'تقييم مرحلة' else 'type-poem')) }}">
+        <i class="fas fa-{{ 'book-open' if plan.plan_type == 'حفظ' else ('microphone-alt' if plan.plan_type == 'سرد' else ('star' if plan.plan_type == 'تقييم مرحلة' else 'feather-alt')) }}"></i>
+        {{ plan.plan_type }}
+      </span>
+      <span class="plan-status-pill">
+        {% if is_current %}<i class="fas fa-circle" style="font-size:.45rem;"></i> الأسبوع الحالي
+        {% elif is_past   %}<i class="fas fa-history"></i> مقرر سابق
+        {% else           %}<i class="fas fa-hourglass-half"></i> مقرر قادم{% endif %}
+      </span>
+    </div>
+
+    <div class="plan-master-body">
+      <!-- التواريخ -->
+      <div class="date-row">
+        <span class="date-pill"><i class="fas fa-calendar-alt"></i> من {{ plan.start_date.strftime('%d/%m/%Y') if plan.start_date.strftime else plan.start_date }}</span>
+        <span class="date-pill"><i class="fas fa-calendar-check"></i> إلى {{ end_date.strftime('%d/%m/%Y') if end_date.strftime else end_date }}</span>
+      </div>
+
+      <!-- المعلم -->
+      <div class="teacher-row">
+        <div class="teacher-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+        <div>
+          <span class="teacher-label">المعلم المسؤول</span>
+          <div class="teacher-name">{{ plan.teacher.full_name if plan.teacher else 'غير معروف' }}</div>
+        </div>
+      </div>
+
+      <!-- تفاصيل المقرر -->
+      <div class="plan-details-grid">
+        {% if plan.plan_type == 'حفظ' %}
+          {% if plan.new_memorization %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-star-and-crescent"></i></div>
+            <div>
+              <span class="plan-detail-label">الجديد</span>
+              <div class="plan-detail-value">{{ plan.new_memorization }}</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if plan.recent_review %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-redo-alt"></i></div>
+            <div>
+              <span class="plan-detail-label">القريب</span>
+              <div class="plan-detail-value">{{ plan.recent_review }}</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if plan.previous_review %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-history"></i></div>
+            <div>
+              <span class="plan-detail-label">القديم</span>
+              <div class="plan-detail-value">{{ plan.previous_review }}</div>
+            </div>
+          </div>
+          {% endif %}
+        {% elif plan.plan_type == 'قصيدة' %}
+          {% if plan.poem %}
+          <div class="plan-detail-row" style="background:#eef2ff;">
+            <div class="plan-detail-icon"><i class="fas fa-feather-alt"></i></div>
+            <div>
+              <span class="plan-detail-label">القصيدة</span>
+              <div class="plan-detail-value">{{ plan.poem.poem_title or ('قصيدة ' ~ plan.poem.poem_number) }}</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if plan.poem and plan.poem.poet %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-user"></i></div>
+            <div>
+              <span class="plan-detail-label">الشاعر</span>
+              <div class="plan-detail-value">{{ plan.poem.poet }}</div>
+            </div>
+          </div>
+          {% endif %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-align-left"></i></div>
+            <div>
+              <span class="plan-detail-label">الأبيات</span>
+              <div class="plan-detail-value">{{ plan.verse_start }} - {{ plan.verse_end }}</div>
+            </div>
+          </div>
+        {% else %}
+          {% if plan.revision_text %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-microphone-alt"></i></div>
+            <div>
+              <span class="plan-detail-label">نص السرد</span>
+              <div class="plan-detail-value">{{ plan.revision_text }}</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if plan.revision_notes %}
+          <div class="plan-detail-row">
+            <div class="plan-detail-icon"><i class="fas fa-sticky-note"></i></div>
+            <div>
+              <span class="plan-detail-label">ملاحظات السرد</span>
+              <div class="plan-detail-value">{{ plan.revision_notes }}</div>
+            </div>
+          </div>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      {% if plan.notes %}
+      <div class="notes-row">
+        <i class="fas fa-sticky-note"></i>
+        <span>{{ plan.notes }}</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- شارة الترحيل: مقرر رُسخ للأسبوع التالي بسبب الرسب في الأسبوع السابق -->
+  {% if plan.rolled_over %}
+  <div class="rollover-banner">
+    <i class="fas fa-rotate-right"></i>
+    <div>
+      <strong>هذا المقرر معاد</strong>
+      <span>نُسخ تلقائياً إلى الأسبوع القادم بعد الرسب{% if plan.roll_reason %} في {{ {'new':'الحفظ الجديد','old':'الحفظ القديم','both':'الحفظ الجديد والقديم','sard':'السرد','poem':'القصيدة'}.get(plan.roll_reason, 'المقرر') }}{% endif %}{% if plan.roll_notes %} — {{ plan.roll_notes }}{% endif %}</span>
+    </div>
+    {% if plan.rolled_from_id %}
+    <a href="{{ url_for('view_plan_details', plan_id=plan.rolled_from_id) }}" class="rollover-link">عرض المقرر الأصلي</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if plan.plan_type != 'قصيدة' %}
+  <!-- ══════════════════════════════════════════
+       التقارير اليومية — في الأعلى
+  ══════════════════════════════════════════════ -->
+  <div class="sec-title" style="animation: fadeUp .4s .1s ease both;">
+    <div class="sec-title-icon"><i class="fas fa-calendar-check"></i></div>
+    <span class="sec-title-text">التقارير اليومية</span>
+    {% if plan.daily_reports %}
+    <span class="sec-title-count">{{ plan.daily_reports|length }}</span>
+    {% endif %}
+  </div>
+
+  <!-- زر إضافة تقرير -->
+  {% if user_type == 'student' and is_current %}
+  <a href="{{ url_for('add_daily_report', plan_id=plan.id) }}" class="btn-add-report">
+    <i class="fas fa-plus-circle"></i>
+    إضافة تقرير يومي جديد
+  </a>
+  {% endif %}
+
+  {% if plan.daily_reports %}
+    {% for report in plan.daily_reports %}
+    <div class="report-card">
+      <!-- رأس التقرير -->
+      <div class="report-head">
+        <div class="report-date-group">
+          <span class="report-date-badge">
+            <i class="fas fa-calendar-day"></i>
+            {{ report.report_date.strftime('%d/%m/%Y') if report.report_date.strftime else report.report_date }}
+          </span>
+          <span class="report-day-badge">{{ report.day_name }}</span>
+        </div>
+        <div class="report-actions">
+          {% if user_type == 'student' and is_current %}
+            <a href="{{ url_for('edit_daily_report', report_id=report.id) }}" class="action-btn edit" title="تعديل">
+              <i class="fas fa-pen"></i>
+            </a>
+          {% elif user_type in ('teacher', 'admin') %}
+            <a href="{{ url_for('teacher_view_report', report_id=report.id) }}" class="action-btn view" title="عرض">
+              <i class="fas fa-eye"></i>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- محتوى التقرير -->
+      <div class="report-body">
+        {% if plan.plan_type == 'حفظ' %}
+          {% set wd = report.report_date.weekday() %}
+          {% if wd in (3, 4) %}
+            <!-- خميس / جمعة — عرض نصي -->
+            {% if report.phase_memorization %}
+            <div class="report-text-box">
+              <strong>مراجعة الحفظ الجديد كاملاً</strong>
+              {{ report.phase_memorization }}
+            </div>
+            {% endif %}
+            {% if report.previous_memorization %}
+            <div class="report-text-box">
+              <strong>{% if wd == 3 %}مراجعة يومي الأحد والاثنين{% else %}مراجعة يومي الثلاثاء والأربعاء{% endif %}</strong>
+              {{ report.previous_memorization }}
+            </div>
+            {% endif %}
+          {% else %}
+            <!-- أيام عادية — chips -->
+            <div class="ach-grid">
+              <div class="ach-chip {{ 'ach-done' if report.listening else 'ach-pending' }}">
+                <i class="fas fa-headphones"></i>
+                <span>الاستماع: {{ 'تم ✓' if report.listening else 'لم يتم' }}</span>
+              </div>
+              <div class="ach-chip {{ 'ach-done' if report.recitation_mastery else 'ach-pending' }}">
+                <i class="fas fa-book-reader"></i>
+                <span>ضبط التلاوة: {{ 'تم ✓' if report.recitation_mastery else 'لم يتم' }}</span>
+              </div>
+              <div class="ach-chip {{ 'ach-done' if report.listened_new else 'ach-pending' }}">
+                <i class="fas fa-volume-up"></i>
+                <span>استماع الجديد: {{ 'تم ✓' if report.listened_new else 'لم يتم' }}</span>
+              </div>
+              <div class="ach-chip {{ 'ach-done' if report.repeated_new else 'ach-pending' }}">
+                <i class="fas fa-redo-alt"></i>
+                <span>تكرار الجديد: {{ 'تم ✓' if report.repeated_new else 'لم يتم' }}</span>
+              </div>
+              <div class="ach-chip full {{ 'ach-done' if report.reviewed_week else 'ach-pending' }}">
+                <i class="fas fa-sync-alt"></i>
+                <span>مراجعة الأسبوع: {{ 'تم ✓' if report.reviewed_week else 'لم يتم' }}</span>
+              </div>
+            </div>
+            {% if report.phase_memorization %}
+            <div class="report-text-box" style="margin-top:.6rem;">
+              <strong>حفظ المرحلة</strong>{{ report.phase_memorization }}
+            </div>
+            {% endif %}
+            {% if report.previous_memorization %}
+            <div class="report-text-box">
+              <strong>الحفظ السابق</strong>{{ report.previous_memorization }}
+            </div>
+            {% endif %}
+          {% endif %}
+
+        {% else %}
+          <!-- سرد -->
+          <div class="ach-grid" style="grid-template-columns:1fr;">
+            <div class="ach-chip {{ 'ach-done' if report.recitation_done else 'ach-pending' }}">
+              <i class="fas fa-microphone-alt"></i>
+              <span>السرد: {{ 'تم ✓' if report.recitation_done else 'لم يتم' }}</span>
+            </div>
+          </div>
+          {% if report.recitation_text %}
+          <div class="report-text-box" style="margin-top:.6rem;">
+            <strong>نص السرد</strong>{{ report.recitation_text }}
+          </div>
+          {% endif %}
+        {% endif %}
+
+        {% if report.recitation_notes %}
+        <div class="report-notes-box">
+          <i class="fas fa-comment-alt"></i>
+          <span>{{ report.recitation_notes }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+  {% else %}
+  <div class="empty-card" style="margin-bottom:.85rem;">
+    <div class="empty-icon"><i class="fas fa-calendar-times"></i></div>
+    <div class="empty-title">لا توجد تقارير يومية</div>
+    <div class="empty-sub">لم يُرسَل أي تقرير لهذا المقرر بعد</div>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="empty-card" style="margin-bottom:.85rem;background:#eef2ff;border:1px dashed #c7d2fe;">
+    <div class="empty-icon"><i class="fas fa-feather-alt"></i></div>
+    <div class="empty-title">مقرر قصيدة</div>
+    <div class="empty-sub">لا توجد تقارير يومية لمقررات القصائد — تُعرض النتيجة في قسم التقييم أدناه</div>
+  </div>
+  {% endif %}
+
+  <!-- ══════════════════════════════════════════
+       التقييم — في الأسفل
+  ══════════════════════════════════════════════ -->
+  <div class="sec-title" style="animation: fadeUp .4s .15s ease both; margin-top: .4rem;">
+    <div class="sec-title-icon" style="background:var(--gold-lt); color:var(--gold);">
+      <i class="fas fa-award"></i>
+    </div>
+    <span class="sec-title-text">نتيجة التقييم</span>
+  </div>
+
+  {% if plan.evaluations %}
+    {% for eval in plan.evaluations %}
+    <div class="eval-card">
+      <div class="eval-card-head">
+        <div class="eval-teacher">
+          <div class="eval-teacher-avatar"><i class="fas fa-chalkboard-teacher"></i></div>
+          <div class="eval-teacher-name">{{ eval.teacher.full_name if eval.teacher else 'غير معروف' }}</div>
+        </div>
+        <span class="eval-date-pill">
+          <i class="fas fa-calendar-day"></i>
+          {{ eval.evaluation_date.strftime('%d/%m/%Y') if eval.evaluation_date.strftime else eval.evaluation_date }}
+        </span>
+      </div>
+
+      <div class="eval-card-body">
+        {% if plan.plan_type == 'حفظ' %}
+        <div class="scores-grid">
+          <div class="score-cell">
+            <span class="score-cell-label">الجديد</span>
+            <div class="score-cell-val">{{ eval.new_score or 0 }}</div>
+            <span class="pass-pill {{ 'pass-yes' if eval.new_pass else 'pass-no' }}">
+              <i class="fas fa-{{ 'check' if eval.new_pass else 'times' }}"></i>
+              {{ 'يجاز' if eval.new_pass else 'لا يجاز' }}
+            </span>
+          </div>
+          <div class="score-cell">
+            <span class="score-cell-label">القريب</span>
+            <div class="score-cell-val">{{ eval.recent_score or 0 }}</div>
+          </div>
+          <div class="score-cell">
+            <span class="score-cell-label">القديم</span>
+            <div class="score-cell-val">{{ eval.previous_score or 0 }}</div>
+            <span class="pass-pill {{ 'pass-yes' if eval.previous_pass else 'pass-no' }}">
+              <i class="fas fa-{{ 'check' if eval.previous_pass else 'times' }}"></i>
+              {{ 'يجاز' if eval.previous_pass else 'لا يجاز' }}
+            </span>
+          </div>
+        </div>
+        {% set plan_pts = (eval.new_score or 0) + (eval.recent_score or 0) + (eval.previous_score or 0) %}
+        {% set plan_stars = 5 if plan_pts >= 270 else (4 if plan_pts >= 216 else (3 if plan_pts >= 162 else (2 if plan_pts >= 108 else (1 if plan_pts >= 54 else 0)))) %}
+        <div style="background:var(--jade-xs);border:1px solid var(--jade-lt);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:.85rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;">
+          <div>
+            <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.2rem;">مجموع درجات المقرر</div>
+            <div style="font-size:2rem;font-weight:800;color:var(--jade);line-height:1;">{{ plan_pts }}<span style="font-size:.9rem;color:var(--muted);font-weight:500;">/300</span></div>
+          </div>
+          <div style="text-align:left;">
+            <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.35rem;">جودة المقرر</div>
+            <div style="display:flex;gap:3px;">
+              {% for i in range(5) %}
+              <i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.85rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        {% elif plan.plan_type == 'سرد' %}
+        {% set plan_pts = eval.revision_score or 0 %}
+        {% set plan_stars = 5 if plan_pts >= 90 else (4 if plan_pts >= 72 else (3 if plan_pts >= 54 else (2 if plan_pts >= 36 else (1 if plan_pts >= 18 else 0)))) %}
+        <div class="sard-score-box">
+          <div class="sard-score-label">درجة السرد</div>
+          <div class="sard-score-num">{{ plan_pts }}<span style="font-size:.9rem;color:var(--muted);font-weight:500;">/100</span></div>
+          <div style="display:flex;gap:4px;justify-content:center;margin:.5rem 0;">
+            {% for i in range(5) %}
+            <i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:1rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>
+            {% endfor %}
+          </div>
+          <span class="pass-pill {{ 'pass-yes' if eval.revision_pass else 'pass-no' }}">
+            <i class="fas fa-{{ 'check' if eval.revision_pass else 'times' }}"></i>
+            {{ 'يجاز' if eval.revision_pass else 'لا يجاز' }}
+          </span>
+        </div>
+
+        {% elif plan.plan_type == 'قصيدة' %}
+        <div class="sard-score-box" style="background:linear-gradient(135deg,#eef2ff,#f5f3ff);border:1px solid #c7d2fe;">
+          <div class="sard-score-label" style="color:#4f46e5;">نتيجة مقرر القصيدة</div>
+          <div style="font-size:1.35rem;font-weight:800;color:#4f46e5;padding:.4rem 0;display:flex;align-items:center;justify-content:center;gap:.5rem;">
+            <i class="fas fa-{{ 'check-circle' if eval.new_pass else 'times-circle' }}"></i>
+            {{ 'أُجيز بنجاح ✅' if eval.new_pass else 'لم يُجز ❌' }}
+          </div>
+          <span class="pass-pill {{ 'pass-yes' if eval.new_pass else 'pass-no' }}">
+            <i class="fas fa-{{ 'check' if eval.new_pass else 'times' }}"></i>
+            {{ 'مجاز' if eval.new_pass else 'غير مجاز' }}
+          </span>
+        </div>
+
+        {% else %}
+        {% set plan_pts = eval.new_score or 0 %}
+        {% set plan_stars = 5 if plan_pts >= 72 else (4 if plan_pts >= 57 else (3 if plan_pts >= 43 else (2 if plan_pts >= 28 else (1 if plan_pts >= 14 else 0)))) %}
+        <div class="sard-score-box">
+          <div class="sard-score-label">درجة المرحلة</div>
+          <div class="sard-score-num">{{ plan_pts }}<span style="font-size:.9rem;color:var(--muted);font-weight:500;">/80</span></div>
+          <div style="display:flex;gap:4px;justify-content:center;margin:.5rem 0;">
+            {% for i in range(5) %}
+            <i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:1rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>
+            {% endfor %}
+          </div>
+          <span class="pass-pill {{ 'pass-yes' if eval.new_pass else 'pass-no' }}">
+            <i class="fas fa-{{ 'check' if eval.new_pass else 'times' }}"></i>
+            {{ 'يجاز' if eval.new_pass else 'لا يجاز' }}
+          </span>
+        </div>
+        {% endif %}
+
+        {% if eval.evaluation_notes %}
+        <div class="eval-notes-box">
+          <i class="fas fa-comment-alt"></i>
+          <span>{{ eval.evaluation_notes }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+  {% else %}
+  <div class="empty-card" style="margin-bottom:.85rem;">
+    <div class="empty-icon"><i class="fas fa-star"></i></div>
+    <div class="empty-title">لم يتم التقييم بعد</div>
+    <div class="empty-sub">سيُضاف التقييم من قِبل معلمك</div>
+  </div>
+  {% endif %}
+
+  <!-- زر العودة -->
+  <a href="{{ url_for('student_dashboard') if user_type == 'student' else url_for('view_student_plans', student_id=plan.student.id) }}" class="btn-back">
+    <i class="fas fa-arrow-right"></i>
+    العودة للقائمة
+  </a>
+
+</div><!-- /sheet -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script>
+    (function(){
+        var items = document.querySelectorAll('[data-toast]');
+        items.forEach(function(el, i){
+            setTimeout(function(){
+                el.classList.add('toast-out');
+                setTimeout(function(){ el.remove(); }, 400);
+            }, 3000 + i * 350);
+        });
+    })();
+    </script>
+<script>
+(function(){
+  /* إخفاء toast تلقائياً */
+  document.querySelectorAll('[data-toast]').forEach(function(el, i){
+    setTimeout(function(){
+      el.classList.add('toast-out');
+      setTimeout(function(){ el.remove(); }, 380);
+    }, 3000 + i * 350);
+  });
+})();
+</script>
+</body>
+</html>
+{% endif %}

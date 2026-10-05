@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>إدارة الإنذارات - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --red:       #e63946;
+            --red-glow:  rgba(230, 57, 70, 0.55);
+            --red-soft:  rgba(230, 57, 70, 0.12);
+            --amber:     #f4a261;
+            --amber-glow:rgba(244,162,97,0.45);
+            --green:     #2d9e6b;
+            --slate:     #1a1f2e;
+            --slate-mid: #252b3b;
+            --slate-card:#1e2436;
+            --border:    rgba(255,255,255,0.07);
+            --text:      #e8eaf0;
+            --text-muted:#7c8499;
+            --radius:    1rem;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background: var(--slate);
+            min-height: 100vh;
+            padding: 1.25rem;
+            margin: 0;
+            color: var(--text);
+        }
+
+        /* ── خلفية متحركة خفيفة ── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(ellipse 60% 40% at 15% 20%, rgba(230,57,70,.08) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 35% at 85% 80%, rgba(244,162,97,.06) 0%, transparent 55%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ══ رأس الصفحة ══ */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.75rem;
+        }
+        .page-title {
+            font-size: 1.55rem;
+            font-weight: 900;
+            color: #fff;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            letter-spacing: -.01em;
+        }
+        .page-title .title-icon {
+            width: 42px; height: 42px;
+            border-radius: .7rem;
+            background: var(--red);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 0 18px var(--red-glow);
+            animation: pulse-icon 2.4s ease-in-out infinite;
+        }
+        @keyframes pulse-icon {
+            0%,100% { box-shadow: 0 0 14px var(--red-glow); }
+            50%      { box-shadow: 0 0 30px var(--red-glow), 0 0 60px rgba(230,57,70,.2); }
+        }
+
+        .btn-back {
+            background: var(--slate-mid);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            padding: .45rem 1.15rem;
+            text-decoration: none;
+            font-size: .84rem;
+            font-weight: 600;
+            transition: all .2s;
+            display: inline-flex; align-items: center; gap: .35rem;
+        }
+        .btn-back:hover { background: #2d3347; color: #fff; }
+
+        /* ══ إحصائيات ══ */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: .6rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: var(--slate-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: .85rem .6rem;
+            text-align: center;
+        }
+        .stat-icon {
+            width: 32px; height: 32px;
+            border-radius: .5rem;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto .35rem;
+            font-size: .85rem;
+        }
+        .stat-icon.total    { background: rgba(108,117,149,.2); color: #9ba5c0; }
+        .stat-icon.active   { background: rgba(45,158,107,.2);  color: #2d9e6b; }
+        .stat-icon.warn     { background: rgba(244,162,97,.2);   color: var(--amber); }
+        .stat-icon.susp     { background: var(--red-soft);       color: var(--red); }
+        .stat-num   { font-size: 1.5rem; font-weight: 900; color: #fff; line-height: 1; }
+        .stat-label { font-size: .68rem; color: var(--text-muted); margin-top: .2rem; }
+
+        /* ══ شبكة الطلاب ══ */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: .9rem;
+        }
+
+        /* ══ بطاقة الطالب ══ */
+        .student-card {
+            background: var(--slate-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .student-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0,0,0,.35);
+        }
+        /* الشريط الجانبي حسب الحالة */
+        .student-card.s-clean    { border-right: 3px solid #2a3045; }
+        .student-card.s-warn1    { border-right: 3px solid var(--amber); }
+        .student-card.s-warn2    { border-right: 3px solid var(--red); }
+        .student-card.s-suspended{ border-right: 3px solid #7c1d23; }
+
+        /* رأس البطاقة */
+        .card-head {
+            padding: .75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            gap: .5rem;
+        }
+        .student-name {
+            font-size: .95rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+        .status-pill {
+            font-size: .65rem;
+            font-weight: 700;
+            padding: .18rem .55rem;
+            border-radius: 20px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .status-pill.active { background: rgba(45,158,107,.2); color: #2d9e6b; }
+        .status-pill.susp   { background: var(--red-soft); color: var(--red); }
+
+        /* جسم البطاقة */
+        .card-body {
+            padding: .8rem 1rem;
+        }
+
+        /* ── دوائر الإنذار المتوهجة ── */
+        .warning-dots {
+            display: flex;
+            align-items: center;
+            gap: .55rem;
+            margin-bottom: .9rem;
+        }
+        .dot-wrap {
+            position: relative;
+            width: 22px; height: 22px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        /* دائرة رمادية فارغة */
+        .dot {
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: #2a3045;
+            border: 2px solid #3a4260;
+            transition: all .3s;
+            position: relative;
+            z-index: 1;
+        }
+        /* دائرة ممتلئة تومض */
+        .dot.active {
+            background: var(--red);
+            border-color: var(--red);
+            animation: blink-dot 1.4s ease-in-out infinite;
+        }
+        /* هالة الوميض خلف الدائرة */
+        .dot.active::before {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            background: var(--red);
+            opacity: 0;
+            animation: blink-halo 1.4s ease-in-out infinite;
+        }
+        /* دائرة ثانية تتأخر قليلاً في الوميض */
+        .dot.active.d2 {
+            animation-delay: .25s;
+        }
+        .dot.active.d2::before {
+            animation-delay: .25s;
+        }
+
+        @keyframes blink-dot {
+            0%,100% { opacity: 1; transform: scale(1); }
+            50%      { opacity: .65; transform: scale(.88); }
+        }
+        @keyframes blink-halo {
+            0%   { transform: scale(1);   opacity: .45; }
+            60%  { transform: scale(2.2); opacity: 0; }
+            100% { transform: scale(1);   opacity: 0; }
+        }
+
+        .warning-label {
+            font-size: .75rem;
+            color: var(--text-muted);
+            margin-right: .2rem;
+        }
+        /* نص الإنذار بجانب الدوائر */
+        .warn-msg {
+            font-size: .72rem;
+            font-weight: 700;
+            padding: .2rem .55rem;
+            border-radius: .45rem;
+            margin-right: auto;
+        }
+        .warn-msg.w1 { background: rgba(244,162,97,.15); color: var(--amber); }
+        .warn-msg.w2 { background: var(--red-soft); color: var(--red); }
+        .warn-msg.w0 { background: rgba(45,158,107,.12); color: #2d9e6b; }
+        .warn-msg.ws { background: rgba(124,29,35,.25); color: #ff6b7a; }
+
+        /* ── أزرار الإجراءات ── */
+        .action-btns {
+            display: flex;
+            gap: .35rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .btn-act {
+            border: none;
+            border-radius: .55rem;
+            padding: .38rem .75rem;
+            font-size: .82rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            display: inline-flex; align-items: center; gap: .3rem;
+            transition: all .18s;
+        }
+        .btn-act:disabled { opacity: .3; cursor: not-allowed; }
+        .btn-act.add  { background: rgba(244,162,97,.18); color: var(--amber); }
+        .btn-act.add:not(:disabled):hover  { background: rgba(244,162,97,.32); }
+        .btn-act.rst  { background: rgba(255,255,255,.07); color: #9ba5c0; }
+        .btn-act.rst:hover  { background: rgba(255,255,255,.14); color: #fff; }
+        .btn-act.on   { background: rgba(45,158,107,.18); color: #2d9e6b; }
+        .btn-act.on:not(:disabled):hover   { background: rgba(45,158,107,.32); }
+        .btn-act.off  { background: var(--red-soft); color: var(--red); }
+        .btn-act.off:not(:disabled):hover  { background: rgba(230,57,70,.22); }
+
+        /* ══ حالة فارغة ══ */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: var(--slate-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-muted);
+        }
+        .empty-state i { font-size: 2.5rem; opacity: .35; margin-bottom: .5rem; }
+
+        /* flash */
+        .flash-ok  { background: rgba(45,158,107,.18); border: 1px solid rgba(45,158,107,.3); color: #2d9e6b; border-radius: .7rem; padding: .65rem 1rem; margin-bottom: 1rem; font-size: .84rem; }
+        .flash-err { background: var(--red-soft); border: 1px solid rgba(230,57,70,.3); color: var(--red); border-radius: .7rem; padding: .65rem 1rem; margin-bottom: 1rem; font-size: .84rem; }
+
+        @media (max-width: 480px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .stat-num  { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <!-- رأس الصفحة -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <span class="title-icon"><i class="fas fa-exclamation"></i></span>
+            إدارة الإنذارات
+        </h1>
+        <a href="{{ url_for('admin') }}" class="btn-back">
+            <i class="fas fa-arrow-right"></i> العودة
+        </a>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for cat, msg in messages %}
+        <div class="{{ 'flash-ok' if cat == 'success' else 'flash-err' }}">
+            <i class="fas fa-{{ 'check-circle' if cat == 'success' else 'exclamation-circle' }} me-2"></i>{{ msg }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <!-- إحصائيات -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon total"><i class="fas fa-users"></i></div>
+            <div class="stat-num">{{ students|length }}</div>
+            <div class="stat-label">إجمالي الطلاب</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon active"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-num">{{ students|selectattr('is_suspended','equalto',false)|list|length }}</div>
+            <div class="stat-label">نشطون</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon warn"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="stat-num">{{ students|selectattr('warning_count','>',0)|list|length }}</div>
+            <div class="stat-label">لديهم إنذارات</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon susp"><i class="fas fa-ban"></i></div>
+            <div class="stat-num">{{ students|selectattr('is_suspended','equalto',true)|list|length }}</div>
+            <div class="stat-label">موقوفون</div>
+        </div>
+    </div>
+
+    <!-- شبكة الطلاب -->
+    {% if students %}
+    <div class="students-grid">
+        {% for student in students %}
+        {% set wc = student.warning_count %}
+        <div class="student-card
+            {% if student.is_suspended %}s-suspended
+            {% elif wc >= 2 %}s-warn2
+            {% elif wc == 1 %}s-warn1
+            {% else %}s-clean{% endif %}">
+
+            <!-- رأس البطاقة -->
+            <div class="card-head">
+                <p class="student-name" title="{{ student.full_name }}">{{ student.full_name }}</p>
+                <span class="status-pill {{ 'susp' if student.is_suspended else 'active' }}">
+                    {{ 'موقوف' if student.is_suspended else 'نشط' }}
+                </span>
+            </div>
+
+            <!-- جسم البطاقة -->
+            <div class="card-body">
+
+                <!-- دوائر الإنذار -->
+                <div class="warning-dots">
+                    {% for i in range(1, 4) %}
+                    <div class="dot-wrap">
+                        <div class="dot {% if i <= wc %}active {{ 'd2' if i == 2 else '' }}{% endif %}"></div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- رسالة الإنذار -->
+                    {% if student.is_suspended %}
+                    <span class="warn-msg ws">⛔ موقوف</span>
+                    {% elif wc == 2 %}
+                    <span class="warn-msg w2">⚠️ إنذار ثانٍ</span>
+                    {% elif wc == 1 %}
+                    <span class="warn-msg w1">إنذار أول</span>
+                    {% else %}
+                    <span class="warn-msg w0">لا إنذارات</span>
+                    {% endif %}
+                </div>
+
+                <!-- أزرار الإجراءات -->
+                <div class="action-btns">
+                    <form method="post" action="{{ url_for('update_warning', student_id=student.id) }}" style="display:contents">
+                        <button type="submit" name="action" value="increment"
+                                class="btn-act add" title="إضافة إنذار"
+                                {% if student.is_suspended %}disabled{% endif %}>
+                            <i class="fas fa-plus"></i> إنذار
+                        </button>
+                        <button type="submit" name="action" value="reset"
+                                class="btn-act rst" title="إعادة تعيين">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button type="submit" name="action" value="activate"
+                                class="btn-act on" title="تنشيط"
+                                {% if not student.is_suspended %}disabled{% endif %}>
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button type="submit" name="action" value="suspend"
+                                class="btn-act off" title="توقيف"
+                                {% if student.is_suspended %}disabled{% endif %}>
+                            <i class="fas fa-ban"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+        <div><i class="fas fa-user-graduate"></i></div>
+        <p class="fw-bold mb-1">لا يوجد طلاب</p>
+        <p class="small">قم بإضافة طلاب أولاً.</p>
+        <a href="{{ url_for('admin', tab='students') }}" class="btn-act on mt-2">
+            <i class="fas fa-plus"></i> إضافة طالب
+        </a>
+    </div>
+    {% endif %}
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

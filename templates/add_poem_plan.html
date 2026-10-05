@@ -1,0 +1,287 @@
+<!-- add_poem_plan.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>إضافة مقرر قصيدة - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 0.5rem;
+        }
+        .mobile-container { max-width: 600px; margin: 0 auto; }
+
+        .header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+        .header p { font-size: 0.9rem; color: #6c757d; margin: 0.2rem 0 0; }
+
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.85rem;
+            margin-bottom: 0.2rem;
+        }
+        .form-control, .form-select {
+            border-radius: 2rem;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            background: white;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+            border-color: #667eea;
+            outline: none;
+        }
+        textarea.form-control { resize: vertical; min-height: 90px; }
+
+        .poem-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.3rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-right: 5px solid #667eea;
+        }
+        .poem-card .poem-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .poem-card .poem-sub { color: #6c757d; font-size: 0.85rem; }
+        .poem-card .poem-verse-big {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .blocked-banner {
+            border-radius: 1.5rem;
+            padding: 1.1rem 1.3rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+        .blocked-banner.pending { background: #fff7ed; border: 1.5px solid #fdba74; color: #ea580c; }
+        .blocked-banner.fail    { background: #fef2f2; border: 1.5px solid #fca5a5; color: #dc2626; }
+        .blocked-banner.nomore  { background: #eef2ff; border: 1.5px solid #a5b4fc; color: #4f46e5; }
+        .blocked-banner a { color: inherit; text-decoration: underline; font-weight: 800; }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 2rem;
+            padding: 0.8rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border: none;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            margin-bottom: 0.8rem;
+        }
+        .btn-back {
+            display: block;
+            text-align: center;
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .btn-back:hover { color: #343a40; }
+
+        .verse-count-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .verse-opt {
+            flex: 1;
+            min-width: 70px;
+            padding: 0.65rem 0.4rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 2px solid #e5e7eb;
+            background: #f9fafb;
+            color: #374151;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        .verse-opt.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        .verse-opt.locked { opacity: 0.45; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="header">
+            <h2><i class="fas fa-feather-alt ms-2"></i> مقرر قصيدة جديد</h2>
+            <p>{{ student.full_name }}</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="mb-3">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category=='success' else ('danger' if category=='error' else 'warning') }} rounded-4 py-2" style="font-size:.85rem;">
+                <i class="fas fa-{{ 'check-circle' if category=='success' else 'exclamation-triangle' }} ms-1"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if blocked == 'pending' %}
+        <div class="blocked-banner pending">
+            <i class="fas fa-hourglass-half"></i>
+            <span>
+                لا يمكن إضافة مقرر قصيدة جديد قبل تقييم المقرر السابق.<br>
+                {% if poem %}القصيدة الحالية: <strong>{{ poem.poem_title or ('قصيدة ' ~ poem.poem_number) }}</strong>{% endif %}
+            </span>
+        </div>
+        {% elif blocked == 'fail' %}
+        <div class="blocked-banner fail">
+            <i class="fas fa-times-circle"></i>
+            <span>
+                المقرر السابق لم يُجز. يجب مراجعة الأبيات وإعادة تقييمها قبل إضافة مقرر جديد.<br>
+                {% if last_plan and last_plan.poem %}
+                الأبيات: <strong>{{ last_plan.verse_start }} - {{ last_plan.verse_end }}</strong>
+                {% endif %}
+            </span>
+        </div>
+        {% elif blocked == 'nomore' %}
+        <div class="blocked-banner nomore">
+            <i class="fas fa-flag-checkered"></i>
+            <span>انتهى الطالب من جميع القصائد المتاحة. لا يوجد مقرر جديد يمكن إضافته.</span>
+        </div>
+        {% endif %}
+
+        {% if poem %}
+        <div class="poem-card">
+            <div class="d-flex align-items-center gap-3">
+                <div class="poem-verse-big">{{ poem.poem_number or '-' }}</div>
+                <div>
+                    <p class="poem-title">{{ poem.poem_title or ('قصيدة ' ~ poem.poem_number) }}</p>
+                    <span class="poem-sub"><i class="fas fa-user ms-1"></i> {{ poem.poet or 'غير محدد' }}</span>
+                    <span class="poem-sub ms-2"><i class="fas fa-align-left ms-1"></i> {{ poem.verse_count }} بيت</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if not blocked %}
+        <form method="POST" action="{{ url_for('add_poem_plan', student_id=student.id) }}">
+            {% set _last_verse = verse_start - 1 %}
+            {% if last_plan and last_plan.poem %}
+            <div class="alert alert-info rounded-4 py-2 mb-3" style="font-size:.85rem;">
+                <i class="fas fa-award ms-1"></i>
+                آخر مقرر مُجاز: <strong>{{ last_plan.poem.poem_title or ('قصيدة ' ~ last_plan.poem.poem_number) }}</strong>
+                (الأبيات {{ last_plan.verse_start }} - {{ last_plan.verse_end }})
+            </div>
+            {% endif %}
+
+            <div class="poem-card" style="text-align:center;">
+                {% if _last_verse > 0 %}
+                <div class="text-muted" style="font-size:.8rem;">
+                    <i class="fas fa-check-circle ms-1" style="color:#16a34a;"></i>
+                    آخر بيت تمت إجازته: <strong style="color:#16a34a;">{{ _last_verse }}</strong>
+                    (التالي يبدأ من {{ verse_start }})
+                </div>
+                {% else %}
+                <div class="text-muted" style="font-size:.8rem;">
+                    <i class="fas fa-circle-minus ms-1"></i>
+                    لا يوجد بيت مُجاز بعد — يبدأ المقرر من البيت <strong>{{ verse_start }}</strong>
+                </div>
+                {% endif %}
+                <div style="font-size:2rem;font-weight:800;color:#667eea;margin-top:.2rem;">{{ verse_start }}</div>
+                <div class="text-muted" style="font-size:.8rem;">
+                    أول بيت للمقرر الجديد — البيت الأخير في القصيدة: {{ poem.verse_count if poem and poem.verse_count else '؟' }} (المتبقي: {{ remaining }})
+                </div>
+            </div>
+
+            <div class="poem-card">
+                <label class="form-label"><i class="fas fa-align-left ms-1"></i> عدد الأبيات للمقرر</label>
+                <div class="verse-count-selector" id="vcSelector">
+                    {% for n in range(1, remaining + 1) %}
+                    {% if n <= 10 or n == remaining %}
+                    <button type="button" class="verse-opt {{ 'active' if n == 5 }}" data-n="{{ n }}">{{ n }}</button>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="verse_count" id="verse_count" value="5">
+            </div>
+
+            <div class="poem-card">
+                <label class="form-label"><i class="fas fa-calendar-alt ms-1"></i> تاريخ البدء (الأحد)</label>
+                <input type="date" name="start_date" class="form-control mb-0" value="{{ default_date }}" required>
+
+                <label class="form-label mt-3"><i class="fas fa-sticky-note ms-1"></i> ملاحظات (اختياري)</label>
+                <textarea name="notes" class="form-control mb-0" placeholder="ملاحظات حول المقرر..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-check ms-1"></i> حفظ المقرر
+            </button>
+        </form>
+        {% endif %}
+
+        <a class="btn-back" href="{{ url_for('view_student_plans', student_id=student.id) }}">
+            <i class="fas fa-arrow-right ms-1"></i> عودة لمقررات الطالب
+        </a>
+    </div>
+
+    <script>
+    (function(){
+        var selector = document.getElementById('vcSelector');
+        var hidden = document.getElementById('verse_count');
+        if (!selector) return;
+        selector.addEventListener('click', function(e){
+            var btn = e.target.closest('.verse-opt');
+            if (!btn || btn.classList.contains('locked')) return;
+            selector.querySelectorAll('.verse-opt').forEach(function(b){ b.classList.remove('active'); });
+            btn.classList.add('active');
+            hidden.value = btn.getAttribute('data-n');
+        });
+    })();
+    </script>
+</body>
+</html>

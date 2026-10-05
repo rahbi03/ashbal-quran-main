@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}غير متصل — أشبال القرآن{% endblock %}
+
+{% block content %}
+<div style="
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+">
+    <div style="
+        background: white;
+        border-radius: 1.5rem;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        max-width: 380px;
+        width: 100%;
+        box-shadow: 0 10px 40px rgba(0,0,0,.12);
+    ">
+        <div style="font-size:4rem; margin-bottom:1rem;">📵</div>
+        <h1 style="font-size:1.4rem; color:#1a3a2a; margin-bottom:.5rem;">
+            لا يوجد اتصال بالإنترنت
+        </h1>
+        <p style="color:#666; font-size:.95rem; line-height:1.7; margin-bottom:1.5rem;">
+            لا تقلق! أي بيانات أدخلتها ستُحفظ تلقائياً<br>
+            وتُزامَن فور عودة الاتصال بالإنترنت.
+        </p>
+
+        <!-- عداد البيانات المعلّقة -->
+        <div id="offline-pending-info" style="
+            margin-bottom:1.2rem;
+            padding:.75rem;
+            background:#fff8e1;
+            border-radius:.75rem;
+            font-size:.87rem;
+            color:#7a5000;
+            display:none;
+        ">
+            <i class="fas fa-clock"></i>
+            <span id="offline-pending-text">يوجد بيانات في انتظار المزامنة</span>
+        </div>
+
+        <button onclick="window.location.reload()" style="
+            background:#28a745; color:white;
+            border:none; padding:.75rem 2rem;
+            border-radius:2rem; font-size:1rem;
+            cursor:pointer; width:100%;
+            font-family:'Tajawal','Cairo',sans-serif;
+            font-weight:700; margin-bottom:.75rem;
+        ">
+            🔄 إعادة المحاولة
+        </button>
+
+        <button onclick="window.history.back()" style="
+            background:transparent; color:#28a745;
+            border:2px solid #28a745; padding:.65rem 2rem;
+            border-radius:2rem; font-size:1rem;
+            cursor:pointer; width:100%;
+            font-family:'Tajawal','Cairo',sans-serif; font-weight:700;
+        ">
+            ← العودة للخلف
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// فحص البيانات المعلّقة
+document.addEventListener('DOMContentLoaded', async () => {
+    if (typeof QuranDB === 'undefined') return;
+
+    try {
+        const counts = await QuranDB.countPending();
+        if (counts.total > 0) {
+            const info = document.getElementById('offline-pending-info');
+            const text = document.getElementById('offline-pending-text');
+            info.style.display = 'block';
+
+            let details = [];
+            if (counts.REPORTS     > 0) details.push(`${counts.REPORTS} تقرير يومي`);
+            if (counts.PLANS       > 0) details.push(`${counts.PLANS} مقرر أسبوعي`);
+            if (counts.EVALUATIONS > 0) details.push(`${counts.EVALUATIONS} تقييم`);
+
+            text.textContent = `في الانتظار: ${details.join(' · ')}`;
+        }
+    } catch (e) { /* تجاهل الأخطاء */ }
+});
+</script>
+{% endblock %}

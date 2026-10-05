@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>مقررات الطالب — أشبال القرآن</title>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#1a5c40">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════
+   نفس نظام الألوان — ثيم الفجر الهادئ
+══════════════════════════════════════════════ */
+:root {
+  --bg:        #f2f0eb;
+  --surface:   #faf9f6;
+  --white:     #ffffff;
+  --jade:      #1a5c40;
+  --jade-md:   #226b4a;
+  --jade-lt:   #cde8da;
+  --jade-xs:   #ebf5f0;
+  --gold:      #c49a2a;
+  --gold-lt:   #fdf3d0;
+  --amber:     #d97706;
+  --amber-lt:  #fef3c7;
+  --ink:       #1c2b22;
+  --muted:     #6b7d72;
+  --border:    #dde8e2;
+  --danger:    #c0392b;
+  --danger-lt: #fdecea;
+  --blue:      #1d4ed8;
+  --blue-lt:   #dbeafe;
+  --purple:    #6d28d9;
+  --purple-lt: #ede9fe;
+
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  direction: rtl;
+  padding-bottom: 3.5rem;
+}
+
+/* ══ شارة المقرر المُرحَّل ═══════════════════ */
+.roll-badge {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: #fffbeb; color: #b45309; border: 1.5px solid #f59e0b;
+  border-radius: 2rem; font-weight: 700;
+}
+.roll-badge-full { padding: .3rem .8rem; font-size: .76rem; margin-bottom: .5rem; }
+.roll-badge-mini { padding: .18rem .55rem; font-size: .68rem; }
+.roll-badge i { font-size: .85em; }
+.roll-badge-full i { font-size: .8rem; }
+.roll-badge small { font-weight: 400; color: #a16207; font-size: .92em; }
+
+/* ══ TOAST ═══════════════════════════════════ */
+.toast-wrap {
+  position: fixed; top: 1.1rem; left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999; display: flex; flex-direction: column;
+  gap: .5rem; pointer-events: none; width: 92%; max-width: 430px;
+}
+.toast-item {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .75rem 1.1rem; border-radius: 1.2rem;
+  font-size: .9rem; font-weight: 700;
+  box-shadow: 0 6px 24px rgba(0,0,0,.13);
+  pointer-events: auto;
+  animation: toastIn .35s cubic-bezier(.22,1,.36,1) forwards;
+  border-right: 4px solid transparent;
+}
+.toast-item.t-success { background:#edfaf1; border-color:#28a745; color:#1a5e2a; }
+.toast-item.t-error   { background:#fef0f0; border-color:#dc3545; color:#7b1a1a; }
+.toast-item.t-warning { background:#fffbec; border-color:#ffc107; color:#7a5000; }
+.toast-item.t-info    { background:#eaf4ff; border-color:#17a2b8; color:#0c4a6e; }
+.toast-item.toast-out { animation: toastOut .35s ease forwards; }
+@keyframes toastIn  { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes toastOut { from{opacity:1} to{opacity:0;transform:translateY(-10px)} }
+
+/* ══ HEADER ══════════════════════════════════ */
+.header-strip {
+  background: var(--jade);
+  padding: 1.1rem 1.2rem 4rem;
+  position: relative; overflow: hidden;
+}
+.header-strip::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 70% at 115% -10%, rgba(255,255,255,.06) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at -15% 110%, rgba(255,255,255,.04) 0%, transparent 55%);
+}
+.header-strip::after {
+  content: ''; position: absolute; inset: 0; opacity: .045; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(255,255,255,1) 18px, rgba(255,255,255,1) 19px),
+    repeating-linear-gradient(-45deg, transparent, transparent 18px, rgba(255,255,255,1) 18px, rgba(255,255,255,1) 19px);
+}
+.header-inner {
+  position: relative; z-index: 2; max-width: 520px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: .8rem;
+}
+.header-info { flex: 1; }
+.header-tag {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+  color: rgba(255,255,255,.85); font-size: .72rem; font-weight: 600;
+  padding: .28rem .8rem; border-radius: 99px; margin-bottom: .5rem;
+}
+.header-name {
+  font-family: 'Amiri', serif;
+  font-size: 1.5rem; font-weight: 700; color: #fff; line-height: 1.25;
+}
+.header-meta {
+  display: flex; align-items: center; gap: .5rem; margin-top: .35rem; flex-wrap: wrap;
+}
+.header-count-pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+  color: rgba(255,255,255,.85); font-size: .72rem; font-weight: 600;
+  padding: .22rem .75rem; border-radius: 99px;
+}
+.btn-back-hdr {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
+  color: #fff; font-family: 'Cairo', sans-serif;
+  font-size: .78rem; font-weight: 600;
+  padding: .42rem .9rem; border-radius: 99px;
+  text-decoration: none; transition: background .18s; flex-shrink: 0;
+}
+.btn-back-hdr:hover { background: rgba(255,255,255,.25); color: #fff; }
+
+/* ══ SHEET ═══════════════════════════════════ */
+.sheet {
+  max-width: 520px; margin: -2.8rem auto 0;
+  padding: 0 .9rem; position: relative; z-index: 5;
+}
+
+/* ══ BTN ADD PLAN ════════════════════════════ */
+.btn-add-plan {
+  display: flex; align-items: center; justify-content: center; gap: .55rem;
+  width: 100%; background: #b08721 ; color: #fff;
+  border-radius: var(--r-lg); padding: .9rem 1rem;
+  font-family: 'Cairo', sans-serif; font-size: .92rem; font-weight: 700;
+  text-decoration: none; margin-bottom: .85rem;
+  border: none; cursor: pointer;
+  transition: background .18s, transform .12s;
+  animation: fadeUp .4s .05s ease both;
+}
+.btn-add-plan:hover { background: var(--jade-md); color: #fff; }
+.btn-add-plan:active { transform: scale(.98); }
+
+/* ══ SECTION TITLE ═══════════════════════════ */
+.sec-title {
+  display: flex; align-items: center; gap: .6rem; margin: .4rem 0 .65rem;
+}
+.sec-title-icon {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: var(--jade-xs);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: .95rem;
+}
+.sec-title-text { font-weight: 800; font-size: .98rem; color: var(--ink); }
+.sec-title-count {
+  margin-right: auto; font-size: .72rem; font-weight: 700;
+  color: var(--jade); background: var(--jade-xs);
+  padding: .18rem .65rem; border-radius: 99px; border: 1px solid var(--jade-lt);
+}
+
+/* ══ CURRENT PLAN CARD (بطاقة الأسبوع الحالي) ══ */
+.current-card {
+  background: var(--white);
+  border-radius: var(--r-xl);
+  border: 1.5px solid var(--jade-lt);
+  overflow: hidden;
+  margin-bottom: .85rem;
+  box-shadow: 0 4px 20px rgba(26,92,64,.09);
+  animation: fadeUp .45s .1s ease both;
+}
+.current-card-head {
+  background: var(--jade);
+  padding: .9rem 1.2rem;
+  display: flex; align-items: center; justify-content: space-between; gap: .6rem; flex-wrap: wrap;
+}
+.current-week-pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.28);
+  color: #fff; font-size: .73rem; font-weight: 700;
+  padding: .28rem .8rem; border-radius: 99px;
+}
+
+/* ══ PLAN TYPE PILLS ══════════════════════════ */
+.type-pill {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-size: .74rem; font-weight: 700; padding: .28rem .85rem;
+  border-radius: 99px;
+}
+.type-hifz   { background: var(--gold-lt);   color: var(--gold);   border: 1px solid #f0d060; }
+.type-sard   { background: var(--blue-lt);   color: var(--blue);   border: 1px solid #93c5fd; }
+.type-phase  { background: var(--purple-lt); color: var(--purple); border: 1px solid #c4b5fd; }
+.type-poem   { background: #eef2ff;          color: #4f46e5;        border: 1px solid #c7d2fe; }
+
+.sard-sub-pill {
+  display: inline-flex; align-items: center; gap: .25rem;
+  font-size: .65rem; font-weight: 700; padding: .18rem .6rem;
+  border-radius: 99px; margin-right: .3rem;
+}
+.sard-full   { background: #dbeafe; color: var(--blue); border: 1px solid #93c5fd; }
+.sard-review { background: var(--amber-lt); color: var(--amber); border: 1px solid #fde68a; }
+
+/* ══ CURRENT CARD BODY ═══════════════════════ */
+.current-card-body { padding: 1.1rem 1.2rem; }
+
+.plan-meta-strip {
+  display: flex; align-items: center; gap: .45rem;
+  flex-wrap: wrap; margin-bottom: .85rem;
+}
+.date-pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--muted); font-size: .72rem; font-weight: 600;
+  padding: .25rem .75rem; border-radius: 99px;
+}
+.eval-status-pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .72rem; font-weight: 700; padding: .25rem .75rem;
+  border-radius: 99px; border: 1px solid;
+}
+.eval-done    { background: var(--jade-xs); color: var(--jade);  border-color: var(--jade-lt); }
+.eval-pending { background: var(--amber-lt); color: var(--amber); border-color: #fde68a; }
+
+/* تفاصيل المقرر */
+.plan-details { display: grid; grid-template-columns: 1fr; gap: .45rem; margin-bottom: .85rem; }
+.plan-detail-row {
+  display: flex; align-items: flex-start; gap: .6rem;
+  background: var(--bg); border-radius: var(--r-sm);
+  padding: .58rem .85rem; border: 1px solid var(--border);
+}
+.detail-icon {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: var(--jade-xs);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: .75rem; flex-shrink: 0; margin-top: .05rem;
+}
+.detail-label {
+  font-size: .67rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px;
+  display: block; margin-bottom: .1rem;
+}
+.detail-value {
+  font-size: .85rem; color: var(--ink); font-weight: 600; line-height: 1.4;
+}
+
+.notes-row {
+  display: flex; align-items: flex-start; gap: .55rem;
+  background: var(--amber-lt); border: 1px solid #fde68a;
+  border-radius: var(--r-sm); padding: .6rem .85rem;
+  margin-bottom: .85rem;
+}
+.notes-row i { color: var(--amber); flex-shrink: 0; margin-top: .1rem; }
+.notes-row span { font-size: .83rem; color: var(--ink); line-height: 1.5; }
+
+/* pass/fail chips */
+.pass-chips-row {
+  display: flex; gap: .45rem; flex-wrap: wrap; margin-bottom: .85rem;
+}
+.pass-chip {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .72rem; font-weight: 700; padding: .28rem .8rem;
+  border-radius: 99px; border: 1px solid;
+}
+.pass-yes { background: var(--jade-xs); color: var(--jade);   border-color: var(--jade-lt); }
+.pass-no  { background: var(--danger-lt); color: var(--danger); border-color: #f5c6cb; }
+
+/* درجة المجموع */
+.score-summary {
+  display: flex; align-items: center; gap: .5rem;
+  background: var(--jade-xs); border: 1px solid var(--jade-lt);
+  border-radius: var(--r-md); padding: .65rem 1rem;
+  margin-bottom: .85rem;
+}
+.score-summary-num {
+  font-size: 1.5rem; font-weight: 800; color: var(--jade); line-height: 1;
+}
+.score-summary-label {
+  font-size: .72rem; color: var(--jade); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px;
+}
+
+/* ══ ACTION BUTTONS ══════════════════════════ */
+.action-row {
+  display: flex; gap: .5rem; flex-wrap: wrap;
+}
+.action-row .btn-action {
+  flex: 1 1 auto;
+  display: inline-flex; align-items: center; justify-content: center; gap: .35rem;
+  font-family: 'Cairo', sans-serif; font-size: .78rem; font-weight: 700;
+  padding: .55rem .6rem; border-radius: var(--r-sm);
+  text-decoration: none; border: none; cursor: pointer;
+  transition: filter .15s, transform .12s;
+  white-space: nowrap;
+}
+.action-row .btn-action:active { transform: scale(.97); }
+.action-row .btn-action:hover  { filter: brightness(1.08); }
+
+.btn-edit-plan  { background: var(--amber-lt);   color: var(--amber);   border: 1.5px solid #fde68a; }
+.btn-del-plan   { background: var(--danger-lt);   color: var(--danger);  border: 1.5px solid #f5c6cb; }
+.btn-eval-plan  { background: var(--blue-lt);     color: var(--blue);    border: 1.5px solid #93c5fd; }
+.btn-edit-eval  { background: var(--purple-lt);   color: var(--purple);  border: 1.5px solid #c4b5fd; }
+.btn-view-plan  { background: var(--jade-xs);     color: var(--jade);    border: 1.5px solid var(--jade-lt); }
+
+/* ══ COLLAPSE (سابقة/قادمة) ══════════════════ */
+.collapse-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; background: var(--white);
+  border: 1px solid var(--border); border-radius: var(--r-lg);
+  padding: .85rem 1.1rem; font-family: 'Cairo', sans-serif;
+  font-size: .9rem; font-weight: 700; color: var(--ink);
+  cursor: pointer; transition: background .18s; margin-bottom: .5rem;
+}
+.collapse-btn:hover { background: var(--jade-xs); }
+.collapse-btn-left { display: flex; align-items: center; gap: .6rem; }
+.collapse-btn-icon {
+  width: 32px; height: 32px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center; font-size: .85rem;
+}
+.icon-prev   { background: #f3f4f6;    color: var(--muted); }
+.icon-future { background: var(--jade-xs); color: var(--jade); }
+.collapse-arrow { font-size: .8rem; color: var(--muted); transition: transform .25s; }
+.collapse-btn.open .collapse-arrow { transform: rotate(180deg); }
+.collapse-body { display: none; }
+.collapse-body.open { display: block; }
+
+/* ══ MINI PLAN CARD ══════════════════════════ */
+.mini-plan-card {
+  background: var(--white);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: .65rem;
+  animation: fadeUp .38s ease both;
+  transition: box-shadow .18s;
+}
+.mini-plan-card:hover { box-shadow: 0 4px 18px rgba(26,92,64,.09); }
+
+.mini-plan-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .5rem; padding: .7rem 1rem;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.mini-plan-meta { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+
+.mini-plan-body { padding: .75rem 1rem; }
+.mini-plan-details { display: grid; grid-template-columns: 1fr; gap: .38rem; margin-bottom: .65rem; }
+.mini-detail-row {
+  display: flex; align-items: baseline; gap: .5rem;
+  background: var(--bg); border-radius: var(--r-sm);
+  padding: .48rem .8rem; border: 1px solid var(--border);
+}
+.mini-detail-label {
+  font-size: .65rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px; white-space: nowrap; flex-shrink: 0;
+}
+.mini-detail-value {
+  font-size: .82rem; color: var(--ink); font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* score strip في mini */
+.mini-score-strip {
+  display: flex; align-items: center; gap: .45rem;
+  background: var(--jade-xs); border: 1px solid var(--jade-lt);
+  border-radius: var(--r-sm); padding: .45rem .8rem; margin-bottom: .65rem;
+}
+.mini-score-num { font-size: 1.15rem; font-weight: 800; color: var(--jade); }
+.mini-score-sep { color: var(--jade-lt); font-size: .9rem; }
+
+/* ══ EMPTY STATE ══════════════════════════════ */
+.empty-card {
+  background: var(--white); border: 1.5px dashed var(--jade-lt);
+  border-radius: var(--r-xl); padding: 2.5rem 1.5rem; text-align: center;
+  animation: fadeUp .5s .1s ease both;
+}
+.empty-icon { font-size: 2.5rem; color: var(--jade-lt); margin-bottom: .6rem; }
+.empty-title { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem; }
+.empty-sub { font-size: .82rem; color: var(--muted); }
+
+/* ══ BACK BTN ════════════════════════════════ */
+.btn-back {
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  width: 100%; background: var(--white);
+  border: 1.5px solid var(--border); border-radius: var(--r-lg);
+  padding: .9rem; font-family: 'Cairo', sans-serif;
+  font-size: .9rem; font-weight: 700; color: var(--ink);
+  text-decoration: none; margin-top: 1rem;
+  transition: background .18s, border-color .18s;
+}
+.btn-back:hover { background: var(--jade-xs); border-color: var(--jade-lt); color: var(--jade); }
+
+/* ══ ANIMATIONS ═══════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 380px) {
+  .action-row { flex-direction: column; }
+  .action-row .btn-action { width: 100%; flex: unset; }
+}
+</style>
+</head>
+<body>
+
+    <!-- ══ Toast Notifications ══ -->
+    <div class="toast-wrap" id="toastWrap">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}
+        <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}"
+             data-toast="{{ loop.index }}">
+            <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}{% endif %}
+    {% endwith %}
+    </div>
+
+<!-- TOAST -->
+<div class="toast-wrap">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}{% for category, message in messages %}
+  <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}" data-toast="{{ loop.index }}">
+    <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %}{% endif %}
+{% endwith %}
+</div>
+
+<!-- HEADER -->
+{% set back_url = url_for('teacher_dashboard') if is_teacher else (url_for('student_dashboard') if is_student else url_for('admin')) %}
+
+<div class="header-strip">
+  <div class="header-inner">
+    <div class="header-info">
+      <div class="header-tag">
+        <i class="fas fa-calendar-alt"></i>
+        المقررات الأسبوعية
+      </div>
+      <div class="header-name">{{ student.full_name }}</div>
+      <div class="header-meta">
+        {% if student.memorization_level %}
+        <span class="header-count-pill"><i class="fas fa-graduation-cap"></i> {{ student.memorization_level }}</span>
+        {% endif %}
+        <span class="header-count-pill"><i class="fas fa-list"></i> {{ quran_plan_count }} مقرر قرآن</span>
+      </div>
+    </div>
+    <a href="{{ back_url }}" class="btn-back-hdr">
+      <i class="fas fa-arrow-right"></i> عودة
+    </a>
+  </div>
+</div>
+
+<!-- SHEET -->
+<div class="sheet">
+
+  {% if error %}
+  <div style="background:var(--amber-lt);border:1.5px solid #fde68a;border-radius:var(--r-lg);padding:.85rem 1.1rem;margin-bottom:.8rem;font-size:.85rem;color:var(--amber);display:flex;align-items:center;gap:.6rem;animation:fadeUp .4s ease both;">
+    <i class="fas fa-exclamation-triangle"></i> {{ error }}
+  </div>
+  {% endif %}
+
+  <!-- زر إضافة مقرر -->
+  {% if is_teacher and student in current_user.students %}
+  <div style="display:flex;gap:.6rem;margin-bottom:.8rem;">
+    <a href="{{ url_for('add_plan', student_id=student.id) }}" class="btn-add-plan" style="flex:1.4;">
+      <i class="fas fa-plus-circle"></i>
+      إضافة مقرر أسبوعي جديد
+    </a>
+    {% if current_user.can_add_plan and current_user.can_add_poem_plan %}
+    <a href="{{ url_for('add_poem_plan', student_id=student.id) }}" class="btn-add-plan" style="flex:1;background:linear-gradient(135deg,#667eea,#764ba2);">
+      <i class="fas fa-feather-alt"></i>
+      مقرر قصيدة
+    </a>
+    {% else %}
+    <span class="btn-add-plan" aria-disabled="true" title="تم تعطيل إضافة مقررات القصائد من قبل الإدارة"
+          style="flex:1;background:linear-gradient(135deg,#667eea,#764ba2);opacity:.45;cursor:not-allowed;filter:grayscale(.7);">
+      <i class="fas fa-ban"></i>
+      مقرر قصيدة
+    </span>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if plans %}
+
+  {# ── تصنيف المقررات ── #}
+  {% set today = now.date() %}
+  {% set current_plans  = plans | selectattr('start_date', '<=', today) | selectattr('end_date', '>=', today) | list %}
+  {% set previous_plans = plans | selectattr('end_date', '<', today)    | list %}
+  {% set future_plans   = plans | selectattr('start_date', '>', today)  | list %}
+
+  {# ═══════════════════════════════════════════
+     MACRO: تفاصيل المقرر (مشترك بين الحالي والبطاقات الصغيرة)
+  ═══════════════════════════════════════════ #}
+  {% macro plan_details_block(plan, mini=false) %}
+    {# شارة المقرر المُرحَّل: تظهر مع كل بطاقة، صغرى كانت أم كاملة #}
+    {% if plan.rolled_over %}
+      <div class="roll-badge roll-badge-{{ 'mini' if mini else 'full' }}">
+        <i class="fas fa-rotate-right"></i> مقرر معاد
+        {% if not mini %}<small>بسبب الرسب{% if plan.roll_reason %} في {{ {'new':'الحفظ الجديد','old':'الحفظ القديم','both':'الحفظ الجديد والقديم','sard':'السرد','poem':'القصيدة'}.get(plan.roll_reason, 'المقرر') }}{% endif %}</small>{% endif %}
+      </div>
+    {% endif %}
+    {% if plan.plan_type == 'حفظ' %}
+      {% set rows = [
+        ('star-and-crescent', 'الجديد',  plan.new_memorization),
+        ('redo-alt',           'القريب',  plan.recent_review),
+        ('history',            'القديم',  plan.previous_review)
+      ] %}
+    {% elif plan.plan_type == 'سرد' %}
+      {% set rows = [
+        ('microphone-alt', ('سرد كامل' if plan.sard_subtype == 'full' else 'مراجعة مقاطع'), plan.revision_text)
+      ] %}
+    {% elif plan.plan_type == 'قصيدة' %}
+      {% set rows = [
+        ('feather-alt', 'القصيدة', ((plan.poem.poem_title or ('قصيدة ' ~ plan.poem.poem_number)) if plan.poem else 'لم يحدد')),
+        ('align-left', 'الأبيات', ((plan.verse_start ~ ' - ' ~ plan.verse_end) if plan.verse_start else 'لم يحدد')),
+        ('user', 'الشاعر', (plan.poem.poet if plan.poem and plan.poem.poet else '—'))
+      ] %}
+    {% endif %}
+
+    {% if mini %}
+      <div class="mini-plan-details">
+        {% for icon, label, val in rows %}
+        <div class="mini-detail-row">
+          <span class="mini-detail-label">{{ label }}</span>
+          <span class="mini-detail-value">{{ val or 'لم يحدد' }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="plan-details">
+        {% for icon, label, val in rows %}
+        <div class="plan-detail-row">
+          <div class="detail-icon"><i class="fas fa-{{ icon }}"></i></div>
+          <div>
+            <span class="detail-label">{{ label }}</span>
+            <div class="detail-value">{{ val or 'لم يحدد' }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if plan.plan_type == 'سرد' and plan.revision_notes %}
+    <div class="{{ 'notes-row' if not mini else 'mini-detail-row' }}" style="{{ 'margin-bottom:.85rem;' if not mini else '' }}">
+      {% if not mini %}<i class="fas fa-sticky-note"></i><span>{{ plan.revision_notes }}</span>
+      {% else %}<span class="mini-detail-label">ملاحظات</span><span class="mini-detail-value">{{ plan.revision_notes }}</span>{% endif %}
+    </div>
+    {% endif %}
+
+    {% if plan.notes and plan.plan_type != 'تقييم مرحلة' %}
+    <div class="notes-row" style="{{ '' if not mini else 'margin-bottom:.65rem;' }}">
+      <i class="fas fa-sticky-note"></i><span>{{ plan.notes }}</span>
+    </div>
+    {% endif %}
+  {% endmacro %}
+
+  {# ═══════════════════════════════════════════
+     MACRO: أزرار الإجراءات
+  ═══════════════════════════════════════════ #}
+  {% macro action_buttons(plan) %}
+  <div class="action-row">
+    {% if is_teacher %}
+      <a href="{{ url_for('edit_plan', plan_id=plan.id) }}" class="btn-action btn-edit-plan">
+        <i class="fas fa-edit"></i> تعديل
+      </a>
+      {% if current_user.id == plan.teacher_id %}
+      <a href="#" onclick="confirmDelete({{ plan.id }}); return false;" class="btn-action btn-del-plan">
+        <i class="fas fa-trash"></i> حذف
+      </a>
+      {% endif %}
+      {% if plan.evaluations %}
+        <a href="{{ url_for('edit_evaluation', eval_id=plan.evaluations[0].id) }}" class="btn-action btn-edit-eval">
+          <i class="fas fa-pen"></i> تعديل التقييم
+        </a>
+      {% else %}
+        <a href="{{ url_for('evaluate_plan', plan_id=plan.id) }}" class="btn-action btn-eval-plan">
+          <i class="fas fa-star"></i> تقييم
+        </a>
+      {% endif %}
+      <a href="{{ url_for('view_plan_details', plan_id=plan.id) }}" class="btn-action btn-view-plan">
+        <i class="fas fa-eye"></i> {{ 'التفاصيل' if plan.plan_type == 'قصيدة' else 'التقارير' }}
+      </a>
+    {% else %}
+      <a href="{{ url_for('view_plan_details', plan_id=plan.id) }}" class="btn-action btn-view-plan" style="width:100%;">
+        <i class="fas fa-eye"></i> {{ 'عرض التفاصيل' if plan.plan_type == 'قصيدة' else 'عرض التفاصيل والتقارير' }}
+      </a>
+    {% endif %}
+  </div>
+  {% endmacro %}
+
+  {# ═══ المقرر الحالي ════ #}
+  {% if current_plans %}
+  <div class="sec-title" style="animation:fadeUp .4s .08s ease both;">
+    <div class="sec-title-icon"><i class="fas fa-calendar-week"></i></div>
+    <span class="sec-title-text">الأسبوع الحالي</span>
+    <span class="sec-title-count">{{ current_plans|length }}</span>
+  </div>
+
+  {% for current_plan in current_plans %}
+  <div class="current-card">
+    <div class="current-card-head">
+      <span class="current-week-pill">
+        <i class="fas fa-circle" style="font-size:.45rem;"></i>
+        مقرر الأسبوع
+      </span>
+      <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;">
+        <span class="type-pill {{ 'type-hifz' if current_plan.plan_type == 'حفظ' else ('type-sard' if current_plan.plan_type == 'سرد' else ('type-poem' if current_plan.plan_type == 'قصيدة' else 'type-phase')) }}">
+          <i class="fas fa-{{ 'book-open' if current_plan.plan_type == 'حفظ' else ('microphone-alt' if current_plan.plan_type == 'سرد' else ('feather-alt' if current_plan.plan_type == 'قصيدة' else 'star')) }}"></i>
+          {{ current_plan.plan_type }}
+        </span>
+        {% if current_plan.plan_type == 'سرد' and current_plan.sard_subtype %}
+        <span class="sard-sub-pill {{ 'sard-full' if current_plan.sard_subtype == 'full' else 'sard-review' }}">
+          {{ 'سرد كامل' if current_plan.sard_subtype == 'full' else 'مراجعة مقاطع' }}
+        </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="current-card-body">
+      <!-- التاريخ وحالة التقييم -->
+      <div class="plan-meta-strip">
+        <span class="date-pill"><i class="fas fa-calendar-alt"></i> {{ current_plan.start_date.strftime('%d/%m/%Y') if current_plan.start_date.strftime else current_plan.start_date }}</span>
+        {% if current_plan.evaluations %}
+          {% set ev = current_plan.evaluations[0] %}
+          <span class="eval-status-pill eval-done"><i class="fas fa-check-circle"></i> قيّمه {{ ev.teacher.full_name if ev.teacher else 'المعلم' }}</span>
+        {% else %}
+          <span class="eval-status-pill eval-pending"><i class="fas fa-clock"></i> بانتظار التقييم</span>
+        {% endif %}
+      </div>
+
+      {{ plan_details_block(current_plan) }}
+
+      <!-- نتيجة التقييم -->
+      {% if current_plan.evaluations %}
+        {% set ev = current_plan.evaluations[0] %}
+        {% if current_plan.plan_type == 'حفظ' %}
+          {% set plan_pts = (ev.new_score or 0) + (ev.recent_score or 0) + (ev.previous_score or 0) %}
+          {% set plan_stars = 5 if plan_pts >= 270 else (4 if plan_pts >= 216 else (3 if plan_pts >= 162 else (2 if plan_pts >= 108 else (1 if plan_pts >= 54 else 0)))) %}
+          <div class="score-summary">
+            <div>
+              <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.1rem;">مجموع الدرجات</div>
+              <div class="score-summary-num">{{ plan_pts }}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex:1;">
+              <div style="display:flex;gap:3px;">
+                {% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.85rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}
+              </div>
+              <div style="display:flex;gap:.35rem;flex-wrap:wrap;">
+                <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.68rem;">الجديد: {{ 'يجاز' if ev.new_pass else 'لا يجاز' }}</span>
+                <span class="pass-chip {{ 'pass-yes' if ev.previous_pass else 'pass-no' }}" style="font-size:.68rem;">القديم: {{ 'يجاز' if ev.previous_pass else 'لا يجاز' }}</span>
+              </div>
+            </div>
+          </div>
+        {% elif current_plan.plan_type == 'سرد' %}
+          {% set plan_pts = ev.revision_score or 0 %}
+          {% set plan_stars = 5 if plan_pts >= 90 else (4 if plan_pts >= 72 else (3 if plan_pts >= 54 else (2 if plan_pts >= 36 else (1 if plan_pts >= 18 else 0)))) %}
+          <div class="score-summary">
+            <div>
+              <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.1rem;">درجة المقرر</div>
+              <div class="score-summary-num">{{ plan_pts }}<span style="font-size:.85rem;color:var(--muted);font-weight:500;">/100</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;">
+              <div style="display:flex;gap:3px;">
+                {% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.85rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}
+              </div>
+              <span class="pass-chip {{ 'pass-yes' if ev.revision_pass else 'pass-no' }}" style="font-size:.68rem;">{{ 'يجاز' if ev.revision_pass else 'لا يجاز' }}</span>
+            </div>
+          </div>
+        {% elif current_plan.plan_type == 'تقييم مرحلة' %}
+          {% set plan_pts = ev.new_score or 0 %}
+          {% set plan_stars = 5 if plan_pts >= 72 else (4 if plan_pts >= 57 else (3 if plan_pts >= 43 else (2 if plan_pts >= 28 else (1 if plan_pts >= 14 else 0)))) %}
+          <div class="score-summary">
+            <div>
+              <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.1rem;">درجة المرحلة</div>
+              <div class="score-summary-num">{{ plan_pts }}<span style="font-size:.85rem;color:var(--muted);font-weight:500;">/80</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;">
+              <div style="display:flex;gap:3px;">
+                {% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.85rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}
+              </div>
+              <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.68rem;">{{ 'يجاز' if ev.new_pass else 'لا يجاز' }}</span>
+            </div>
+          </div>
+        {% elif current_plan.plan_type == 'قصيدة' %}
+          <div class="score-summary" style="background:linear-gradient(135deg,#eef2ff,#f5f3ff);border:1px solid #c7d2fe;">
+            <div>
+              <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.1rem;">نتيجة مقرر القصيدة</div>
+              <div class="score-summary-num" style="font-size:1.05rem;">{{ 'مُجاز ✅' if ev.new_pass else 'غير مُجاز ❌' }}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;">
+              <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.78rem;">
+                <i class="fas fa-{{ 'check-circle' if ev.new_pass else 'times-circle' }}"></i>
+                {{ 'أُجيز بنجاح' if ev.new_pass else 'لم يُجز' }}
+              </span>
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {{ action_buttons(current_plan) }}
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {# ═══ المقررات السابقة ═════ #}
+  {% if previous_plans %}
+  <div class="sec-title" style="animation:fadeUp .4s .13s ease both;margin-top:.3rem;">
+    <div class="sec-title-icon" style="background:#f3f4f6;color:var(--muted);"><i class="fas fa-history"></i></div>
+    <span class="sec-title-text">السابقة</span>
+    <span class="sec-title-count">{{ previous_plans|length }}</span>
+  </div>
+
+  <button class="collapse-btn" id="btn-prev" onclick="toggleCollapse('body-prev','btn-prev')">
+    <span class="collapse-btn-left">
+      <span class="collapse-btn-icon icon-prev"><i class="fas fa-history"></i></span>
+      المقررات السابقة
+    </span>
+    <i class="fas fa-chevron-down collapse-arrow"></i>
+  </button>
+
+  <div class="collapse-body" id="body-prev">
+    {% for plan in previous_plans %}
+    <div class="mini-plan-card" style="animation-delay:{{ loop.index0 * 0.05 }}s;">
+      <!-- رأس البطاقة -->
+      <div class="mini-plan-head">
+        <div class="mini-plan-meta">
+          <span class="type-pill {{ 'type-hifz' if plan.plan_type == 'حفظ' else ('type-sard' if plan.plan_type == 'سرد' else ('type-poem' if plan.plan_type == 'قصيدة' else 'type-phase')) }}">
+            <i class="fas fa-{{ 'book-open' if plan.plan_type == 'حفظ' else ('microphone-alt' if plan.plan_type == 'سرد' else ('feather-alt' if plan.plan_type == 'قصيدة' else 'star')) }}"></i>
+            {{ plan.plan_type }}
+          </span>
+          {% if plan.plan_type == 'سرد' and plan.sard_subtype %}
+          <span class="sard-sub-pill {{ 'sard-full' if plan.sard_subtype == 'full' else 'sard-review' }}">
+            {{ 'سرد كامل' if plan.sard_subtype == 'full' else 'مراجعة' }}
+          </span>
+          {% endif %}
+        </div>
+        <span class="date-pill"><i class="fas fa-calendar-day"></i> {{ plan.start_date.strftime('%d/%m/%Y') if plan.start_date.strftime else plan.start_date }}</span>
+      </div>
+
+      <!-- جسم البطاقة -->
+      <div class="mini-plan-body">
+        {{ plan_details_block(plan, mini=true) }}
+
+        <!-- الدرجة -->
+        {% if plan.evaluations %}
+          {% set ev = plan.evaluations[0] %}
+          <div class="mini-score-strip">
+            {% if plan.plan_type == 'حفظ' %}
+              {% set plan_pts = (ev.new_score or 0) + (ev.recent_score or 0) + (ev.previous_score or 0) %}
+              {% set plan_stars = 5 if plan_pts >= 270 else (4 if plan_pts >= 216 else (3 if plan_pts >= 162 else (2 if plan_pts >= 108 else (1 if plan_pts >= 54 else 0)))) %}
+              <div class="mini-score-num">{{ plan_pts }}</div>
+              <span class="mini-score-sep">|</span>
+              <div style="display:flex;gap:2px;align-items:center;">{% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.7rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}</div>
+              <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.62rem;">{{ 'يجاز' if ev.new_pass else 'لا يجاز' }}</span>
+            {% elif plan.plan_type == 'سرد' %}
+              {% set plan_pts = ev.revision_score or 0 %}
+              {% set plan_stars = 5 if plan_pts >= 90 else (4 if plan_pts >= 72 else (3 if plan_pts >= 54 else (2 if plan_pts >= 36 else (1 if plan_pts >= 18 else 0)))) %}
+              <div class="mini-score-num">{{ plan_pts }}<span style="font-size:.78rem;color:var(--muted);font-weight:500;">/100</span></div>
+              <span class="mini-score-sep">|</span>
+              <div style="display:flex;gap:2px;align-items:center;">{% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.7rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}</div>
+              <span class="pass-chip {{ 'pass-yes' if ev.revision_pass else 'pass-no' }}" style="font-size:.62rem;">{{ 'يجاز' if ev.revision_pass else 'لا يجاز' }}</span>
+            {% elif plan.plan_type == 'تقييم مرحلة' %}
+              {% set plan_pts = ev.new_score or 0 %}
+              {% set plan_stars = 5 if plan_pts >= 72 else (4 if plan_pts >= 57 else (3 if plan_pts >= 43 else (2 if plan_pts >= 28 else (1 if plan_pts >= 14 else 0)))) %}
+              <div class="mini-score-num">{{ plan_pts }}<span style="font-size:.78rem;color:var(--muted);font-weight:500;">/80</span></div>
+              <span class="mini-score-sep">|</span>
+              <div style="display:flex;gap:2px;align-items:center;">{% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.7rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}</div>
+              <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.62rem;">{{ 'يجاز' if ev.new_pass else 'لا يجاز' }}</span>
+            {% elif plan.plan_type == 'قصيدة' %}
+              <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.62rem;">
+                <i class="fas fa-{{ 'check-circle' if ev.new_pass else 'times-circle' }}"></i>
+                {{ 'مجاز' if ev.new_pass else 'غير مجاز' }}
+              </span>
+            {% endif %}
+            <span style="margin-right:auto;font-size:.68rem;color:var(--muted);">{{ ev.teacher.full_name if ev.teacher else '' }}</span>
+          </div>
+        {% else %}
+          <div style="background:var(--amber-lt);border:1px solid #fde68a;border-radius:var(--r-sm);padding:.45rem .8rem;margin-bottom:.65rem;font-size:.75rem;color:var(--amber);font-weight:600;display:flex;align-items:center;gap:.4rem;">
+            <i class="fas fa-clock"></i> لم يقيم بعد
+          </div>
+        {% endif %}
+
+        {{ action_buttons(plan) }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# ═══ المقررات القادمة ═════ #}
+  {% if future_plans %}
+  <div class="sec-title" style="animation:fadeUp .4s .18s ease both;margin-top:.3rem;">
+    <div class="sec-title-icon"><i class="fas fa-hourglass-half"></i></div>
+    <span class="sec-title-text">القادمة</span>
+    <span class="sec-title-count">{{ future_plans|length }}</span>
+  </div>
+
+  <button class="collapse-btn" id="btn-fut" onclick="toggleCollapse('body-fut','btn-fut')">
+    <span class="collapse-btn-left">
+      <span class="collapse-btn-icon icon-future"><i class="fas fa-hourglass-half"></i></span>
+      المقررات القادمة
+    </span>
+    <i class="fas fa-chevron-down collapse-arrow"></i>
+  </button>
+
+  <div class="collapse-body" id="body-fut">
+    {% for plan in future_plans %}
+    <div class="mini-plan-card" style="animation-delay:{{ loop.index0 * 0.05 }}s;">
+      <div class="mini-plan-head">
+        <div class="mini-plan-meta">
+          <span class="type-pill {{ 'type-hifz' if plan.plan_type == 'حفظ' else ('type-sard' if plan.plan_type == 'سرد' else ('type-poem' if plan.plan_type == 'قصيدة' else 'type-phase')) }}">
+            <i class="fas fa-{{ 'book-open' if plan.plan_type == 'حفظ' else ('microphone-alt' if plan.plan_type == 'سرد' else ('feather-alt' if plan.plan_type == 'قصيدة' else 'star')) }}"></i>
+            {{ plan.plan_type }}
+          </span>
+          {% if plan.plan_type == 'سرد' and plan.sard_subtype %}
+          <span class="sard-sub-pill {{ 'sard-full' if plan.sard_subtype == 'full' else 'sard-review' }}">
+            {{ 'سرد كامل' if plan.sard_subtype == 'full' else 'مراجعة' }}
+          </span>
+          {% endif %}
+        </div>
+        <span class="date-pill"><i class="fas fa-calendar-day"></i> {{ plan.start_date.strftime('%d/%m/%Y') if plan.start_date.strftime else plan.start_date }}</span>
+      </div>
+      <div class="mini-plan-body">
+        {{ plan_details_block(plan, mini=true) }}
+        {{ action_buttons(plan) }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <!-- حالة فارغة -->
+  <div class="empty-card">
+    <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+    <div class="empty-title">لا توجد مقررات بعد</div>
+    <div class="empty-sub">
+      {% if is_teacher %}يمكنك إضافة مقرر جديد باستخدام الزر أعلاه
+      {% else %}سيتم إضافة المقررات من قِبل معلمك قريباً{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {# ═══════════ قسم مقررات القصائد ═══════════ #}
+  {% if poem_state and (poem_state.current_poem or poem_state.achievements) %}
+  <div class="sec-title" style="animation:fadeUp .4s .22s ease both;margin-top:.3rem;">
+    <div class="sec-title-icon" style="background:#eef2ff;color:#4f46e5;"><i class="fas fa-feather-alt"></i></div>
+    <span class="sec-title-text">مقررات القصائد</span>
+    <span class="sec-title-count">{{ poem_state.achievements|length }}</span>
+  </div>
+
+  {% if poem_state.current_poem %}
+  {% set _pc = poem_state.current_poem %}
+  {% set _total = _pc.verse_count or 0 %}
+  {% set _done = [poem_state.current_verse, _total] | min if _total else poem_state.current_verse %}
+  {% set _pct = ((_done / _total * 100) | round | int) if _total else 0 %}
+  <div class="current-card" style="border-color:#c7d2fe;margin-bottom:.8rem;">
+    <div class="current-card-head">
+      <span class="current-week-pill" style="background:#eef2ff;color:#4f46e5;">
+        <i class="fas fa-feather-alt"></i>
+        القصيدة الحالية
+      </span>
+      <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;">
+        <span class="type-pill type-poem">
+          <i class="fas fa-quote-right"></i>
+          {{ _pc.poem_title or ('قصيدة ' ~ _pc.poem_number) }}
+        </span>
+        {% if is_teacher %}
+        {% if student in current_user.students and current_user.can_add_plan and current_user.can_add_poem_plan %}
+        <a href="{{ url_for('add_poem_plan', student_id=student.id) }}" class="btn-action btn-eval-plan" style="padding:.3rem .8rem;font-size:.75rem;">
+          <i class="fas fa-plus"></i> مقرر جديد
+        </a>
+        {% elif student in current_user.students %}
+        <span class="btn-action btn-eval-plan" aria-disabled="true" title="تم تعطيل إضافة مقررات القصائد من قبل الإدارة"
+              style="padding:.3rem .8rem;font-size:.75rem;opacity:.45;cursor:not-allowed;filter:grayscale(.7);">
+          <i class="fas fa-ban"></i> مقرر جديد
+        </span>
+        {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="current-card-body">
+      <div class="plan-meta-strip">
+        <span class="date-pill"><i class="fas fa-user"></i> {{ _pc.poet or 'غير محدد' }}</span>
+        <span class="date-pill"><i class="fas fa-align-left"></i> {{ _total }} بيت</span>
+      </div>
+
+      <div style="margin:.35rem 0 .75rem;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:.3rem;">
+          <span style="font-size:.72rem;color:var(--muted);font-weight:700;">مستوى الإتمام</span>
+          <span style="font-size:.72rem;color:#4f46e5;font-weight:800;">{{ _done }}/{{ _total }} بيت ({{ _pct }}%)</span>
+        </div>
+        <div style="background:#e5e7eb;border-radius:99px;height:10px;overflow:hidden;">
+          <div style="width:{{ _pct }}%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:99px;transition:width .5s ease;"></div>
+        </div>
+      </div>
+
+      {% if poem_state.achievements %}
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.5rem;">
+        {% for a in poem_state.achievements %}
+        <a href="{{ url_for('view_plan_details', plan_id=a.plan.id) }}"
+           style="font-size:.68rem;text-decoration:none;padding:.25rem .75rem;border-radius:99px;
+                  background:{{ '#dcfce7' if a.evaluation.new_pass else '#fee2e2' }};
+                  color:{{ '#16a34a' if a.evaluation.new_pass else '#dc2626' }};
+                  border:1px solid {{ '#86efac' if a.evaluation.new_pass else '#fca5a5' }};">
+          <i class="fas fa-{{ 'check-circle' if a.evaluation.new_pass else 'times-circle' }}"></i>
+          {{ a.poem.poem_title if a.poem and a.poem.poem_title else ('قصيدة ' ~ a.poem.poem_number) if a.poem else '' }}
+          ({{ a.plan.verse_start }}-{{ a.plan.verse_end }})
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if poem_state.achievements %}
+  <button class="collapse-btn" id="btn-poem" onclick="toggleCollapse('body-poem','btn-poem')">
+    <span class="collapse-btn-left">
+      <span class="collapse-btn-icon" style="background:#eef2ff;color:#4f46e5;"><i class="fas fa-history"></i></span>
+      سجل إنجازات القصائد
+    </span>
+    <i class="fas fa-chevron-down collapse-arrow"></i>
+  </button>
+
+  <div class="collapse-body" id="body-poem">
+    {% for a in poem_state.achievements %}
+    <div class="mini-plan-card" style="animation-delay:{{ loop.index0 * 0.05 }}s;">
+      <div class="mini-plan-head">
+        <div class="mini-plan-meta">
+          <span class="type-pill type-poem">
+            <i class="fas fa-feather-alt"></i>
+            {{ a.poem.poem_title if a.poem and a.poem.poem_title else ('قصيدة ' ~ a.poem.poem_number) if a.poem else 'قصيدة' }}
+          </span>
+          <span class="date-pill"><i class="fas fa-align-left"></i> {{ a.plan.verse_start }} - {{ a.plan.verse_end }}</span>
+        </div>
+        <span class="date-pill"><i class="fas fa-calendar-day"></i> {{ a.plan.start_date.strftime('%d/%m/%Y') if a.plan.start_date.strftime else a.plan.start_date }}</span>
+      </div>
+      <div class="mini-plan-body">
+        {% if a.evaluation %}
+        <div class="mini-score-strip">
+          <span class="pass-chip {{ 'pass-yes' if a.evaluation.new_pass else 'pass-no' }}" style="font-size:.68rem;">
+            <i class="fas fa-{{ 'check-circle' if a.evaluation.new_pass else 'times-circle' }}"></i>
+            {{ 'أُجيز بنجاح ✅' if a.evaluation.new_pass else 'لم يُجز ❌' }}
+          </span>
+          <span style="margin-right:auto;font-size:.68rem;color:var(--muted);">
+            {{ a.evaluation.evaluation_date.strftime('%d/%m/%Y') if a.evaluation.evaluation_date.strftime else a.evaluation.evaluation_date }}
+            · {{ a.evaluation.teacher.full_name if a.evaluation.teacher else '' }}
+          </span>
+        </div>
+        {% endif %}
+        <div style="display:flex;gap:.4rem;margin-top:.5rem;">
+          <a href="{{ url_for('view_plan_details', plan_id=a.plan.id) }}" class="btn-action btn-view-plan" style="flex:1;">
+            <i class="fas fa-eye"></i> التفاصيل
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endif %}
+
+  <!-- زر العودة -->
+  <a href="{{ back_url }}" class="btn-back">
+    <i class="fas fa-arrow-right"></i>
+    العودة
+  </a>
+
+</div><!-- /sheet -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script>
+    (function(){
+        var items = document.querySelectorAll('[data-toast]');
+        items.forEach(function(el, i){
+            setTimeout(function(){
+                el.classList.add('toast-out');
+                setTimeout(function(){ el.remove(); }, 400);
+            }, 3000 + i * 350);
+        });
+    })();
+    </script>
+<script>
+function toggleCollapse(bodyId, btnId) {
+  const body = document.getElementById(bodyId);
+  const btn  = document.getElementById(btnId);
+  body.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function confirmDelete(planId) {
+  const href = "{{ url_for('delete_plan', plan_id=0) }}".replace('0', planId);
+  askConfirm('هل أنت متأكد من حذف هذا المقرر؟').then(function(ok) {
+    if (ok) window.location.href = href;
+  });
+}
+
+/* إخفاء toast */
+(function(){
+  document.querySelectorAll('[data-toast]').forEach(function(el, i){
+    setTimeout(function(){
+      el.classList.add('toast-out');
+      setTimeout(function(){ el.remove(); }, 380);
+    }, 3000 + i * 350);
+  });
+})();
+</script>
+<script src="{{ url_for('static', filename='js/confirm-modal.js') }}"></script>
+</body>
+</html>{% if false %}<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>مقررات الطالب — أشبال القرآن</title>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#1a5c40">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════
+   نفس نظام الألوان — ثيم الفجر الهادئ
+══════════════════════════════════════════════ */
+:root {
+  --bg:        #f2f0eb;
+  --surface:   #faf9f6;
+  --white:     #ffffff;
+  --jade:      #1a5c40;
+  --jade-md:   #226b4a;
+  --jade-lt:   #cde8da;
+  --jade-xs:   #ebf5f0;
+  --gold:      #c49a2a;
+  --gold-lt:   #fdf3d0;
+  --amber:     #d97706;
+  --amber-lt:  #fef3c7;
+  --ink:       #1c2b22;
+  --muted:     #6b7d72;
+  --border:    #dde8e2;
+  --danger:    #c0392b;
+  --danger-lt: #fdecea;
+  --blue:      #1d4ed8;
+  --blue-lt:   #dbeafe;
+  --purple:    #6d28d9;
+  --purple-lt: #ede9fe;
+
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  direction: rtl;
+  padding-bottom: 3.5rem;
+}
+
+/* ══ شارة المقرر المُرحَّل ═══════════════════ */
+.roll-badge {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: #fffbeb; color: #b45309; border: 1.5px solid #f59e0b;
+  border-radius: 2rem; font-weight: 700;
+}
+.roll-badge-full { padding: .3rem .8rem; font-size: .76rem; margin-bottom: .5rem; }
+.roll-badge-mini { padding: .18rem .55rem; font-size: .68rem; }
+.roll-badge i { font-size: .85em; }
+.roll-badge-full i { font-size: .8rem; }
+.roll-badge small { font-weight: 400; color: #a16207; font-size: .92em; }
+
+/* ══ TOAST ═══════════════════════════════════ */
+.toast-wrap {
+  position: fixed; top: 1.1rem; left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999; display: flex; flex-direction: column;
+  gap: .5rem; pointer-events: none; width: 92%; max-width: 430px;
+}
+.toast-item {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .75rem 1.1rem; border-radius: 1.2rem;
+  font-size: .9rem; font-weight: 700;
+  box-shadow: 0 6px 24px rgba(0,0,0,.13);
+  pointer-events: auto;
+  animation: toastIn .35s cubic-bezier(.22,1,.36,1) forwards;
+  border-right: 4px solid transparent;
+}
+.toast-item.t-success { background:#edfaf1; border-color:#28a745; color:#1a5e2a; }
+.toast-item.t-error   { background:#fef0f0; border-color:#dc3545; color:#7b1a1a; }
+.toast-item.t-warning { background:#fffbec; border-color:#ffc107; color:#7a5000; }
+.toast-item.t-info    { background:#eaf4ff; border-color:#17a2b8; color:#0c4a6e; }
+.toast-item.toast-out { animation: toastOut .35s ease forwards; }
+@keyframes toastIn  { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes toastOut { from{opacity:1} to{opacity:0;transform:translateY(-10px)} }
+
+/* ══ HEADER ══════════════════════════════════ */
+.header-strip {
+  background: var(--jade);
+  padding: 1.1rem 1.2rem 4rem;
+  position: relative; overflow: hidden;
+}
+.header-strip::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 70% at 115% -10%, rgba(255,255,255,.06) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at -15% 110%, rgba(255,255,255,.04) 0%, transparent 55%);
+}
+.header-strip::after {
+  content: ''; position: absolute; inset: 0; opacity: .045; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(255,255,255,1) 18px, rgba(255,255,255,1) 19px),
+    repeating-linear-gradient(-45deg, transparent, transparent 18px, rgba(255,255,255,1) 18px, rgba(255,255,255,1) 19px);
+}
+.header-inner {
+  position: relative; z-index: 2; max-width: 520px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: .8rem;
+}
+.header-info { flex: 1; }
+.header-tag {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+  color: rgba(255,255,255,.85); font-size: .72rem; font-weight: 600;
+  padding: .28rem .8rem; border-radius: 99px; margin-bottom: .5rem;
+}
+.header-name {
+  font-family: 'Amiri', serif;
+  font-size: 1.5rem; font-weight: 700; color: #fff; line-height: 1.25;
+}
+.header-meta {
+  display: flex; align-items: center; gap: .5rem; margin-top: .35rem; flex-wrap: wrap;
+}
+.header-count-pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+  color: rgba(255,255,255,.85); font-size: .72rem; font-weight: 600;
+  padding: .22rem .75rem; border-radius: 99px;
+}
+.btn-back-hdr {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
+  color: #fff; font-family: 'Cairo', sans-serif;
+  font-size: .78rem; font-weight: 600;
+  padding: .42rem .9rem; border-radius: 99px;
+  text-decoration: none; transition: background .18s; flex-shrink: 0;
+}
+.btn-back-hdr:hover { background: rgba(255,255,255,.25); color: #fff; }
+
+/* ══ SHEET ═══════════════════════════════════ */
+.sheet {
+  max-width: 520px; margin: -2.8rem auto 0;
+  padding: 0 .9rem; position: relative; z-index: 5;
+}
+
+/* ══ BTN ADD PLAN ════════════════════════════ */
+.btn-add-plan {
+  display: flex; align-items: center; justify-content: center; gap: .55rem;
+  width: 100%; background: #b08721 ; color: #fff;
+  border-radius: var(--r-lg); padding: .9rem 1rem;
+  font-family: 'Cairo', sans-serif; font-size: .92rem; font-weight: 700;
+  text-decoration: none; margin-bottom: .85rem;
+  border: none; cursor: pointer;
+  transition: background .18s, transform .12s;
+  animation: fadeUp .4s .05s ease both;
+}
+.btn-add-plan:hover { background: var(--jade-md); color: #fff; }
+.btn-add-plan:active { transform: scale(.98); }
+
+/* ══ SECTION TITLE ═══════════════════════════ */
+.sec-title {
+  display: flex; align-items: center; gap: .6rem; margin: .4rem 0 .65rem;
+}
+.sec-title-icon {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: var(--jade-xs);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: .95rem;
+}
+.sec-title-text { font-weight: 800; font-size: .98rem; color: var(--ink); }
+.sec-title-count {
+  margin-right: auto; font-size: .72rem; font-weight: 700;
+  color: var(--jade); background: var(--jade-xs);
+  padding: .18rem .65rem; border-radius: 99px; border: 1px solid var(--jade-lt);
+}
+
+/* ══ CURRENT PLAN CARD (بطاقة الأسبوع الحالي) ══ */
+.current-card {
+  background: var(--white);
+  border-radius: var(--r-xl);
+  border: 1.5px solid var(--jade-lt);
+  overflow: hidden;
+  margin-bottom: .85rem;
+  box-shadow: 0 4px 20px rgba(26,92,64,.09);
+  animation: fadeUp .45s .1s ease both;
+}
+.current-card-head {
+  background: var(--jade);
+  padding: .9rem 1.2rem;
+  display: flex; align-items: center; justify-content: space-between; gap: .6rem; flex-wrap: wrap;
+}
+.current-week-pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.28);
+  color: #fff; font-size: .73rem; font-weight: 700;
+  padding: .28rem .8rem; border-radius: 99px;
+}
+
+/* ══ PLAN TYPE PILLS ══════════════════════════ */
+.type-pill {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-size: .74rem; font-weight: 700; padding: .28rem .85rem;
+  border-radius: 99px;
+}
+.type-hifz   { background: var(--gold-lt);   color: var(--gold);   border: 1px solid #f0d060; }
+.type-sard   { background: var(--blue-lt);   color: var(--blue);   border: 1px solid #93c5fd; }
+.type-phase  { background: var(--purple-lt); color: var(--purple); border: 1px solid #c4b5fd; }
+.type-poem   { background: #eef2ff;          color: #4f46e5;        border: 1px solid #c7d2fe; }
+
+.sard-sub-pill {
+  display: inline-flex; align-items: center; gap: .25rem;
+  font-size: .65rem; font-weight: 700; padding: .18rem .6rem;
+  border-radius: 99px; margin-right: .3rem;
+}
+.sard-full   { background: #dbeafe; color: var(--blue); border: 1px solid #93c5fd; }
+.sard-review { background: var(--amber-lt); color: var(--amber); border: 1px solid #fde68a; }
+
+/* ══ CURRENT CARD BODY ═══════════════════════ */
+.current-card-body { padding: 1.1rem 1.2rem; }
+
+.plan-meta-strip {
+  display: flex; align-items: center; gap: .45rem;
+  flex-wrap: wrap; margin-bottom: .85rem;
+}
+.date-pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--muted); font-size: .72rem; font-weight: 600;
+  padding: .25rem .75rem; border-radius: 99px;
+}
+.eval-status-pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .72rem; font-weight: 700; padding: .25rem .75rem;
+  border-radius: 99px; border: 1px solid;
+}
+.eval-done    { background: var(--jade-xs); color: var(--jade);  border-color: var(--jade-lt); }
+.eval-pending { background: var(--amber-lt); color: var(--amber); border-color: #fde68a; }
+
+/* تفاصيل المقرر */
+.plan-details { display: grid; grid-template-columns: 1fr; gap: .45rem; margin-bottom: .85rem; }
+.plan-detail-row {
+  display: flex; align-items: flex-start; gap: .6rem;
+  background: var(--bg); border-radius: var(--r-sm);
+  padding: .58rem .85rem; border: 1px solid var(--border);
+}
+.detail-icon {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: var(--jade-xs);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: .75rem; flex-shrink: 0; margin-top: .05rem;
+}
+.detail-label {
+  font-size: .67rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px;
+  display: block; margin-bottom: .1rem;
+}
+.detail-value {
+  font-size: .85rem; color: var(--ink); font-weight: 600; line-height: 1.4;
+}
+
+.notes-row {
+  display: flex; align-items: flex-start; gap: .55rem;
+  background: var(--amber-lt); border: 1px solid #fde68a;
+  border-radius: var(--r-sm); padding: .6rem .85rem;
+  margin-bottom: .85rem;
+}
+.notes-row i { color: var(--amber); flex-shrink: 0; margin-top: .1rem; }
+.notes-row span { font-size: .83rem; color: var(--ink); line-height: 1.5; }
+
+/* pass/fail chips */
+.pass-chips-row {
+  display: flex; gap: .45rem; flex-wrap: wrap; margin-bottom: .85rem;
+}
+.pass-chip {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .72rem; font-weight: 700; padding: .28rem .8rem;
+  border-radius: 99px; border: 1px solid;
+}
+.pass-yes { background: var(--jade-xs); color: var(--jade);   border-color: var(--jade-lt); }
+.pass-no  { background: var(--danger-lt); color: var(--danger); border-color: #f5c6cb; }
+
+/* درجة المجموع */
+.score-summary {
+  display: flex; align-items: center; gap: .5rem;
+  background: var(--jade-xs); border: 1px solid var(--jade-lt);
+  border-radius: var(--r-md); padding: .65rem 1rem;
+  margin-bottom: .85rem;
+}
+.score-summary-num {
+  font-size: 1.5rem; font-weight: 800; color: var(--jade); line-height: 1;
+}
+.score-summary-label {
+  font-size: .72rem; color: var(--jade); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px;
+}
+
+/* ══ ACTION BUTTONS ══════════════════════════ */
+.action-row {
+  display: flex; gap: .5rem; flex-wrap: wrap;
+}
+.action-row .btn-action {
+  flex: 1 1 auto;
+  display: inline-flex; align-items: center; justify-content: center; gap: .35rem;
+  font-family: 'Cairo', sans-serif; font-size: .78rem; font-weight: 700;
+  padding: .55rem .6rem; border-radius: var(--r-sm);
+  text-decoration: none; border: none; cursor: pointer;
+  transition: filter .15s, transform .12s;
+  white-space: nowrap;
+}
+.action-row .btn-action:active { transform: scale(.97); }
+.action-row .btn-action:hover  { filter: brightness(1.08); }
+
+.btn-edit-plan  { background: var(--amber-lt);   color: var(--amber);   border: 1.5px solid #fde68a; }
+.btn-del-plan   { background: var(--danger-lt);   color: var(--danger);  border: 1.5px solid #f5c6cb; }
+.btn-eval-plan  { background: var(--blue-lt);     color: var(--blue);    border: 1.5px solid #93c5fd; }
+.btn-edit-eval  { background: var(--purple-lt);   color: var(--purple);  border: 1.5px solid #c4b5fd; }
+.btn-view-plan  { background: var(--jade-xs);     color: var(--jade);    border: 1.5px solid var(--jade-lt); }
+
+/* ══ COLLAPSE (سابقة/قادمة) ══════════════════ */
+.collapse-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; background: var(--white);
+  border: 1px solid var(--border); border-radius: var(--r-lg);
+  padding: .85rem 1.1rem; font-family: 'Cairo', sans-serif;
+  font-size: .9rem; font-weight: 700; color: var(--ink);
+  cursor: pointer; transition: background .18s; margin-bottom: .5rem;
+}
+.collapse-btn:hover { background: var(--jade-xs); }
+.collapse-btn-left { display: flex; align-items: center; gap: .6rem; }
+.collapse-btn-icon {
+  width: 32px; height: 32px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center; font-size: .85rem;
+}
+.icon-prev   { background: #f3f4f6;    color: var(--muted); }
+.icon-future { background: var(--jade-xs); color: var(--jade); }
+.collapse-arrow { font-size: .8rem; color: var(--muted); transition: transform .25s; }
+.collapse-btn.open .collapse-arrow { transform: rotate(180deg); }
+.collapse-body { display: none; }
+.collapse-body.open { display: block; }
+
+/* ══ MINI PLAN CARD ══════════════════════════ */
+.mini-plan-card {
+  background: var(--white);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: .65rem;
+  animation: fadeUp .38s ease both;
+  transition: box-shadow .18s;
+}
+.mini-plan-card:hover { box-shadow: 0 4px 18px rgba(26,92,64,.09); }
+
+.mini-plan-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .5rem; padding: .7rem 1rem;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.mini-plan-meta { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+
+.mini-plan-body { padding: .75rem 1rem; }
+.mini-plan-details { display: grid; grid-template-columns: 1fr; gap: .38rem; margin-bottom: .65rem; }
+.mini-detail-row {
+  display: flex; align-items: baseline; gap: .5rem;
+  background: var(--bg); border-radius: var(--r-sm);
+  padding: .48rem .8rem; border: 1px solid var(--border);
+}
+.mini-detail-label {
+  font-size: .65rem; color: var(--muted); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .3px; white-space: nowrap; flex-shrink: 0;
+}
+.mini-detail-value {
+  font-size: .82rem; color: var(--ink); font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* score strip في mini */
+.mini-score-strip {
+  display: flex; align-items: center; gap: .45rem;
+  background: var(--jade-xs); border: 1px solid var(--jade-lt);
+  border-radius: var(--r-sm); padding: .45rem .8rem; margin-bottom: .65rem;
+}
+.mini-score-num { font-size: 1.15rem; font-weight: 800; color: var(--jade); }
+.mini-score-sep { color: var(--jade-lt); font-size: .9rem; }
+
+/* ══ EMPTY STATE ══════════════════════════════ */
+.empty-card {
+  background: var(--white); border: 1.5px dashed var(--jade-lt);
+  border-radius: var(--r-xl); padding: 2.5rem 1.5rem; text-align: center;
+  animation: fadeUp .5s .1s ease both;
+}
+.empty-icon { font-size: 2.5rem; color: var(--jade-lt); margin-bottom: .6rem; }
+.empty-title { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem; }
+.empty-sub { font-size: .82rem; color: var(--muted); }
+
+/* ══ BACK BTN ════════════════════════════════ */
+.btn-back {
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  width: 100%; background: var(--white);
+  border: 1.5px solid var(--border); border-radius: var(--r-lg);
+  padding: .9rem; font-family: 'Cairo', sans-serif;
+  font-size: .9rem; font-weight: 700; color: var(--ink);
+  text-decoration: none; margin-top: 1rem;
+  transition: background .18s, border-color .18s;
+}
+.btn-back:hover { background: var(--jade-xs); border-color: var(--jade-lt); color: var(--jade); }
+
+/* ══ ANIMATIONS ═══════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 380px) {
+  .action-row { flex-direction: column; }
+  .action-row .btn-action { width: 100%; flex: unset; }
+}
+</style>
+</head>
+<body>
+
+    <!-- ══ Toast Notifications ══ -->
+    <div class="toast-wrap" id="toastWrap">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}
+        <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}"
+             data-toast="{{ loop.index }}">
+            <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}{% endif %}
+    {% endwith %}
+    </div>
+
+<!-- TOAST -->
+<div class="toast-wrap">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}{% for category, message in messages %}
+  <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}" data-toast="{{ loop.index }}">
+    <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %}{% endif %}
+{% endwith %}
+</div>
+
+<!-- HEADER -->
+{% set back_url = url_for('teacher_dashboard') if is_teacher else (url_for('student_dashboard') if is_student else url_for('admin')) %}
+
+<div class="header-strip">
+  <div class="header-inner">
+    <div class="header-info">
+      <div class="header-tag">
+        <i class="fas fa-calendar-alt"></i>
+        المقررات الأسبوعية
+      </div>
+      <div class="header-name">{{ student.full_name }}</div>
+      <div class="header-meta">
+        {% if student.memorization_level %}
+        <span class="header-count-pill"><i class="fas fa-graduation-cap"></i> {{ student.memorization_level }}</span>
+        {% endif %}
+        <span class="header-count-pill"><i class="fas fa-list"></i> {{ plans|length }} مقرر</span>
+      </div>
+    </div>
+    <a href="{{ back_url }}" class="btn-back-hdr">
+      <i class="fas fa-arrow-right"></i> عودة
+    </a>
+  </div>
+</div>
+
+<!-- SHEET -->
+<div class="sheet">
+
+  {% if error %}
+  <div style="background:var(--amber-lt);border:1.5px solid #fde68a;border-radius:var(--r-lg);padding:.85rem 1.1rem;margin-bottom:.8rem;font-size:.85rem;color:var(--amber);display:flex;align-items:center;gap:.6rem;animation:fadeUp .4s ease both;">
+    <i class="fas fa-exclamation-triangle"></i> {{ error }}
+  </div>
+  {% endif %}
+
+  <!-- زر إضافة مقرر -->
+  {% if is_teacher %}
+  <div style="display:flex;gap:.6rem;margin-bottom:.8rem;">
+    <a href="{{ url_for('add_plan', student_id=student.id) }}" class="btn-add-plan" style="flex:1.4;">
+      <i class="fas fa-plus-circle"></i>
+      إضافة مقرر أسبوعي جديد
+    </a>
+    <a href="{{ url_for('add_poem_plan', student_id=student.id) }}" class="btn-add-plan" style="flex:1;background:linear-gradient(135deg,#667eea,#764ba2);">
+      <i class="fas fa-feather-alt"></i>
+      مقرر قصيدة
+    </a>
+  </div>
+  {% endif %}
+
+  {% if plans %}
+
+  {# ── تصنيف المقررات ── #}
+  {% set today = now.date() %}
+  {% set current_plan   = plans | selectattr('start_date', '<=', today) | selectattr('end_date', '>=', today) | first %}
+  {% set previous_plans = plans | selectattr('end_date', '<', today)    | list %}
+  {% set future_plans   = plans | selectattr('start_date', '>', today)  | list %}
+
+  {# ═══════════════════════════════════════════
+     MACRO: تفاصيل المقرر (مشترك بين الحالي والبطاقات الصغيرة)
+  ═══════════════════════════════════════════ #}
+  {% macro plan_details_block(plan, mini=false) %}
+    {# شارة المقرر المُرحَّل: تظهر مع كل بطاقة، صغرى كانت أم كاملة #}
+    {% if plan.rolled_over %}
+      <div class="roll-badge roll-badge-{{ 'mini' if mini else 'full' }}">
+        <i class="fas fa-rotate-right"></i> مقرر معاد
+        {% if not mini %}<small>بسبب الرسب{% if plan.roll_reason %} في {{ {'new':'الحفظ الجديد','old':'الحفظ القديم','both':'الحفظ الجديد والقديم','sard':'السرد','poem':'القصيدة'}.get(plan.roll_reason, 'المقرر') }}{% endif %}</small>{% endif %}
+      </div>
+    {% endif %}
+    {% if plan.plan_type == 'حفظ' %}
+      {% set rows = [
+        ('star-and-crescent', 'الجديد',  plan.new_memorization),
+        ('redo-alt',           'القريب',  plan.recent_review),
+        ('history',            'القديم',  plan.previous_review)
+      ] %}
+    {% elif plan.plan_type == 'سرد' %}
+      {% set rows = [
+        ('microphone-alt', ('سرد كامل' if plan.sard_subtype == 'full' else 'مراجعة مقاطع'), plan.revision_text)
+      ] %}
+    {% elif plan.plan_type == 'قصيدة' %}
+      {% set rows = [
+        ('feather-alt', 'القصيدة', ((plan.poem.poem_title or ('قصيدة ' ~ plan.poem.poem_number)) if plan.poem else 'لم يحدد')),
+        ('align-left', 'الأبيات', ((plan.verse_start ~ ' - ' ~ plan.verse_end) if plan.verse_start else 'لم يحدد')),
+        ('user', 'الشاعر', (plan.poem.poet if plan.poem and plan.poem.poet else '—'))
+      ] %}
+    {% endif %}
+
+    {% if mini %}
+      <div class="mini-plan-details">
+        {% for icon, label, val in rows %}
+        <div class="mini-detail-row">
+          <span class="mini-detail-label">{{ label }}</span>
+          <span class="mini-detail-value">{{ val or 'لم يحدد' }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="plan-details">
+        {% for icon, label, val in rows %}
+        <div class="plan-detail-row">
+          <div class="detail-icon"><i class="fas fa-{{ icon }}"></i></div>
+          <div>
+            <span class="detail-label">{{ label }}</span>
+            <div class="detail-value">{{ val or 'لم يحدد' }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if plan.plan_type == 'سرد' and plan.revision_notes %}
+    <div class="{{ 'notes-row' if not mini else 'mini-detail-row' }}" style="{{ 'margin-bottom:.85rem;' if not mini else '' }}">
+      {% if not mini %}<i class="fas fa-sticky-note"></i><span>{{ plan.revision_notes }}</span>
+      {% else %}<span class="mini-detail-label">ملاحظات</span><span class="mini-detail-value">{{ plan.revision_notes }}</span>{% endif %}
+    </div>
+    {% endif %}
+
+    {% if plan.notes and plan.plan_type != 'تقييم مرحلة' %}
+    <div class="notes-row" style="{{ '' if not mini else 'margin-bottom:.65rem;' }}">
+      <i class="fas fa-sticky-note"></i><span>{{ plan.notes }}</span>
+    </div>
+    {% endif %}
+  {% endmacro %}
+
+  {# ═══════════════════════════════════════════
+     MACRO: أزرار الإجراءات
+  ═══════════════════════════════════════════ #}
+  {% macro action_buttons(plan) %}
+  <div class="action-row">
+    {% if is_teacher %}
+      <a href="{{ url_for('edit_plan', plan_id=plan.id) }}" class="btn-action btn-edit-plan">
+        <i class="fas fa-edit"></i> تعديل
+      </a>
+      {% if current_user.id == plan.teacher_id %}
+      <a href="#" onclick="confirmDelete({{ plan.id }}); return false;" class="btn-action btn-del-plan">
+        <i class="fas fa-trash"></i> حذف
+      </a>
+      {% endif %}
+      {% if plan.evaluations %}
+        <a href="{{ url_for('edit_evaluation', eval_id=plan.evaluations[0].id) }}" class="btn-action btn-edit-eval">
+          <i class="fas fa-pen"></i> تعديل التقييم
+        </a>
+      {% else %}
+        <a href="{{ url_for('evaluate_plan', plan_id=plan.id) }}" class="btn-action btn-eval-plan">
+          <i class="fas fa-star"></i> تقييم
+        </a>
+      {% endif %}
+      <a href="{{ url_for('view_plan_details', plan_id=plan.id) }}" class="btn-action btn-view-plan">
+        <i class="fas fa-eye"></i> {{ 'التفاصيل' if plan.plan_type == 'قصيدة' else 'التقارير' }}
+      </a>
+    {% else %}
+      <a href="{{ url_for('view_plan_details', plan_id=plan.id) }}" class="btn-action btn-view-plan" style="width:100%;">
+        <i class="fas fa-eye"></i> {{ 'عرض التفاصيل' if plan.plan_type == 'قصيدة' else 'عرض التفاصيل والتقارير' }}
+      </a>
+    {% endif %}
+  </div>
+  {% endmacro %}
+
+  {# ═══ المقرر الحالي ════ #}
+  {% if current_plan %}
+  <div class="sec-title" style="animation:fadeUp .4s .08s ease both;">
+    <div class="sec-title-icon"><i class="fas fa-calendar-week"></i></div>
+    <span class="sec-title-text">الأسبوع الحالي</span>
+  </div>
+
+  <div class="current-card">
+    <div class="current-card-head">
+      <span class="current-week-pill">
+        <i class="fas fa-circle" style="font-size:.45rem;"></i>
+        مقرر الأسبوع
+      </span>
+      <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;">
+        <span class="type-pill {{ 'type-hifz' if current_plan.plan_type == 'حفظ' else ('type-sard' if current_plan.plan_type == 'سرد' else ('type-poem' if current_plan.plan_type == 'قصيدة' else 'type-phase')) }}">
+          <i class="fas fa-{{ 'book-open' if current_plan.plan_type == 'حفظ' else ('microphone-alt' if current_plan.plan_type == 'سرد' else ('feather-alt' if current_plan.plan_type == 'قصيدة' else 'star')) }}"></i>
+          {{ current_plan.plan_type }}
+        </span>
+        {% if current_plan.plan_type == 'سرد' and current_plan.sard_subtype %}
+        <span class="sard-sub-pill {{ 'sard-full' if current_plan.sard_subtype == 'full' else 'sard-review' }}">
+          {{ 'سرد كامل' if current_plan.sard_subtype == 'full' else 'مراجعة مقاطع' }}
+        </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="current-card-body">
+      <!-- التاريخ وحالة التقييم -->
+      <div class="plan-meta-strip">
+        <span class="date-pill"><i class="fas fa-calendar-alt"></i> {{ current_plan.start_date.strftime('%d/%m/%Y') if current_plan.start_date.strftime else current_plan.start_date }}</span>
+        {% if current_plan.evaluations %}
+          {% set ev = current_plan.evaluations[0] %}
+          <span class="eval-status-pill eval-done"><i class="fas fa-check-circle"></i> قيّمه {{ ev.teacher.full_name if ev.teacher else 'المعلم' }}</span>
+        {% else %}
+          <span class="eval-status-pill eval-pending"><i class="fas fa-clock"></i> بانتظار التقييم</span>
+        {% endif %}
+      </div>
+
+      {{ plan_details_block(current_plan) }}
+
+      <!-- نتيجة التقييم -->
+      {% if current_plan.evaluations %}
+        {% set ev = current_plan.evaluations[0] %}
+        {% if current_plan.plan_type == 'حفظ' %}
+          {% set plan_pts = (ev.new_score or 0) + (ev.recent_score or 0) + (ev.previous_score or 0) %}
+          {% set plan_stars = 5 if plan_pts >= 270 else (4 if plan_pts >= 216 else (3 if plan_pts >= 162 else (2 if plan_pts >= 108 else (1 if plan_pts >= 54 else 0)))) %}
+          <div class="score-summary">
+            <div>
+              <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.1rem;">مجموع الدرجات</div>
+              <div class="score-summary-num">{{ plan_pts }}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex:1;">
+              <div style="display:flex;gap:3px;">
+                {% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.85rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}
+              </div>
+              <div style="display:flex;gap:.35rem;flex-wrap:wrap;">
+                <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.68rem;">الجديد: {{ 'يجاز' if ev.new_pass else 'لا يجاز' }}</span>
+                <span class="pass-chip {{ 'pass-yes' if ev.previous_pass else 'pass-no' }}" style="font-size:.68rem;">القديم: {{ 'يجاز' if ev.previous_pass else 'لا يجاز' }}</span>
+              </div>
+            </div>
+          </div>
+        {% elif current_plan.plan_type == 'سرد' %}
+          {% set plan_pts = ev.revision_score or 0 %}
+          {% set plan_stars = 5 if plan_pts >= 90 else (4 if plan_pts >= 72 else (3 if plan_pts >= 54 else (2 if plan_pts >= 36 else (1 if plan_pts >= 18 else 0)))) %}
+          <div class="score-summary">
+            <div>
+              <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.1rem;">درجة المقرر</div>
+              <div class="score-summary-num">{{ plan_pts }}<span style="font-size:.85rem;color:var(--muted);font-weight:500;">/100</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;">
+              <div style="display:flex;gap:3px;">
+                {% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.85rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}
+              </div>
+              <span class="pass-chip {{ 'pass-yes' if ev.revision_pass else 'pass-no' }}" style="font-size:.68rem;">{{ 'يجاز' if ev.revision_pass else 'لا يجاز' }}</span>
+            </div>
+          </div>
+        {% elif current_plan.plan_type == 'تقييم مرحلة' %}
+          {% set plan_pts = ev.new_score or 0 %}
+          {% set plan_stars = 5 if plan_pts >= 72 else (4 if plan_pts >= 57 else (3 if plan_pts >= 43 else (2 if plan_pts >= 28 else (1 if plan_pts >= 14 else 0)))) %}
+          <div class="score-summary">
+            <div>
+              <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.1rem;">درجة المرحلة</div>
+              <div class="score-summary-num">{{ plan_pts }}<span style="font-size:.85rem;color:var(--muted);font-weight:500;">/80</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;">
+              <div style="display:flex;gap:3px;">
+                {% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.85rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}
+              </div>
+              <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.68rem;">{{ 'يجاز' if ev.new_pass else 'لا يجاز' }}</span>
+            </div>
+          </div>
+        {% elif current_plan.plan_type == 'قصيدة' %}
+          <div class="score-summary" style="background:linear-gradient(135deg,#eef2ff,#f5f3ff);border:1px solid #c7d2fe;">
+            <div>
+              <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:.1rem;">نتيجة مقرر القصيدة</div>
+              <div class="score-summary-num" style="font-size:1.05rem;">{{ 'مُجاز ✅' if ev.new_pass else 'غير مُجاز ❌' }}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;">
+              <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.78rem;">
+                <i class="fas fa-{{ 'check-circle' if ev.new_pass else 'times-circle' }}"></i>
+                {{ 'أُجيز بنجاح' if ev.new_pass else 'لم يُجز' }}
+              </span>
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {{ action_buttons(current_plan) }}
+    </div>
+  </div>
+  {% endif %}
+
+  {# ═══ المقررات السابقة ═════ #}
+  {% if previous_plans %}
+  <div class="sec-title" style="animation:fadeUp .4s .13s ease both;margin-top:.3rem;">
+    <div class="sec-title-icon" style="background:#f3f4f6;color:var(--muted);"><i class="fas fa-history"></i></div>
+    <span class="sec-title-text">السابقة</span>
+    <span class="sec-title-count">{{ previous_plans|length }}</span>
+  </div>
+
+  <button class="collapse-btn" id="btn-prev" onclick="toggleCollapse('body-prev','btn-prev')">
+    <span class="collapse-btn-left">
+      <span class="collapse-btn-icon icon-prev"><i class="fas fa-history"></i></span>
+      المقررات السابقة
+    </span>
+    <i class="fas fa-chevron-down collapse-arrow"></i>
+  </button>
+
+  <div class="collapse-body" id="body-prev">
+    {% for plan in previous_plans %}
+    <div class="mini-plan-card" style="animation-delay:{{ loop.index0 * 0.05 }}s;">
+      <!-- رأس البطاقة -->
+      <div class="mini-plan-head">
+        <div class="mini-plan-meta">
+          <span class="type-pill {{ 'type-hifz' if plan.plan_type == 'حفظ' else ('type-sard' if plan.plan_type == 'سرد' else ('type-poem' if plan.plan_type == 'قصيدة' else 'type-phase')) }}">
+            <i class="fas fa-{{ 'book-open' if plan.plan_type == 'حفظ' else ('microphone-alt' if plan.plan_type == 'سرد' else ('feather-alt' if plan.plan_type == 'قصيدة' else 'star')) }}"></i>
+            {{ plan.plan_type }}
+          </span>
+          {% if plan.plan_type == 'سرد' and plan.sard_subtype %}
+          <span class="sard-sub-pill {{ 'sard-full' if plan.sard_subtype == 'full' else 'sard-review' }}">
+            {{ 'سرد كامل' if plan.sard_subtype == 'full' else 'مراجعة' }}
+          </span>
+          {% endif %}
+        </div>
+        <span class="date-pill"><i class="fas fa-calendar-day"></i> {{ plan.start_date.strftime('%d/%m/%Y') if plan.start_date.strftime else plan.start_date }}</span>
+      </div>
+
+      <!-- جسم البطاقة -->
+      <div class="mini-plan-body">
+        {{ plan_details_block(plan, mini=true) }}
+
+        <!-- الدرجة -->
+        {% if plan.evaluations %}
+          {% set ev = plan.evaluations[0] %}
+          <div class="mini-score-strip">
+            {% if plan.plan_type == 'حفظ' %}
+              {% set plan_pts = (ev.new_score or 0) + (ev.recent_score or 0) + (ev.previous_score or 0) %}
+              {% set plan_stars = 5 if plan_pts >= 270 else (4 if plan_pts >= 216 else (3 if plan_pts >= 162 else (2 if plan_pts >= 108 else (1 if plan_pts >= 54 else 0)))) %}
+              <div class="mini-score-num">{{ plan_pts }}</div>
+              <span class="mini-score-sep">|</span>
+              <div style="display:flex;gap:2px;align-items:center;">{% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.7rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}</div>
+              <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.62rem;">{{ 'يجاز' if ev.new_pass else 'لا يجاز' }}</span>
+            {% elif plan.plan_type == 'سرد' %}
+              {% set plan_pts = ev.revision_score or 0 %}
+              {% set plan_stars = 5 if plan_pts >= 90 else (4 if plan_pts >= 72 else (3 if plan_pts >= 54 else (2 if plan_pts >= 36 else (1 if plan_pts >= 18 else 0)))) %}
+              <div class="mini-score-num">{{ plan_pts }}<span style="font-size:.78rem;color:var(--muted);font-weight:500;">/100</span></div>
+              <span class="mini-score-sep">|</span>
+              <div style="display:flex;gap:2px;align-items:center;">{% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.7rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}</div>
+              <span class="pass-chip {{ 'pass-yes' if ev.revision_pass else 'pass-no' }}" style="font-size:.62rem;">{{ 'يجاز' if ev.revision_pass else 'لا يجاز' }}</span>
+            {% elif plan.plan_type == 'تقييم مرحلة' %}
+              {% set plan_pts = ev.new_score or 0 %}
+              {% set plan_stars = 5 if plan_pts >= 72 else (4 if plan_pts >= 57 else (3 if plan_pts >= 43 else (2 if plan_pts >= 28 else (1 if plan_pts >= 14 else 0)))) %}
+              <div class="mini-score-num">{{ plan_pts }}<span style="font-size:.78rem;color:var(--muted);font-weight:500;">/80</span></div>
+              <span class="mini-score-sep">|</span>
+              <div style="display:flex;gap:2px;align-items:center;">{% for i in range(5) %}<i class="{{ 'fas' if i < plan_stars else 'far' }} fa-star" style="font-size:.7rem;color:{{ '#f59e0b' if i < plan_stars else 'var(--border)' }};"></i>{% endfor %}</div>
+              <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.62rem;">{{ 'يجاز' if ev.new_pass else 'لا يجاز' }}</span>
+            {% elif plan.plan_type == 'قصيدة' %}
+              <span class="pass-chip {{ 'pass-yes' if ev.new_pass else 'pass-no' }}" style="font-size:.62rem;">
+                <i class="fas fa-{{ 'check-circle' if ev.new_pass else 'times-circle' }}"></i>
+                {{ 'مجاز' if ev.new_pass else 'غير مجاز' }}
+              </span>
+            {% endif %}
+            <span style="margin-right:auto;font-size:.68rem;color:var(--muted);">{{ ev.teacher.full_name if ev.teacher else '' }}</span>
+          </div>
+        {% else %}
+          <div style="background:var(--amber-lt);border:1px solid #fde68a;border-radius:var(--r-sm);padding:.45rem .8rem;margin-bottom:.65rem;font-size:.75rem;color:var(--amber);font-weight:600;display:flex;align-items:center;gap:.4rem;">
+            <i class="fas fa-clock"></i> لم يقيم بعد
+          </div>
+        {% endif %}
+
+        {{ action_buttons(plan) }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# ═══ المقررات القادمة ═════ #}
+  {% if future_plans %}
+  <div class="sec-title" style="animation:fadeUp .4s .18s ease both;margin-top:.3rem;">
+    <div class="sec-title-icon"><i class="fas fa-hourglass-half"></i></div>
+    <span class="sec-title-text">القادمة</span>
+    <span class="sec-title-count">{{ future_plans|length }}</span>
+  </div>
+
+  <button class="collapse-btn" id="btn-fut" onclick="toggleCollapse('body-fut','btn-fut')">
+    <span class="collapse-btn-left">
+      <span class="collapse-btn-icon icon-future"><i class="fas fa-hourglass-half"></i></span>
+      المقررات القادمة
+    </span>
+    <i class="fas fa-chevron-down collapse-arrow"></i>
+  </button>
+
+  <div class="collapse-body" id="body-fut">
+    {% for plan in future_plans %}
+    <div class="mini-plan-card" style="animation-delay:{{ loop.index0 * 0.05 }}s;">
+      <div class="mini-plan-head">
+        <div class="mini-plan-meta">
+          <span class="type-pill {{ 'type-hifz' if plan.plan_type == 'حفظ' else ('type-sard' if plan.plan_type == 'سرد' else ('type-poem' if plan.plan_type == 'قصيدة' else 'type-phase')) }}">
+            <i class="fas fa-{{ 'book-open' if plan.plan_type == 'حفظ' else ('microphone-alt' if plan.plan_type == 'سرد' else ('feather-alt' if plan.plan_type == 'قصيدة' else 'star')) }}"></i>
+            {{ plan.plan_type }}
+          </span>
+          {% if plan.plan_type == 'سرد' and plan.sard_subtype %}
+          <span class="sard-sub-pill {{ 'sard-full' if plan.sard_subtype == 'full' else 'sard-review' }}">
+            {{ 'سرد كامل' if plan.sard_subtype == 'full' else 'مراجعة' }}
+          </span>
+          {% endif %}
+        </div>
+        <span class="date-pill"><i class="fas fa-calendar-day"></i> {{ plan.start_date.strftime('%d/%m/%Y') if plan.start_date.strftime else plan.start_date }}</span>
+      </div>
+      <div class="mini-plan-body">
+        {{ plan_details_block(plan, mini=true) }}
+        {{ action_buttons(plan) }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <!-- حالة فارغة -->
+  <div class="empty-card">
+    <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+    <div class="empty-title">لا توجد مقررات بعد</div>
+    <div class="empty-sub">
+      {% if is_teacher %}يمكنك إضافة مقرر جديد باستخدام الزر أعلاه
+      {% else %}سيتم إضافة المقررات من قِبل معلمك قريباً{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {# ═══════════ قسم مقررات القصائد ═══════════ #}
+  {% if poem_state and (poem_state.current_poem or poem_state.achievements) %}
+  <div class="sec-title" style="animation:fadeUp .4s .22s ease both;margin-top:.3rem;">
+    <div class="sec-title-icon" style="background:#eef2ff;color:#4f46e5;"><i class="fas fa-feather-alt"></i></div>
+    <span class="sec-title-text">مقررات القصائد</span>
+    <span class="sec-title-count">{{ poem_state.achievements|length }}</span>
+  </div>
+
+  {% if poem_state.current_poem %}
+  {% set _pc = poem_state.current_poem %}
+  {% set _total = _pc.verse_count or 0 %}
+  {% set _done = [poem_state.current_verse, _total] | min if _total else poem_state.current_verse %}
+  {% set _pct = ((_done / _total * 100) | round | int) if _total else 0 %}
+  <div class="current-card" style="border-color:#c7d2fe;margin-bottom:.8rem;">
+    <div class="current-card-head">
+      <span class="current-week-pill" style="background:#eef2ff;color:#4f46e5;">
+        <i class="fas fa-feather-alt"></i>
+        القصيدة الحالية
+      </span>
+      <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;">
+        <span class="type-pill type-poem">
+          <i class="fas fa-quote-right"></i>
+          {{ _pc.poem_title or ('قصيدة ' ~ _pc.poem_number) }}
+        </span>
+        {% if is_teacher %}
+        <a href="{{ url_for('add_poem_plan', student_id=student.id) }}" class="btn-action btn-eval-plan" style="padding:.3rem .8rem;font-size:.75rem;">
+          <i class="fas fa-plus"></i> مقرر جديد
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="current-card-body">
+      <div class="plan-meta-strip">
+        <span class="date-pill"><i class="fas fa-user"></i> {{ _pc.poet or 'غير محدد' }}</span>
+        <span class="date-pill"><i class="fas fa-align-left"></i> {{ _total }} بيت</span>
+      </div>
+
+      <div style="margin:.35rem 0 .75rem;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:.3rem;">
+          <span style="font-size:.72rem;color:var(--muted);font-weight:700;">مستوى الإتمام</span>
+          <span style="font-size:.72rem;color:#4f46e5;font-weight:800;">{{ _done }}/{{ _total }} بيت ({{ _pct }}%)</span>
+        </div>
+        <div style="background:#e5e7eb;border-radius:99px;height:10px;overflow:hidden;">
+          <div style="width:{{ _pct }}%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:99px;transition:width .5s ease;"></div>
+        </div>
+      </div>
+
+      {% if poem_state.achievements %}
+      <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.5rem;">
+        {% for a in poem_state.achievements %}
+        <a href="{{ url_for('view_plan_details', plan_id=a.plan.id) }}"
+           style="font-size:.68rem;text-decoration:none;padding:.25rem .75rem;border-radius:99px;
+                  background:{{ '#dcfce7' if a.evaluation.new_pass else '#fee2e2' }};
+                  color:{{ '#16a34a' if a.evaluation.new_pass else '#dc2626' }};
+                  border:1px solid {{ '#86efac' if a.evaluation.new_pass else '#fca5a5' }};">
+          <i class="fas fa-{{ 'check-circle' if a.evaluation.new_pass else 'times-circle' }}"></i>
+          {{ a.poem.poem_title if a.poem and a.poem.poem_title else ('قصيدة ' ~ a.poem.poem_number) if a.poem else '' }}
+          ({{ a.plan.verse_start }}-{{ a.plan.verse_end }})
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if poem_state.achievements %}
+  <button class="collapse-btn" id="btn-poem" onclick="toggleCollapse('body-poem','btn-poem')">
+    <span class="collapse-btn-left">
+      <span class="collapse-btn-icon" style="background:#eef2ff;color:#4f46e5;"><i class="fas fa-history"></i></span>
+      سجل إنجازات القصائد
+    </span>
+    <i class="fas fa-chevron-down collapse-arrow"></i>
+  </button>
+
+  <div class="collapse-body" id="body-poem">
+    {% for a in poem_state.achievements %}
+    <div class="mini-plan-card" style="animation-delay:{{ loop.index0 * 0.05 }}s;">
+      <div class="mini-plan-head">
+        <div class="mini-plan-meta">
+          <span class="type-pill type-poem">
+            <i class="fas fa-feather-alt"></i>
+            {{ a.poem.poem_title if a.poem and a.poem.poem_title else ('قصيدة ' ~ a.poem.poem_number) if a.poem else 'قصيدة' }}
+          </span>
+          <span class="date-pill"><i class="fas fa-align-left"></i> {{ a.plan.verse_start }} - {{ a.plan.verse_end }}</span>
+        </div>
+        <span class="date-pill"><i class="fas fa-calendar-day"></i> {{ a.plan.start_date.strftime('%d/%m/%Y') if a.plan.start_date.strftime else a.plan.start_date }}</span>
+      </div>
+      <div class="mini-plan-body">
+        {% if a.evaluation %}
+        <div class="mini-score-strip">
+          <span class="pass-chip {{ 'pass-yes' if a.evaluation.new_pass else 'pass-no' }}" style="font-size:.68rem;">
+            <i class="fas fa-{{ 'check-circle' if a.evaluation.new_pass else 'times-circle' }}"></i>
+            {{ 'أُجيز بنجاح ✅' if a.evaluation.new_pass else 'لم يُجز ❌' }}
+          </span>
+          <span style="margin-right:auto;font-size:.68rem;color:var(--muted);">
+            {{ a.evaluation.evaluation_date.strftime('%d/%m/%Y') if a.evaluation.evaluation_date.strftime else a.evaluation.evaluation_date }}
+            · {{ a.evaluation.teacher.full_name if a.evaluation.teacher else '' }}
+          </span>
+        </div>
+        {% endif %}
+        <div style="display:flex;gap:.4rem;margin-top:.5rem;">
+          <a href="{{ url_for('view_plan_details', plan_id=a.plan.id) }}" class="btn-action btn-view-plan" style="flex:1;">
+            <i class="fas fa-eye"></i> التفاصيل
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endif %}
+
+  <!-- زر العودة -->
+  <a href="{{ back_url }}" class="btn-back">
+    <i class="fas fa-arrow-right"></i>
+    العودة
+  </a>
+
+</div><!-- /sheet -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script>
+    (function(){
+        var items = document.querySelectorAll('[data-toast]');
+        items.forEach(function(el, i){
+            setTimeout(function(){
+                el.classList.add('toast-out');
+                setTimeout(function(){ el.remove(); }, 400);
+            }, 3000 + i * 350);
+        });
+    })();
+    </script>
+<script>
+function toggleCollapse(bodyId, btnId) {
+  const body = document.getElementById(bodyId);
+  const btn  = document.getElementById(btnId);
+  body.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function confirmDelete(planId) {
+  const href = "{{ url_for('delete_plan', plan_id=0) }}".replace('0', planId);
+  askConfirm('هل أنت متأكد من حذف هذا المقرر؟').then(function(ok) {
+    if (ok) window.location.href = href;
+  });
+}
+
+/* إخفاء toast */
+(function(){
+  document.querySelectorAll('[data-toast]').forEach(function(el, i){
+    setTimeout(function(){
+      el.classList.add('toast-out');
+      setTimeout(function(){ el.remove(); }, 380);
+    }, 3000 + i * 350);
+  });
+})();
+</script>
+<script src="{{ url_for('static', filename='js/confirm-modal.js') }}"></script>
+</body>
+</html>{% endif %}

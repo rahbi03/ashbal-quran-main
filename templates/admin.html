@@ -1,0 +1,3761 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>لوحة الإدارة - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    /* ═══════════════════════════════════════════
+       DESIGN TOKENS — ثيم حديث 2025
+    ═══════════════════════════════════════════ */
+    :root {
+        --bg:          #0f1117;
+        --surface:     #1a1d27;
+        --surface-2:   #22263a;
+        --surface-3:   #2b3050;
+        --border:      rgba(255,255,255,0.07);
+        --border-soft: rgba(255,255,255,0.04);
+
+        --accent:      #6c63ff;
+        --accent-2:    #00d4aa;
+        --accent-3:    #ff6b6b;
+        --accent-4:    #ffd93d;
+        --accent-5:    #4facfe;
+
+        --text-1: #f0f2ff;
+        --text-2: #9ba3bf;
+        --text-3: #5a6280;
+
+        --grad-purple:  linear-gradient(135deg,#6c63ff,#a855f7);
+        --grad-teal:    linear-gradient(135deg,#00d4aa,#00b4d8);
+        --grad-red:     linear-gradient(135deg,#ff6b6b,#ee5a24);
+        --grad-gold:    linear-gradient(135deg,#ffd93d,#ff9f43);
+        --grad-blue:    linear-gradient(135deg,#4facfe,#00f2fe);
+        --grad-green:   linear-gradient(135deg,#43e97b,#38f9d7);
+        --grad-pink:    linear-gradient(135deg,#f093fb,#f5576c);
+
+        --radius-sm: 10px;
+        --radius-md: 16px;
+        --radius-lg: 24px;
+        --radius-xl: 32px;
+
+        --shadow-sm:  0 2px 8px rgba(0,0,0,0.3);
+        --shadow-md:  0 8px 24px rgba(0,0,0,0.4);
+        --shadow-lg:  0 16px 48px rgba(0,0,0,0.5);
+        --glow-purple: 0 0 20px rgba(108,99,255,0.25);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+        font-family: 'Tajawal','Cairo',sans-serif;
+        background: var(--bg);
+        min-height: 100vh;
+        color: var(--text-1);
+        padding: 0.75rem;
+        /* subtle grid pattern */
+        background-image:
+            radial-gradient(ellipse 800px 500px at 20% 10%, rgba(108,99,255,0.06) 0%, transparent 70%),
+            radial-gradient(ellipse 600px 400px at 80% 80%, rgba(0,212,170,0.04) 0%, transparent 70%);
+    }
+
+    .wrap { max-width: 1200px; margin: 0 auto; }
+
+    /* ─── NAVBAR ─── */
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 0.65rem 1.2rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow-sm);
+    }
+    .brand {
+        font-size: 1.05rem;
+        font-weight: 800;
+        background: var(--grad-purple);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .topbar-actions { display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; }
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.9rem;
+        border-radius: 99px;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+    .chip-purple { background: rgba(108,99,255,0.15); color: #a89fff; border: 1px solid rgba(108,99,255,0.25); }
+    .chip-red    { background: rgba(255,107,107,0.15); color: #ff9f9f; border: 1px solid rgba(255,107,107,0.25); }
+    .chip-teal   { background: rgba(0,212,170,0.12);   color: #5fffc5; border: 1px solid rgba(0,212,170,0.2); }
+    .chip-gold   { background: rgba(255,217,61,0.12);  color: #ffe680; border: 1px solid rgba(255,217,61,0.2); }
+    .chip-blue   { background: rgba(79,172,254,0.12);  color: #8fd4ff; border: 1px solid rgba(79,172,254,0.2); }
+    .chip-gray   { background: rgba(255,255,255,0.07); color: var(--text-2); border: 1px solid var(--border); }
+    a.chip { text-decoration: none; transition: 0.2s; }
+    a.chip:hover { filter: brightness(1.2); }
+
+    /* ─── QUICK ACTIONS ─── */
+    .quick-row {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+        flex-wrap: wrap;
+    }
+    .qbtn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.45rem 1rem;
+        border-radius: 99px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-decoration: none;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .qbtn:hover { transform: translateY(-2px); filter: brightness(1.1); color:white; }
+    .qbtn-teal   { background: var(--grad-teal);   box-shadow: 0 4px 14px rgba(0,212,170,0.3); }
+    .qbtn-gold   { background: var(--grad-gold);   box-shadow: 0 4px 14px rgba(255,217,61,0.3); }
+    .qbtn-gray   { background: linear-gradient(135deg,#3a3f5c,#2b3050); box-shadow: var(--shadow-sm); }
+    .qbtn-purple { background: var(--grad-purple);  box-shadow: 0 4px 14px rgba(108,99,255,0.3); }
+
+    /* ─── PHASE TOGGLE CARD ─── */
+    .phase-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    .phase-card label { font-size: 0.82rem; color: var(--text-2); font-weight:600; }
+    .form-check-input { cursor:pointer; }
+    .form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
+
+    /* ─── TABS ─── */
+    .tab-rail {
+        display: flex;
+        gap: 0.3rem;
+        flex-wrap: wrap;
+        margin-bottom: 0;
+        padding: 0.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    .tab-rail .nav-link {
+        background: transparent;
+        border: none;
+        color: var(--text-2);
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 0.4rem 0.85rem;
+        border-radius: var(--radius-sm);
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+    .tab-rail .nav-link:hover { background: var(--surface-2); color: var(--text-1); }
+    .tab-rail .nav-link.active {
+        background: var(--grad-purple);
+        color: white;
+        box-shadow: var(--glow-purple);
+    }
+
+    .tab-body {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.2rem;
+    }
+    /* اصلاح التبويبات: تجاوز Bootstrap fade لمنع المساحة الفارغة */
+    .tab-body .tab-pane         { display: none !important; opacity: 1 !important; }
+    .tab-body .tab-pane.show    { display: block !important; }
+
+    /* SECTION HEADER */
+    .sec-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .sec-head h5 {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: var(--text-1);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    /* ─── LIST ITEMS ─── */
+    .list-card {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 0.7rem 1rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        transition: 0.2s;
+    }
+    .list-card:hover { border-color: rgba(108,99,255,0.3); background: var(--surface-3); }
+    .list-card .info { display:flex; align-items:center; gap:0.6rem; }
+    .list-card .info .avatar {
+        width: 36px; height: 36px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+    .av-green  { background: rgba(67,233,123,0.15); color: #43e97b; }
+    .av-purple { background: rgba(108,99,255,0.15); color: #a89fff; }
+    .list-card .info h6 { margin:0; font-size:0.85rem; font-weight:700; color:var(--text-1); }
+    .list-card .info small { color:var(--text-3); font-size:0.7rem; }
+    .row-actions { display:flex; gap:0.35rem; flex-wrap:wrap; }
+
+    /* ─── ACTION BUTTONS ─── */
+    .abtn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.28rem 0.7rem;
+        border-radius: 99px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+    .abtn:hover { transform:translateY(-1px); filter:brightness(1.15); }
+    .abtn-gold   { background:rgba(255,217,61,0.15); color:#ffe680; border:1px solid rgba(255,217,61,0.25); }
+    .abtn-red    { background:rgba(255,107,107,0.15); color:#ff9f9f; border:1px solid rgba(255,107,107,0.25); }
+    .abtn-purple { background:rgba(108,99,255,0.15); color:#a89fff; border:1px solid rgba(108,99,255,0.25); }
+    .abtn-teal   { background:rgba(0,212,170,0.12);  color:#5fffc5; border:1px solid rgba(0,212,170,0.2); }
+    .abtn-blue   { background:rgba(79,172,254,0.12); color:#8fd4ff; border:1px solid rgba(79,172,254,0.2); }
+    .abtn-green  { background:rgba(67,233,123,0.12); color:#7fffb0; border:1px solid rgba(67,233,123,0.2); }
+    .abtn-gray   { background:rgba(255,255,255,0.07);color:var(--text-2);border:1px solid var(--border); }
+
+    /* ─── FORMS ─── */
+    .f-control {
+        width: 100%;
+        background: var(--surface-3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-1);
+        padding: 0.5rem 0.85rem;
+        font-size: 0.83rem;
+        font-family: inherit;
+        transition: 0.2s;
+    }
+    .f-control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,99,255,0.15); }
+    .f-control::placeholder { color: var(--text-3); }
+    .f-label { font-size: 0.75rem; font-weight: 700; color: var(--text-2); margin-bottom: 0.3rem; display:block; }
+
+    .btn-submit {
+        background: var(--grad-purple);
+        color: white;
+        border: none;
+        border-radius: 99px;
+        padding: 0.5rem 1.4rem;
+        font-weight: 700;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: 0.2s;
+        font-family: inherit;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: var(--glow-purple); }
+
+    .btn-cancel {
+        background: var(--surface-3);
+        color: var(--text-2);
+        border: 1px solid var(--border);
+        border-radius: 99px;
+        padding: 0.5rem 1.2rem;
+        font-weight: 700;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: 0.2s;
+        font-family: inherit;
+    }
+    .btn-cancel:hover { border-color: rgba(255,255,255,0.15); color:var(--text-1); }
+
+    /* ─── TABLE ─── */
+    .dark-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.78rem;
+    }
+    .dark-table thead tr {
+        background: var(--surface-3);
+    }
+    .dark-table thead th {
+        padding: 0.65rem 0.9rem;
+        color: var(--text-2);
+        font-weight: 700;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+    }
+    .dark-table tbody tr {
+        border-bottom: 1px solid var(--border-soft);
+        transition: background 0.15s;
+    }
+    .dark-table tbody tr:hover { background: var(--surface-2); }
+    .dark-table tbody td { padding: 0.7rem 0.9rem; vertical-align:middle; color:var(--text-1); }
+
+    /* ─── MODAL ─── */
+    .modal-content {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        color: var(--text-1);
+    }
+    .modal-header {
+        border-bottom: 1px solid var(--border);
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        padding: 1rem 1.2rem;
+    }
+    .modal-body { padding: 1.2rem; }
+    .modal-footer {
+        border-top: 1px solid var(--border);
+        padding: 0.8rem 1.2rem;
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+    .modal-title { font-size: 0.95rem; font-weight: 800; color: var(--text-1); display:flex; align-items:center; gap:0.4rem; }
+
+    /* ─── PERMISSIONS GRID ─── */
+    .perm-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 0.6rem;
+        margin-top: 0.5rem;
+    }
+    .perm-card {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 0.65rem 0.85rem;
+        transition: 0.2s;
+    }
+    .perm-card:has(input:checked) {
+        border-color: rgba(108,99,255,0.4);
+        background: rgba(108,99,255,0.08);
+    }
+    .perm-card label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-2);
+        margin: 0;
+        user-select: none;
+    }
+    .perm-card:has(input:checked) label { color: var(--text-1); }
+    .perm-card input[type=checkbox] {
+        width: 15px; height: 15px;
+        accent-color: var(--accent);
+        flex-shrink: 0;
+    }
+    .perm-section-title {
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0.9rem 0 0.4rem;
+    }
+
+    /* ─── STATUS BADGES ─── */
+    .sbadge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+        padding: 0.18rem 0.55rem;
+        border-radius: 99px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        margin: 1px;
+    }
+    .sbadge-on  { background:rgba(67,233,123,0.15); color:#7fffb0; border:1px solid rgba(67,233,123,0.2); }
+    .sbadge-off { background:rgba(255,255,255,0.05);color:var(--text-3);border:1px solid var(--border); }
+    .sbadge-super { background:var(--grad-purple);color:white; }
+
+    /* ─── SEPARATOR ─── */
+    .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 0.9rem 0;
+    }
+
+    /* ─── ASSIGN CARD ─── */
+    .acard {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+    }
+    .student-check-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 0.4rem;
+    }
+    .student-check-item {
+        background: var(--surface-3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 0.4rem 0.65rem;
+        transition: 0.2s;
+    }
+    .student-check-item:has(input:checked) {
+        border-color: rgba(0,212,170,0.4);
+        background: rgba(0,212,170,0.08);
+    }
+    .student-check-item label {
+        display:flex; align-items:center; gap:0.4rem;
+        font-size:0.75rem; font-weight:600; color:var(--text-2);
+        cursor:pointer; margin:0;
+    }
+    .student-check-item:has(input:checked) label { color:var(--text-1); }
+
+    /* ─── REPORT TABLE ─── */
+    .form-row { display:flex; gap:0.6rem; align-items:flex-end; flex-wrap:wrap; margin-bottom:0.8rem; }
+    .form-group { flex:1; min-width:130px; }
+
+    /* ─── DANGER ZONE ─── */
+    .danger-box {
+        border: 1px solid rgba(255,107,107,0.3);
+        background: rgba(255,107,107,0.05);
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    .danger-box h6 { color: #ff9f9f; font-weight:800; margin-bottom:0.4rem; }
+
+    /* ─── POINTS (leaderboard stays) ─── */
+    .points-hero {
+        background: linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        position:relative; overflow:hidden;
+    }
+    .points-hero::before {
+        content:'✦'; position:absolute;
+        font-size:10rem; color:rgba(255,215,0,0.03);
+        top:-2rem; left:-2rem; line-height:1;
+    }
+    .stat-pill {
+        background:rgba(255,255,255,0.07);
+        border:1px solid rgba(255,255,255,0.1);
+        border-radius:14px; padding:1rem 1.2rem;
+        text-align:center; transition:0.2s;
+    }
+    .stat-pill:hover{transform:translateY(-3px);}
+    .stat-pill .val{font-size:1.8rem;font-weight:800;color:#FFD700;line-height:1;}
+    .stat-pill .lbl{font-size:0.72rem;color:rgba(255,255,255,0.5);}
+    .leaderboard-wrap{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
+    .lb-head{background:linear-gradient(90deg,#1a1a2e,#0f3460);padding:0.85rem 1.2rem;display:flex;align-items:center;justify-content:space-between;}
+    .lb-head h6{color:#FFD700;margin:0;font-weight:800;font-size:0.9rem;}
+    .rank-badge{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:0.78rem;}
+    .rank-1{background:linear-gradient(135deg,#FFD700,#FFA500);color:#fff;box-shadow:0 3px 10px rgba(255,165,0,.4);}
+    .rank-2{background:linear-gradient(135deg,#C0C0C0,#a0a0a0);color:#fff;}
+    .rank-3{background:linear-gradient(135deg,#CD7F32,#a0522d);color:#fff;}
+    .rank-other{background:rgba(255,255,255,0.08);color:var(--text-3);}
+    .points-bar-wrap{display:flex;align-items:center;gap:0.5rem;min-width:120px;}
+    .points-bar{flex:1;height:5px;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;}
+    .points-bar-fill{height:100%;background:var(--grad-blue);border-radius:10px;}
+    .points-badge{background:var(--grad-purple);color:white;border-radius:20px;padding:0.18rem 0.65rem;font-size:0.78rem;font-weight:700;white-space:nowrap;}
+    .cycle-badge{background:var(--grad-green);color:#1a1a2e;border-radius:20px;padding:0.18rem 0.65rem;font-size:0.75rem;font-weight:700;}
+    .stars-row{display:flex;gap:2px;align-items:center;}
+    .btn-log{background:transparent;border:1.5px solid rgba(79,172,254,0.4);color:#8fd4ff;border-radius:20px;padding:0.22rem 0.75rem;font-size:0.72rem;font-weight:700;cursor:pointer;transition:0.2s;}
+    .btn-log:hover{background:rgba(79,172,254,0.15);border-color:#4facfe;}
+    .archive-bar{background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-radius:var(--radius-md);padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;}
+    .archive-bar .ttl{font-weight:800;color:#ffe680;}
+    .archive-bar .dsc{font-size:0.75rem;color:rgba(255,230,128,0.6);margin-top:0.15rem;}
+    .btn-archive{background:var(--grad-gold);border:none;color:#1a1a2e;border-radius:var(--radius-sm);padding:0.5rem 1.1rem;font-weight:800;font-size:0.8rem;cursor:pointer;white-space:nowrap;transition:0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;}
+    .btn-archive:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(255,193,7,.4);color:#1a1a2e;}
+    .btn-archive-blue{background:var(--grad-blue);}
+    .log-modal-header{background:linear-gradient(135deg,#1a1a2e,#0f3460);}
+    .log-entry{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid var(--border);gap:0.5rem;}
+    .log-entry:last-child{border-bottom:none;}
+    .log-date{font-size:0.72rem;color:var(--text-3);}
+    .log-type{font-size:0.7rem;background:var(--surface-3);border-radius:6px;padding:0.1rem 0.45rem;color:var(--text-2);}
+    .log-pts{font-weight:800;color:#43e97b;font-size:0.95rem;}
+
+    /* ─── TOAST ─── */
+    .toast-wrap {
+        position: fixed; top: 1rem; left: 50%;
+        transform: translateX(-50%);
+        z-index: 99999; display:flex; flex-direction:column;
+        gap:0.5rem; pointer-events:none;
+        width:92%; max-width:420px;
+    }
+    .toast-item {
+        display:flex; align-items:center; gap:0.65rem;
+        padding:0.75rem 1.1rem; border-radius:var(--radius-md);
+        font-size:0.88rem; font-weight:700;
+        box-shadow:var(--shadow-md); pointer-events:auto;
+        animation: toastIn 0.35s cubic-bezier(.22,1,.36,1) forwards;
+        border-right: 4px solid transparent;
+    }
+    .t-success{background:#0d2818;border-color:#43e97b;color:#7fffb0;}
+    .t-error  {background:#2a0a0a;border-color:#ff6b6b;color:#ff9f9f;}
+    .t-warning{background:#2a1e00;border-color:#ffd93d;color:#ffe680;}
+    .t-info   {background:#0a1a2a;border-color:#4facfe;color:#8fd4ff;}
+    .toast-item.toast-out{animation:toastOut 0.35s ease forwards;}
+    @keyframes toastIn  {from{opacity:0;transform:translateY(-16px) scale(.95);}to{opacity:1;transform:none;}}
+    @keyframes toastOut {from{opacity:1;}to{opacity:0;transform:translateY(-12px) scale(.95);}}
+
+    /* ─── EMPTY STATE ─── */
+    .empty {
+        text-align:center; padding:2.5rem 1rem;
+        color:var(--text-3);
+    }
+    .empty i{font-size:2.5rem;margin-bottom:0.6rem;opacity:0.4;}
+    .empty p{font-size:0.85rem;}
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar{width:6px;height:6px;}
+    ::-webkit-scrollbar-track{background:var(--surface);}
+    ::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:99px;}
+
+    /* ── تجاوز Bootstrap كاملاً لمنع المساحة الفارغة ── */
+    .tab-pane                   { display: none !important; }
+    .tab-pane.show, 
+    .tab-pane.active            { display: block !important; }
+    /* منع Bootstrap من التدخل بـ opacity */
+    .tab-pane.fade              { opacity: 1 !important; transition: none !important; }
+
+    /* ─── HAMBURGER ─── */
+    .hamburger {
+        background: transparent;
+        border: none;
+        color: var(--text-1);
+        font-size: 1.4rem;
+        padding: 0.2rem 0.4rem;
+        cursor: pointer;
+        border-radius: var(--radius-sm);
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .hamburger:hover { background: var(--surface-2); color: var(--accent); }
+
+    /* ─── SIDEBAR OVERLAY ─── */
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 99990;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: auto;
+        right: -300px;
+        width: 280px;
+        height: 100vh;
+        background: var(--surface);
+        border-left: 1px solid var(--border);
+        z-index: 99991;
+        overflow-y: auto;
+        transition: right 0.3s cubic-bezier(.22,1,.36,1);
+        padding: 1rem 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar.open { right: 0; }
+
+    .sidebar-header {
+        padding: 0.5rem 1.2rem 1rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .sidebar-header .brand-small {
+        font-size: 1rem;
+        font-weight: 800;
+        background: var(--grad-purple);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .sidebar-close {
+        background: transparent;
+        border: none;
+        color: var(--text-2);
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0.2rem;
+        transition: 0.2s;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px; height: 32px;
+    }
+    .sidebar-close:hover { background: var(--surface-2); color: var(--text-1); }
+
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; flex: 1; }
+    .sidebar-nav li { margin: 0; }
+    .sidebar-nav .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.7rem 1.2rem;
+        color: var(--text-2);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        background: transparent;
+        width: 100%;
+        text-align: right;
+        cursor: pointer;
+        transition: 0.15s;
+        font-family: inherit;
+        border-right: 3px solid transparent;
+    }
+    .sidebar-nav .nav-link:hover {
+        background: var(--surface-2);
+        color: var(--text-1);
+    }
+    .sidebar-nav .nav-link.active {
+        background: rgba(108,99,255,0.1);
+        color: var(--accent);
+        border-right-color: var(--accent);
+    }
+    .sidebar-nav .nav-link i { width: 20px; text-align: center; font-size: 0.9rem; }
+
+    .sidebar-footer {
+        padding: 0.8rem 1.2rem;
+        border-top: 1px solid var(--border);
+        font-size: 0.7rem;
+        color: var(--text-3);
+    }
+
+</style>
+</head>
+<body>
+
+<!-- ══ Toast ══ -->
+<div class="toast-wrap" id="toastWrap">
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}
+    <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}"
+         data-toast="{{ loop.index }}">
+        <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+        <span>{{ message }}</span>
+    </div>
+    {% endfor %}{% endif %}
+{% endwith %}
+</div>
+
+<div class="wrap">
+
+    <!-- ══ TOPBAR ══ -->
+    <nav class="topbar">
+        <button class="hamburger" id="sidebarToggle" aria-label="القائمة">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="topbar-actions">
+            <span class="chip chip-purple"><i class="fas fa-user-cog"></i> {{ current_user.username }}</span>
+            {% if current_user.is_super_admin %}
+            <span class="chip chip-gold"><i class="fas fa-crown"></i> مدير عام</span>
+            {% endif %}
+            <a href="{{ url_for('change_password') }}" class="chip chip-gray"><i class="fas fa-key"></i> كلمة المرور</a>
+            <a href="{{ url_for('logout') }}" class="chip chip-red"><i class="fas fa-sign-out-alt"></i> خروج</a>
+        </div>
+    </nav>
+
+    <!-- ══ PHASE TOGGLE (moved to settings tab) ══ -->
+
+    {% if error %}
+    <div style="background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);border-radius:var(--radius-sm);padding:0.6rem 1rem;margin-bottom:0.8rem;font-size:0.82rem;color:#ff9f9f;">
+        <i class="fas fa-exclamation-circle"></i> {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- ══ SIDEBAR OVERLAY ══ -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="brand-small"><i class="fas fa-quran"></i> أشبال القرآن</span>
+            <button class="sidebar-close" id="sidebarClose" aria-label="إغلاق"><i class="fas fa-times"></i></button>
+        </div>
+        <ul class="sidebar-nav">
+            {% if current_user.is_super_admin or current_user.can_access_students %}
+            <li><button class="nav-link {% if active_tab=='students' %}active{% endif %}" data-tab="students">
+                <i class="fas fa-user-graduate"></i> الطلاب
+            </button></li>
+            {% endif %}
+            {% if current_user.is_super_admin or current_user.can_access_teachers %}
+            <li><button class="nav-link {% if active_tab=='teachers' %}active{% endif %}" data-tab="teachers">
+                <i class="fas fa-chalkboard-teacher"></i> المعلمون
+            </button></li>
+            {% endif %}
+            <li><button class="nav-link {% if active_tab=='assign' %}active{% endif %}" data-tab="assign">
+                <i class="fas fa-link"></i> الربط
+            </button></li>
+            {% if current_user.is_super_admin or current_user.can_access_reports %}
+            <li><button class="nav-link {% if active_tab=='reports' %}active{% endif %}" data-tab="reports">
+                <i class="fas fa-chart-bar"></i> التقارير
+            </button></li>
+            <li><button class="nav-link {% if active_tab=='points' %}active{% endif %}" data-tab="points">
+                <i class="fas fa-star" style="color:#FFD700;"></i> النقاط
+            </button></li>
+            <li><button class="nav-link {% if active_tab=='rewards' %}active{% endif %}" data-tab="rewards">
+                <i class="fas fa-gift"></i> المكافآت
+            </button></li>
+            <li><a class="nav-link" href="{{ url_for('missing_reports') }}">
+                <i class="fas fa-chart-line" style="color:var(--accent-2);"></i> تقرير المتخلفين
+            </a></li>
+            <li><a class="nav-link" href="{{ url_for('admin_warnings_simple') }}">
+                <i class="fas fa-exclamation-triangle" style="color:var(--accent-4);"></i> إدارة الإنذارات
+            </a></li>
+            {% endif %}
+            {% if current_user.is_super_admin %}
+            <li><button class="nav-link {% if active_tab=='settings' %}active{% endif %}" data-tab="settings">
+                <i class="fas fa-cog"></i> إعدادات النظام
+            </button></li>
+            {% endif %}
+            {% if current_user.is_super_admin or current_user.can_access_backup %}
+            <li><button class="nav-link {% if active_tab=='data' %}active{% endif %}" data-tab="data">
+                <i class="fas fa-database"></i> البيانات
+            </button></li>
+            {% endif %}
+            {% if current_user.is_super_admin %}
+            <li><button class="nav-link {% if active_tab=='admins' %}active{% endif %}" data-tab="admins">
+                <i class="fas fa-user-shield"></i> المستخدمون
+            </button></li>
+            {% endif %}
+            {% if current_user.is_super_admin %}
+            <li><a class="nav-link {% if active_tab=='poems' %}active{% endif %}"
+                   href="{{ url_for('admin_poems') }}">
+                <i class="fas fa-feather-alt" style="color:var(--accent-2);"></i> القصائد
+            </a></li>
+            {% endif %}
+            {% if current_user.is_super_admin or current_user.can_access_reports %}
+            <li><a class="nav-link {% if active_tab=='duplicates' %}active{% endif %}"
+                   href="{{ url_for('admin_duplicates') }}">
+                <i class="fas fa-copy" style="color:var(--accent-4);"></i> مقررات مكررة
+            </a></li>
+            {% endif %}
+        </ul>
+        <div class="sidebar-footer">
+            <i class="fas fa-user-cog"></i> {{ current_user.username }}
+            {% if current_user.is_super_admin %} · مدير عام{% endif %}
+        </div>
+    </aside>
+
+    <!-- ══ TOPBAR TABS (hidden, used for active_tab tracking) ══ -->
+    <div style="display:none" id="adminTabs" data-active="{{ active_tab }}"></div>
+
+    <!-- ══ TAB CONTENT ══ -->
+    <div class="tab-body" id="adminTabsContent">
+
+        <!-- ═══ STUDENTS ═══ -->
+        <div class="tab-pane {% if active_tab=='students' %}show active{% endif %}" id="students" role="tabpanel">
+            <div class="sec-head">
+                <h5><i class="fas fa-user-graduate" style="color:var(--accent-2);"></i> قائمة الطلاب</h5>
+                {% if current_user.is_super_admin or current_user.can_edit_students %}
+                <button class="abtn abtn-teal" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                    <i class="fas fa-plus-circle"></i> إضافة طالب
+                </button>
+                {% endif %}
+            </div>
+            {% if students %}
+            {% for student in students|sort(attribute='full_name') %}
+            <div class="list-card">
+                <div class="info">
+                    <div class="avatar av-green"><i class="fas fa-user-graduate"></i></div>
+                    <div>
+                        <h6>{{ student.full_name }}</h6>
+                        <small>@{{ student.username }} · {{ student.memorization_level or 'غير محدد' }}</small>
+                    </div>
+                </div>
+                <div class="row-actions">
+                    {% if student.is_suspended %}
+                    <span class="sbadge sbadge-off"><i class="fas fa-ban"></i> موقوف</span>
+                    {% endif %}
+                    {% if current_user.is_super_admin or current_user.can_edit_students %}
+                    <a href="{{ url_for('edit_student', id=student.id) }}" class="abtn abtn-gold">
+                        <i class="fas fa-edit"></i> تعديل
+                    </a>
+                    <a href="{{ url_for('delete_student', id=student.id, tab=active_tab) }}" class="abtn abtn-red tab-sync"
+                       data-confirm="حذف هذا الطالب؟">
+                        <i class="fas fa-trash"></i> حذف
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('view_student_plans', student_id=student.id) }}" class="abtn abtn-purple">
+                        <i class="fas fa-list"></i> مقرراته
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty"><i class="fas fa-users d-block"></i><p>لا يوجد طلاب مسجّلون</p></div>
+            {% endif %}
+        </div>
+
+        <!-- ═══ TEACHERS ═══ -->
+        <div class="tab-pane {% if active_tab=='teachers' %}show active{% endif %}" id="teachers" role="tabpanel">
+            <div class="sec-head">
+                <h5><i class="fas fa-chalkboard-teacher" style="color:var(--accent);"></i> قائمة المعلمين</h5>
+                {% if current_user.is_super_admin or current_user.can_edit_teachers %}
+                <button class="abtn abtn-purple" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
+                    <i class="fas fa-plus-circle"></i> إضافة معلم
+                </button>
+                {% endif %}
+            </div>
+            {% if teachers %}
+            {% for teacher in teachers|sort(attribute='full_name') %}
+            <div class="list-card">
+                <div class="info">
+                    <div class="avatar av-purple"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <div>
+                        <h6>{{ teacher.full_name }}</h6>
+                        <small>@{{ teacher.username }}</small>
+                        <div style="margin-top:2px;">
+                            {% if teacher.can_view_missing_reports %}
+                            <span class="sbadge sbadge-on"><i class="fas fa-eye"></i> مشرف تقارير</span>
+                            {% endif %}
+                            {% if teacher.can_add_plan %}
+                            <span class="sbadge sbadge-on"><i class="fas fa-plus-circle"></i> إضافة مقررات</span>
+                            {% endif %}
+                            {% if teacher.can_add_poem_plan %}
+                            <span class="sbadge sbadge-on"><i class="fas fa-feather-alt"></i> إضافة قصائد</span>
+                            {% else %}
+                            <span class="sbadge sbadge-off"><i class="fas fa-ban"></i> القصائد معطلة</span>
+                            {% endif %}
+                            {% if teacher.can_add_poem_plan %}
+                            <span class="sbadge sbadge-on"><i class="fas fa-feather-alt"></i> إضافة قصائد</span>
+                            {% else %}
+                            <span class="sbadge sbadge-off"><i class="fas fa-ban"></i> القصائد معطلة</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row-actions">
+                    {% if current_user.is_super_admin %}
+                    <a href="{{ url_for('toggle_teacher_report_permission', teacher_id=teacher.id, tab=active_tab) }}"
+                       class="abtn {% if teacher.can_view_missing_reports %}abtn-teal{% else %}abtn-gray{% endif %} tab-sync"
+                       data-confirm="تغيير صلاحية التقارير؟" title="صلاحية تقرير المتخلفين">
+                        <i class="fas fa-eye"></i> {{ 'مشرف ✓' if teacher.can_view_missing_reports else 'مشرف ✗' }}
+                    </a>
+                    <a href="{{ url_for('toggle_teacher_add_plan_permission', teacher_id=teacher.id, tab=active_tab) }}"
+                       class="abtn {% if teacher.can_add_plan %}abtn-blue{% else %}abtn-gray{% endif %} tab-sync"
+                       data-confirm="تغيير صلاحية إضافة المقررات؟" title="صلاحية إضافة المقررات">
+                        <i class="fas fa-{% if teacher.can_add_plan %}plus-circle{% else %}ban{% endif %}"></i>
+                        {{ 'مقرر ✓' if teacher.can_add_plan else 'مقرر ✗' }}
+                    </a>
+                    <a href="{{ url_for('toggle_teacher_add_poem_plan_permission', teacher_id=teacher.id, tab=active_tab) }}"
+                       class="abtn {% if teacher.can_add_poem_plan %}abtn-purple{% else %}abtn-gray{% endif %} tab-sync"
+                       data-confirm="تغيير صلاحية إضافة مقررات القصائد؟" title="صلاحية إضافة مقررات القصائد">
+                        <i class="fas fa-{% if teacher.can_add_poem_plan %}feather-alt{% else %}ban{% endif %}"></i>
+                        {{ 'قصائد ✓' if teacher.can_add_poem_plan else 'قصائد ✗' }}
+                    </a>
+                    {% endif %}
+                    {% if current_user.is_super_admin or current_user.can_edit_teachers %}
+                    <a href="{{ url_for('edit_teacher', id=teacher.id) }}" class="abtn abtn-gold">
+                        <i class="fas fa-edit"></i> تعديل
+                    </a>
+                    <a href="{{ url_for('delete_teacher', id=teacher.id, tab=active_tab) }}" class="abtn abtn-red tab-sync"
+                       data-confirm="إخفاء هذا المعلم؟ لن يتم حذف أي بيانات مرتبطة به.">
+                        <i class="fas fa-eye-slash"></i> إخفاء
+                    </a>
+                    {% else %}
+                    <span class="sbadge sbadge-off">عرض فقط</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty"><i class="fas fa-chalkboard-teacher d-block"></i><p>لا يوجد معلمون مسجّلون</p></div>
+            {% endif %}
+        </div>
+
+        <!-- ═══ ASSIGN ═══ -->
+        <div class="tab-pane {% if active_tab=='assign' %}show active{% endif %}" id="assign" role="tabpanel">
+            <h5 style="font-size:0.95rem;font-weight:800;color:var(--text-1);margin-bottom:1rem;">
+                <i class="fas fa-link" style="color:var(--accent-2);"></i> ربط المعلمين بالطلاب
+            </h5>
+
+            <form action="{{ url_for('assign_teacher_students') }}" method="post" id="assignForm">
+                <input type="hidden" name="tab" value="assign">
+                <input type="hidden" name="teacher_id" id="selectedTeacherId" value="">
+                <!-- student_ids تضاف ديناميكياً عبر JavaScript قبل الإرسال -->
+
+                <!-- ─── معلمين ─── -->
+                <div style="margin-bottom:1rem;">
+                    <div style="font-size:0.7rem;font-weight:700;color:var(--text-3);margin-bottom:0.4rem;">
+                        <i class="fas fa-chalkboard-teacher"></i> اختر معلماً
+                    </div>
+                    <select id="teacherSelect" onchange="selectTeacher(this)"
+                            style="width:100%;padding:0.6rem 0.8rem;border-radius:10px;
+                                   border:1.5px solid var(--border);background:var(--surface-3);
+                                   color:var(--text-1);font-size:0.85rem;font-weight:600;
+                                   appearance:auto;cursor:pointer;">
+                        <option value="">— اختر معلماً —</option>
+                        {% for teacher in teachers %}
+                        <option value="{{ teacher.id }}">{{ teacher.full_name }} ({{ teacher.students|length }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- ─── طلاب ─── -->
+                <div id="studentArea" style="display:none;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+                        <div style="font-size:0.7rem;font-weight:700;color:var(--text-3);">
+                            <i class="fas fa-users"></i> <span id="studentCountLabel">0</span> طالب
+                        </div>
+                        <div style="display:flex;gap:0.4rem;">
+                            <span id="assignedCount" class="sbadge sbadge-on" style="font-size:0.65rem;">0 مرتبط</span>
+                            <span id="unassignedCount" class="sbadge sbadge-off" style="font-size:0.65rem;">0 غير مرتبط</span>
+                        </div>
+                    </div>
+                    <div id="studentGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:0.4rem;">
+                        {% for student in students %}
+                        <div class="assign-student-item" data-id="{{ student.id }}"
+                             style="display:flex;align-items:center;gap:0.5rem;
+                                    background:var(--surface-3);border:1.5px solid var(--border);
+                                    border-radius:10px;padding:0.45rem 0.65rem;
+                                    cursor:pointer;transition:all .2s;
+                                    font-size:0.75rem;font-weight:600;color:var(--text-2);"
+                             onclick="toggleStudent(this)">
+                            <div class="assign-avatar"
+                                 style="width:28px;height:28px;border-radius:50%;
+                                        background:var(--accent-2);color:#fff;
+                                        display:flex;align-items:center;justify-content:center;
+                                        font-size:0.7rem;font-weight:700;flex-shrink:0;">
+                                {{ student.full_name[0] }}
+                            </div>
+                            <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ student.full_name }}</span>
+                            <div class="assign-toggle"
+                                 style="width:18px;height:18px;border-radius:50%;
+                                        border:2px solid var(--border);
+                                        transition:all .2s;flex-shrink:0;"></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- ─── شريط الحفظ الثابت ─── -->
+                <div id="saveBar" style="display:none;position:sticky;bottom:0;margin-top:1rem;
+                        background:var(--surface-2);border:1px solid var(--border);
+                        border-radius:14px;padding:0.8rem 1rem;
+                        align-items:center;justify-content:space-between;gap:1rem;
+                        box-shadow:0 -4px 20px rgba(0,0,0,.15);">
+                    <div>
+                        <div style="font-size:0.7rem;color:var(--text-3);">المعلم المحدد</div>
+                        <div style="font-weight:700;font-size:0.9rem;color:var(--text-1);" id="saveBarTeacher">—</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.8rem;">
+                        <span id="saveBarCount" style="font-size:0.75rem;color:var(--text-2);"><span id="checkedCount">0</span> طالب</span>
+                        <button type="submit" class="abtn abtn-green" style="padding:0.45rem 1.2rem;font-size:0.8rem;">
+                            <i class="fas fa-save"></i> حفظ
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+
+        <script>
+        // بيانات ارتباطات كل معلم (مجمعة مسبقاً)
+        var teacherStudents = {
+            {% for teacher in teachers %}
+            {{ teacher.id }}: [{% for s in teacher.students %}{{ s.id }}{% if not loop.last %},{% endif %}{% endfor %}],
+            {% endfor %}
+        };
+        var selectedTeacherId = null;
+        var allStudentIds = [{% for s in students %}{{ s.id }}{% if not loop.last %},{% endif %}{% endfor %}];
+
+        function selectTeacher(el) {
+            var id = parseInt(el.value);
+            if (!id) {
+                document.getElementById('studentArea').style.display = 'none';
+                document.getElementById('saveBar').style.display = 'none';
+                return;
+            }
+
+            selectedTeacherId = id;
+            document.getElementById('selectedTeacherId').value = id;
+            document.getElementById('studentArea').style.display = 'block';
+            document.getElementById('saveBar').style.display = 'flex';
+
+            var assigned = teacherStudents[id] || [];
+            var items = document.querySelectorAll('.assign-student-item');
+            items.forEach(function(item) {
+                var sid = parseInt(item.dataset.id);
+                var toggle = item.querySelector('.assign-toggle');
+                item.style.borderColor = 'var(--border)';
+                item.style.background = 'var(--surface-3)';
+                toggle.style.background = 'transparent';
+                toggle.style.borderColor = 'var(--border)';
+                if (assigned.indexOf(sid) !== -1) {
+                    item.style.borderColor = 'rgba(0,212,170,0.35)';
+                    item.style.background = 'rgba(0,212,170,0.06)';
+                    toggle.style.background = '#0dc8a0';
+                    toggle.style.borderColor = '#0dc8a0';
+                }
+            });
+
+            updateCounts();
+            document.getElementById('saveBarTeacher').textContent = el.options[el.selectedIndex].text.replace(/\(\d+\)$/, '').trim();
+        }
+
+        function toggleStudent(el) {
+            if (!selectedTeacherId) return;
+            var toggle = el.querySelector('.assign-toggle');
+            var isOn = toggle.style.background === 'rgb(13, 200, 160)' || toggle.style.background === '#0dc8a0';
+
+            if (isOn) {
+                el.style.borderColor = 'var(--border)';
+                el.style.background = 'var(--surface-3)';
+                toggle.style.background = 'transparent';
+                toggle.style.borderColor = 'var(--border)';
+            } else {
+                el.style.borderColor = 'rgba(0,212,170,0.35)';
+                el.style.background = 'rgba(0,212,170,0.06)';
+                toggle.style.background = '#0dc8a0';
+                toggle.style.borderColor = '#0dc8a0';
+            }
+            updateCounts();
+        }
+
+        function updateCounts() {
+            var items = document.querySelectorAll('.assign-student-item');
+            var checked = 0;
+            items.forEach(function(item) {
+                var toggle = item.querySelector('.assign-toggle');
+                if (toggle.style.background === 'rgb(13, 200, 160)' || toggle.style.background === '#0dc8a0') checked++;
+            });
+            document.getElementById('checkedCount').textContent = checked;
+            document.getElementById('studentCountLabel').textContent = items.length + ' طالب — ' + checked + ' مرتبط';
+            var assignedSpan = document.getElementById('assignedCount');
+            var unassignedSpan = document.getElementById('unassignedCount');
+            assignedSpan.textContent = checked + ' مرتبط';
+            unassignedSpan.textContent = (items.length - checked) + ' غير مرتبط';
+        }
+
+        function syncFormBeforeSubmit() {
+            var items = document.querySelectorAll('.assign-student-item');
+            var checked = [];
+            items.forEach(function(item) {
+                var toggle = item.querySelector('.assign-toggle');
+                if (toggle.style.background === 'rgb(13, 200, 160)' || toggle.style.background === '#0dc8a0') {
+                    checked.push(item.dataset.id);
+                }
+            });
+            // إزالة أي student_ids سابقة وإضافة المحددة
+            var form = document.getElementById('assignForm');
+            form.querySelectorAll('input[name="student_ids"]').forEach(function(i) { i.remove(); });
+            checked.forEach(function(id) {
+                var inp = document.createElement('input');
+                inp.type = 'hidden';
+                inp.name = 'student_ids';
+                inp.value = id;
+                form.appendChild(inp);
+            });
+            return true;
+        }
+
+        document.getElementById('assignForm').addEventListener('submit', syncFormBeforeSubmit);
+
+        // تفعيل أول معلم تلقائياً
+        document.addEventListener('DOMContentLoaded', function() {
+            var firstCard = document.querySelector('.assign-teacher-card');
+            if (firstCard) selectTeacher(firstCard, parseInt(firstCard.dataset.id));
+        });
+        </script>
+
+        <!-- ═══ REPORTS ═══ -->
+        <div class="tab-pane {% if active_tab=='reports' %}show active{% endif %}" id="reports" role="tabpanel">
+            <h5 style="font-size:0.95rem;font-weight:800;color:var(--text-1);margin-bottom:1rem;">
+                <i class="fas fa-chart-bar" style="color:var(--accent-4);"></i> تقرير الأداء
+            </h5>
+            <div class="acard">
+                <form method="get" action="{{ url_for('admin') }}">
+                    <input type="hidden" name="tab" value="reports">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="f-label">من تاريخ</label>
+                            <input type="date" name="start_date" class="f-control"
+                                   value="{{ start_date.strftime('%Y-%m-%d') if start_date else '' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="f-label">إلى تاريخ</label>
+                            <input type="date" name="end_date" class="f-control"
+                                   value="{{ end_date.strftime('%Y-%m-%d') if end_date else '' }}" required>
+                        </div>
+                        <button type="submit" class="btn-submit" style="align-self:flex-end;">عرض</button>
+                    </div>
+                </form>
+            </div>
+            {% if report_data %}
+            <div class="table-responsive">
+                <table class="dark-table">
+                    <thead><tr><th>الطالب</th><th>المقررات</th><th>مقيّمة</th><th>غير مقيّمة</th><th>أيام الغياب*</th><th>المتوسط</th></tr></thead>
+                    <tbody>
+                    {% for item in report_data %}
+                    <tr>
+                        <td style="font-weight:700;">{{ item.student.full_name }}</td>
+                        <td>{{ item.total_plans }}</td>
+                        <td><span class="sbadge sbadge-on">{{ item.evaluated_plans }}</span></td>
+                        <td><span class="sbadge {% if item.unevaluated_plans>0 %}sbadge-off{% else %}sbadge-on{% endif %}">{{ item.unevaluated_plans }}</span></td>
+                        <td>{{ item.absent_days }}</td>
+                        <td><strong>{{ item.avg_score }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p style="font-size:0.7rem;color:var(--text-3);margin-top:0.5rem;">* أيام الغياب من الأحد إلى الجمعة (السبت مستثنى)</p>
+            {% else %}
+            <div class="empty"><i class="fas fa-chart-bar d-block"></i><p>اختر فترة زمنية لعرض التقرير</p></div>
+            {% endif %}
+
+            <!-- ═══ TEACHER EVALUATIONS REPORT ═══ -->
+            <div class="divider"></div>
+            <h5 style="font-size:0.95rem;font-weight:800;color:var(--text-1);margin:1rem 0;">
+                <i class="fas fa-chalkboard-teacher" style="color:var(--accent);"></i> تقييمات المعلمين
+            </h5>
+            <div class="acard">
+                <form method="get" action="{{ url_for('admin') }}">
+                    <input type="hidden" name="tab" value="reports">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="f-label">من تاريخ</label>
+                            <input type="date" name="tr_start" class="f-control"
+                                   value="{{ tr_start.strftime('%Y-%m-%d') if tr_start else '' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="f-label">إلى تاريخ</label>
+                            <input type="date" name="tr_end" class="f-control"
+                                   value="{{ tr_end.strftime('%Y-%m-%d') if tr_end else '' }}" required>
+                        </div>
+                        <button type="submit" class="btn-submit" style="align-self:flex-end;">بحث</button>
+                    </div>
+                </form>
+            </div>
+            {% if teacher_report_data is not none and teacher_report_data|length > 0 %}
+            <div class="table-responsive">
+                <table class="dark-table" id="teacherEvalTable">
+                    <thead>
+                        <tr>
+                            <th>المعلم</th>
+                            <th>عدد المقررات المقيمة</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in teacher_report_data %}
+                    <tr>
+                        <td style="font-weight:700;">{{ item.teacher_name }}</td>
+                        <td>
+                            <a href="#" class="abtn abtn-teal eval-count-btn"
+                               data-teacher="{{ item.teacher_name }}"
+                               data-evals='{{ item.evaluations | tojson | safe }}'>
+                                <i class="fas fa-list"></i> {{ item.evaluations | length }}
+                            </a>
+                        </td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="evalDetails" style="display:none;margin-top:0.8rem;"></div>
+            {% elif teacher_report_data is not none and teacher_report_data|length == 0 %}
+            <div class="empty"><i class="fas fa-chalkboard-teacher d-block"></i><p>لا توجد تقييمات في هذه الفترة</p></div>
+            {% endif %}
+        </div>
+
+        <!-- ═══ POINTS ═══ -->
+        <div class="tab-pane {% if active_tab=='points' %}show active{% endif %}" id="points" role="tabpanel">
+
+            <!-- إعادة حساب النقاط بالمنطق الجديد -->
+            <div style="background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.2);border-radius:var(--radius-md);padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:0.8rem;">
+                <div>
+                    <div style="font-weight:800;color:#ff9f9f;font-size:0.85rem;display:flex;align-items:center;gap:0.4rem;">
+                        <i class="fas fa-calculator"></i> إعادة حساب نقاط جميع الطلاب
+                    </div>
+                    <div style="font-size:0.72rem;color:rgba(255,159,159,0.6);margin-top:0.2rem;line-height:1.5;">
+                        يُطبّق المنطق الجديد: 100 درجة/مقرر · 600 للدورة · 5 نجوم · كل نجمة = 120 درجة
+                    </div>
+                </div>
+                <form method="post" action="{{ url_for('recalculate_all_points') }}"
+                      data-confirm="إعادة حساب نقاط جميع الطلاب بالمنطق الجديد؟
+سيتم تحديث جميع النقاط والنجوم فوراً.">
+                    <button type="submit" style="background:linear-gradient(135deg,#ff6b6b,#ee5a24);border:none;color:white;border-radius:var(--radius-sm);padding:0.5rem 1.1rem;font-weight:800;font-size:0.8rem;cursor:pointer;white-space:nowrap;transition:0.2s;display:inline-flex;align-items:center;gap:0.4rem;font-family:inherit;"
+                            onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+                        <i class="fas fa-sync-alt"></i> إعادة الحساب الآن
+                    </button>
+                </form>
+            </div>
+
+            <!-- أرشفة -->
+            <div class="archive-bar">
+                <div>
+                    <div class="ttl"><i class="fas fa-archive"></i> أرشفة الدورة الحالية</div>
+                    <div class="dsc">سيتم إنشاء دورة جديدة مع الاحتفاظ بالنقاط التراكمية وتصفير نقاط الدورة والنجوم.</div>
+                </div>
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <a href="{{ url_for('points_cycle_history') }}" class="btn-archive btn-archive-blue">
+                        <i class="fas fa-history"></i> الدورات السابقة
+                    </a>
+                    <form method="post" action="{{ url_for('archive_points_cycle') }}"
+                          data-confirm="⚠️ سيتم أرشفة الدورة الحالية وبدء دورة جديدة. هل أنت متأكد؟">
+                        <button type="submit" class="btn-archive"><i class="fas fa-archive"></i> أرشفة وبدء دورة</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="leaderboard-wrap">
+                <div class="lb-head">
+                    <h6><i class="fas fa-ranking-star"></i> ترتيب الطلاب — الدورة الحالية</h6>
+                    <span style="color:rgba(255,255,255,0.4);font-size:0.72rem;">مرتب حسب النقاط التراكمية</span>
+                </div>
+                {% set max_pts = students_with_points_data[0].total_points if students_with_points_data and students_with_points_data[0].total_points > 0 else 1 %}
+                <table class="dark-table">
+                    <thead><tr><th style="width:44px;">#</th><th>الطالب</th><th>النقاط الكلية</th><th>نقاط الدورة</th><th>النجوم / 5</th><th>السجل</th></tr></thead>
+                    <tbody>
+                    {% for student in students_with_points_data %}
+                    {% set loop_idx = loop.index %}
+                    <tr>
+                        <td>
+                            <span class="rank-badge {% if loop_idx==1 %}rank-1{% elif loop_idx==2 %}rank-2{% elif loop_idx==3 %}rank-3{% else %}rank-other{% endif %}">
+                                {{ loop_idx }}
+                            </span>
+                        </td>
+                        <td style="font-weight:700;">{{ student.full_name }}</td>
+                        <td>
+                            <div class="points-bar-wrap">
+                                <div class="points-bar">
+                                    <div class="points-bar-fill" style="width:{{ [((student.total_points / max_pts)*100)|round|int, 100]|min }}%;"></div>
+                                </div>
+                                <span class="points-badge">{{ student.total_points }}</span>
+                            </div>
+                        </td>
+                        <td><span class="cycle-badge">{{ student.current_cycle_points }}</span></td>
+                        <td>
+                            <div class="stars-row">
+                                {% for i in range(student.star_level) %}<i class="fas fa-star" style="color:#FFD700;font-size:0.8rem;"></i>{% endfor %}
+                                {% for i in range(5 - student.star_level) %}<i class="far fa-star" style="color:var(--text-3);font-size:0.8rem;"></i>{% endfor %}
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn-log" data-bs-toggle="modal" data-bs-target="#logModal{{ student.id }}">
+                                <i class="fas fa-list-ul"></i> عرض
+                            </button>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="text-center" style="padding:2rem;color:var(--text-3);">لا توجد بيانات</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Log Modals -->
+            {% for student in students_with_points_data %}
+            <div class="modal fade" id="logModal{{ student.id }}" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header log-modal-header">
+                            <span class="modal-title"><i class="fas fa-history" style="color:#FFD700;"></i> سجل نقاط {{ student.full_name }}</span>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% if student.points_logs %}
+                            <div style="display:flex;justify-content:space-between;background:var(--surface-2);border-radius:var(--radius-sm);padding:0.6rem 0.9rem;margin-bottom:0.75rem;font-size:0.82rem;">
+                                <span>الإجمالي: <strong style="color:var(--accent);">{{ student.total_points }}</strong></span>
+                                <span>الدورة: <strong style="color:var(--accent-2);">{{ student.current_cycle_points }}</strong></span>
+                            </div>
+                            {% for log in student.points_logs|sort(attribute='evaluation_date',reverse=True) %}
+                            <div class="log-entry">
+                                <div>
+                                    <span class="log-type">{{ log.plan.plan_type if log.plan else '—' }}</span>
+                                    <span class="log-date" style="margin-right:0.5rem;">{{ log.evaluation_date }}</span>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:0.5rem;">
+                                    <div class="stars-row">
+                                        {% for i in range(log.stars_earned) %}<i class="fas fa-star" style="color:#FFD700;font-size:0.8rem;"></i>{% endfor %}
+                                        {% for i in range(5-log.stars_earned) %}<i class="far fa-star" style="color:var(--text-3);font-size:0.8rem;"></i>{% endfor %}
+                                    </div>
+                                    <span class="log-pts">+{{ log.points_earned }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="empty"><i class="fas fa-inbox d-block"></i><p>لا توجد سجلات نقاط</p></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- ═══ REWARDS ═══ -->
+        <div class="tab-pane {% if active_tab=='rewards' %}show active{% endif %}" id="rewards" role="tabpanel">
+            <iframe src="{{ url_for('admin_reward_rules') }}" style="width:100%;height:600px;border:none;border-radius:var(--radius-md);"></iframe>
+        </div>
+
+        <!-- ═══ SETTINGS ═══ -->
+        {% if current_user.is_super_admin %}
+        <div class="tab-pane {% if active_tab=='settings' %}show active{% endif %}" id="settings" role="tabpanel">
+            <h5 style="font-size:0.95rem;font-weight:800;color:var(--text-1);margin-bottom:1rem;">
+                <i class="fas fa-cog" style="color:var(--accent-5);"></i> إعدادات النظام
+            </h5>
+            <div class="acard">
+                <h6 style="font-size:0.82rem;font-weight:800;color:var(--text-2);margin-bottom:0.6rem;">
+                    <i class="fas fa-toggle-on" style="color:var(--accent-2);"></i> مقرر تقييم المرحلة
+                </h6>
+                <p style="font-size:0.75rem;color:var(--text-3);margin-bottom:0.75rem;">تفعيل مقرر تقييم المرحلة للطلاب.</p>
+                <form method="post" action="{{ url_for('toggle_phase_plan') }}" style="display:flex;align-items:center;gap:0.6rem;">
+                    <input type="hidden" name="tab" value="settings">
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" role="switch" id="phaseSwitch"
+                               name="phase_plan_enabled" {% if phase_plan_enabled %}checked{% endif %}>
+                        <label class="form-check-label" for="phaseSwitch" style="font-size:0.78rem;color:var(--text-2);">
+                            {{ 'مفعّل' if phase_plan_enabled else 'غير مفعّل' }}
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-submit" style="padding:0.3rem 0.9rem;font-size:0.75rem;">حفظ</button>
+                </form>
+            </div>
+            <div class="acard">
+                <iframe src="{{ url_for('admin_settings') }}" style="width:100%;min-height:500px;border:none;border-radius:var(--radius-md);background:#fff;"></iframe>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ═══ DATA ═══ -->
+        <div class="tab-pane {% if active_tab=='data' %}show active{% endif %}" id="data" role="tabpanel">
+            <h5 style="font-size:0.95rem;font-weight:800;color:var(--text-1);margin-bottom:1rem;">
+                <i class="fas fa-database" style="color:var(--accent-5);"></i> النسخ الاحتياطي
+            </h5>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="acard">
+                        <h6 style="font-size:0.82rem;font-weight:800;color:var(--text-2);margin-bottom:0.6rem;">
+                            <i class="fas fa-download" style="color:var(--accent);"></i> إنشاء نسخة احتياطية
+                        </h6>
+                        <p style="font-size:0.75rem;color:var(--text-3);margin-bottom:0.75rem;">سيتم تنزيل ملف JSON يحتوي على جميع البيانات الحالية.</p>
+                        <form method="post" action="{{ url_for('backup') }}">
+                            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> إنشاء نسخة</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="acard">
+                        <h6 style="font-size:0.82rem;font-weight:800;color:var(--text-2);margin-bottom:0.6rem;">
+                            <i class="fas fa-upload" style="color:var(--accent-2);"></i> استعادة نسخة احتياطية
+                        </h6>
+                        <form method="post" action="{{ url_for('restore') }}" enctype="multipart/form-data"
+                              data-confirm="تأكيد استعادة البيانات؟ سيتم حذف جميع البيانات الحالية.">
+                            <label class="f-label">ملف النسخة الاحتياطية (JSON)</label>
+                            <input type="file" name="backup_file" accept=".json" class="f-control" required style="margin-bottom:0.6rem;">
+                            <div style="background:rgba(255,217,61,0.08);border:1px solid rgba(255,217,61,0.2);border-radius:var(--radius-sm);padding:0.5rem 0.7rem;font-size:0.72rem;color:#ffe680;margin-bottom:0.65rem;">
+                                <i class="fas fa-exclamation-triangle"></i> تحذير: استعادة النسخة ستحذف جميع البيانات الحالية. لا يمكن التراجع.
+                            </div>
+                            {% if current_user.is_super_admin or current_user.can_restore_backup %}
+                            <button type="submit" class="btn-submit" style="background:var(--grad-teal);">
+                                <i class="fas fa-undo"></i> استعادة البيانات
+                            </button>
+                            {% else %}
+                            <button type="button" class="btn-cancel" disabled>لا تملك صلاحية الاستعادة</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% if current_user.is_super_admin or current_user.can_restore_backup %}
+            <div class="danger-box">
+                <h6><i class="fas fa-skull-crossbones"></i> منطقة الخطر</h6>
+                <p style="font-size:0.75rem;color:var(--text-3);margin-bottom:0.75rem;">إعادة تهيئة قاعدة البيانات تحذف جميع البيانات من الجداول مع الحفاظ على هيكلها. لا يمكن التراجع.</p>
+                <form method="post" action="{{ url_for('reset_database') }}"
+                      data-confirm="⚠️ تحذير شديد: سيتم حذف جميع البيانات بشكل نهائي. هل أنت متأكد تماماً؟">
+                    <button type="submit" class="abtn abtn-red" style="padding:0.4rem 1rem;font-size:0.78rem;">
+                        <i class="fas fa-trash-alt"></i> إعادة تهيئة قاعدة البيانات
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- ═══ ADMINS ═══ -->
+        {% if current_user.is_super_admin %}
+        <div class="tab-pane {% if active_tab=='admins' %}show active{% endif %}" id="admins" role="tabpanel">
+            <div class="sec-head">
+                <h5><i class="fas fa-user-shield" style="color:var(--accent);"></i> إدارة المستخدمين</h5>
+                <button class="abtn abtn-teal" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+                    <i class="fas fa-plus-circle"></i> إضافة مستخدم
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="dark-table">
+                    <thead>
+                        <tr>
+                            <th>المستخدم</th>
+                            <th>الطلاب</th>
+                            <th>المعلمون</th>
+                            <th>التقارير</th>
+                            <th>الإنذارات</th>
+                            <th>النقاط</th>
+                            <th>المكافآت</th>
+                            <th>البيانات</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for admin in admins %}
+                    <tr>
+                        <td>
+                            <span style="font-weight:800;">{{ admin.username }}</span>
+                            {% if admin.is_super_admin %}<span class="sbadge sbadge-super"><i class="fas fa-crown"></i> مدير عام</span>{% endif %}
+                        </td>
+                        <td>
+                            <span class="sbadge {% if admin.can_access_students %}sbadge-on{% else %}sbadge-off{% endif %}">دخول</span>
+                            {% if admin.can_edit_students %}<span class="sbadge sbadge-on">تعديل</span>{% endif %}
+                        </td>
+                        <td>
+                            <span class="sbadge {% if admin.can_access_teachers %}sbadge-on{% else %}sbadge-off{% endif %}">دخول</span>
+                            {% if admin.can_edit_teachers %}<span class="sbadge sbadge-on">تعديل</span>{% endif %}
+                        </td>
+                        <td><span class="sbadge {% if admin.can_access_reports %}sbadge-on{% else %}sbadge-off{% endif %}">{{ '✓' if admin.can_access_reports else '✗' }}</span></td>
+                        <td><span class="sbadge {% if admin.can_access_warnings %}sbadge-on{% else %}sbadge-off{% endif %}">{{ '✓' if admin.can_access_warnings else '✗' }}</span></td>
+                        <td><span class="sbadge {% if admin.can_access_reports %}sbadge-on{% else %}sbadge-off{% endif %}">{{ '✓' if admin.can_access_reports else '✗' }}</span></td>
+                        <td><span class="sbadge {% if admin.can_access_reports %}sbadge-on{% else %}sbadge-off{% endif %}">{{ '✓' if admin.can_access_reports else '✗' }}</span></td>
+                        <td>
+                            <span class="sbadge {% if admin.can_access_backup %}sbadge-on{% else %}sbadge-off{% endif %}">نسخ</span>
+                            {% if admin.can_restore_backup %}<span class="sbadge sbadge-on">استعادة</span>{% endif %}
+                        </td>
+                        <td>
+                            <div class="row-actions">
+                                <a href="#" class="abtn abtn-gold" data-bs-toggle="modal"
+                                   data-bs-target="#editAdminModal{{ admin.id }}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% if admin.id != current_user.id and not admin.is_super_admin %}
+                                <a href="{{ url_for('delete_admin', id=admin.id) }}" class="abtn abtn-red"
+                                   data-confirm="حذف هذا المستخدم؟">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- ── EDIT ADMIN MODAL ── -->
+                    <div class="modal fade" id="editAdminModal{{ admin.id }}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background:var(--surface-3);">
+                                    <span class="modal-title"><i class="fas fa-user-edit" style="color:var(--accent-4);"></i> تعديل: {{ admin.username }}</span>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" action="{{ url_for('edit_admin', id=admin.id) }}" id="editAdminForm{{ admin.id }}">
+                                        <div class="row g-3 mb-3">
+                                            <div class="col-md-6">
+                                                <label class="f-label">اسم المستخدم</label>
+                                                <input type="text" name="username" class="f-control" value="{{ admin.username }}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="f-label">كلمة المرور الجديدة</label>
+                                                <input type="password" name="password" class="f-control" placeholder="اتركه فارغاً إذا لم ترد التغيير">
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-users"></i> الطلاب</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_students" {% if admin.can_access_students %}checked{% endif %}> عرض قائمة الطلاب</label>
+                                            </div>
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_edit_students" {% if admin.can_edit_students %}checked{% endif %}> إضافة / تعديل / حذف</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-chalkboard-teacher"></i> المعلمون</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_teachers" {% if admin.can_access_teachers %}checked{% endif %}> عرض قائمة المعلمين</label>
+                                            </div>
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_edit_teachers" {% if admin.can_edit_teachers %}checked{% endif %}> إضافة / تعديل / حذف</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-chart-bar"></i> التقارير والنقاط والمكافآت</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_reports" {% if admin.can_access_reports %}checked{% endif %}> تقارير الأداء والمتخلفين</label>
+                                            </div>
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_reports" {% if admin.can_access_reports %}checked{% endif %}> إدارة النقاط والدورات</label>
+                                            </div>
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_reports" {% if admin.can_access_reports %}checked{% endif %}> قواعد المكافآت</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-exclamation-triangle"></i> الإنذارات</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_warnings" {% if admin.can_access_warnings %}checked{% endif %}> إدارة إنذارات الطلاب</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-database"></i> النسخ الاحتياطي</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_backup" {% if admin.can_access_backup %}checked{% endif %}> إنشاء نسخة احتياطية</label>
+                                            </div>
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_restore_backup" {% if admin.can_restore_backup %}checked{% endif %}> استعادة / إعادة تهيئة</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-crown"></i> صلاحية خاصة</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card" style="border-color:rgba(108,99,255,0.3);">
+                                                <label><input type="checkbox" name="is_super_admin" {% if admin.is_super_admin %}checked{% endif %}> مدير عام (صلاحيات كاملة)</label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                                    <button type="submit" form="editAdminForm{{ admin.id }}" class="btn-submit">حفظ التغييرات</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+    </div><!-- /tab-body -->
+
+    <!-- ══ DUPLICATES REDIRECT NOTE (not a tab-pane — it's a link to separate page) ══ -->
+    {% if active_tab == 'duplicates' %}
+    <script>window.location.href = "{{ url_for('admin_duplicates') }}";</script>
+    {% endif %}
+
+</div><!-- /wrap -->
+
+<!-- ══════════════════════════════════════
+     MODALS — ADD STUDENT / TEACHER / ADMIN
+══════════════════════════════════════════ -->
+
+<!-- ADD STUDENT -->
+<div class="modal fade" id="addStudentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--surface-3);">
+                <span class="modal-title"><i class="fas fa-user-plus" style="color:var(--accent-2);"></i> إضافة طالب جديد</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('add_student') }}" method="post" id="addStudentForm">
+                    <input type="hidden" name="tab" value="{{ active_tab }}" class="tab-sync">
+                    <div class="mb-3">
+                        <label class="f-label">الاسم الكامل</label>
+                        <input type="text" name="full_name" class="f-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">اسم المستخدم</label>
+                        <input type="text" name="username" class="f-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">كلمة المرور</label>
+                        <input type="password" name="password" class="f-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">رقم الهاتف</label>
+                        <input type="text" name="phone" class="f-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">مستوى الحفظ</label>
+                        <input type="text" name="level" class="f-control" placeholder="مثال: جزء عم">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                <button type="submit" form="addStudentForm" class="btn-submit" style="background:var(--grad-teal);">حفظ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD TEACHER -->
+<div class="modal fade" id="addTeacherModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--surface-3);">
+                <span class="modal-title"><i class="fas fa-chalkboard-teacher" style="color:var(--accent);"></i> إضافة معلم جديد</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('add_teacher') }}" method="post" id="addTeacherForm">
+                    <input type="hidden" name="tab" value="{{ active_tab }}" class="tab-sync">
+                    <div class="mb-3">
+                        <label class="f-label">الاسم الكامل</label>
+                        <input type="text" name="full_name" class="f-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">اسم المستخدم</label>
+                        <input type="text" name="username" class="f-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">كلمة المرور</label>
+                        <input type="password" name="password" class="f-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                <button type="submit" form="addTeacherForm" class="btn-submit">حفظ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD ADMIN -->
+<div class="modal fade" id="addAdminModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--surface-3);">
+                <span class="modal-title"><i class="fas fa-user-shield" style="color:var(--accent);"></i> إضافة مستخدم جديد</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('add_admin') }}" method="post" id="addAdminForm">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="f-label">اسم المستخدم</label>
+                            <input type="text" name="username" class="f-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="f-label">كلمة المرور</label>
+                            <input type="password" name="password" class="f-control" required>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-users"></i> الطلاب</div>
+                    <div class="perm-grid">
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_students" checked> عرض قائمة الطلاب</label>
+                        </div>
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_edit_students" checked> إضافة / تعديل / حذف</label>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-chalkboard-teacher"></i> المعلمون</div>
+                    <div class="perm-grid">
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_teachers" checked> عرض قائمة المعلمين</label>
+                        </div>
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_edit_teachers" checked> إضافة / تعديل / حذف</label>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-chart-bar"></i> التقارير والنقاط والمكافآت</div>
+                    <div class="perm-grid">
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_reports" checked> تقارير الأداء والمتخلفين</label>
+                        </div>
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_reports" checked> إدارة النقاط والدورات</label>
+                        </div>
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_reports" checked> قواعد المكافآت</label>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-exclamation-triangle"></i> الإنذارات</div>
+                    <div class="perm-grid">
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_warnings" checked> إدارة إنذارات الطلاب</label>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-database"></i> النسخ الاحتياطي</div>
+                    <div class="perm-grid">
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_backup" checked> إنشاء نسخة احتياطية</label>
+                        </div>
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_restore_backup" checked> استعادة / إعادة تهيئة</label>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-crown"></i> صلاحية خاصة</div>
+                    <div class="perm-grid">
+                        <div class="perm-card" style="border-color:rgba(108,99,255,0.3);">
+                            <label><input type="checkbox" name="is_super_admin"> مدير عام (صلاحيات كاملة)</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                <button type="submit" form="addAdminForm" class="btn-submit">إضافة المستخدم</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* ── Sidebar toggle ── */
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const closeBtn = document.getElementById('sidebarClose');
+
+    function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+    if (toggleBtn) toggleBtn.addEventListener('click', openSidebar);
+    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+
+    /* ── Sidebar tab switching ── */
+    function syncActiveTab(tab) {
+        // حدّث روابط/نماذج تحمل tab=active_tab لتتبع التبويب الحالي
+        document.querySelectorAll('a.tab-sync').forEach(a => {
+            const url = new URL(a.href);
+            url.searchParams.set('tab', tab);
+            a.href = url.toString();
+        });
+        document.querySelectorAll('input.tab-sync').forEach(i => {
+            i.value = tab;
+        });
+    }
+
+    function selectTab(tab) {
+        document.querySelectorAll('.sidebar-nav .nav-link').forEach(l => l.classList.remove('active'));
+        const navBtn = document.querySelector('.sidebar-nav .nav-link[data-tab="' + tab + '"]');
+        if (navBtn) navBtn.classList.add('active');
+        document.querySelectorAll('.tab-body .tab-pane').forEach(p => p.classList.remove('show', 'active'));
+        const target = document.getElementById(tab);
+        if (target) target.classList.add('show', 'active');
+        syncActiveTab(tab);
+        const url = new URL(window.location);
+        url.searchParams.set('tab', tab);
+        history.replaceState({}, '', url);
+    }
+
+    document.querySelectorAll('.sidebar-nav .nav-link[data-tab]').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            closeSidebar();
+            selectTab(this.getAttribute('data-tab'));
+        });
+    });
+
+    /* ── Teacher-student assignment ── */
+    const sel = document.getElementById('teacherSelect');
+    if (sel) {
+        sel.addEventListener('change', function () {
+            const id = this.value;
+            document.querySelectorAll('.student-checkbox').forEach(cb => cb.checked = false);
+            if (!id) return;
+            fetch(`/get_teacher_students/${id}`)
+                .then(r => r.json())
+                .then(data => {
+                    document.querySelectorAll('.student-checkbox').forEach(cb => {
+                        if (data.student_ids.includes(parseInt(cb.value))) cb.checked = true;
+                    });
+                })
+                .catch(console.error);
+        });
+        if (sel.value) sel.dispatchEvent(new Event('change'));
+    }
+
+    /* ── Teacher evaluation details expand ── */
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.eval-count-btn');
+        if (!btn) return;
+        e.preventDefault();
+        const detailsDiv = document.getElementById('evalDetails');
+        const teacher = btn.dataset.teacher;
+        let evals;
+        try { evals = JSON.parse(btn.dataset.evals); } catch(_) { evals = []; }
+        if (!evals.length) {
+            detailsDiv.innerHTML = '<div class="empty"><p>لا توجد تفاصيل</p></div>';
+            detailsDiv.style.display = 'block';
+            return;
+        }
+        let html = '<div class="acard" style="background:var(--surface-3);">';
+        html += '<h6 style="font-size:0.82rem;font-weight:800;color:var(--accent);margin-bottom:0.6rem;">';
+        html += '<i class="fas fa-chalkboard-teacher"></i> ' + teacher + '</h6>';
+        html += '<div class="table-responsive"><table class="dark-table"><thead><tr>';
+        html += '<th>الطالب</th><th>نوع المقرر</th><th>فترة المقرر</th><th>تاريخ التقييم</th>';
+        html += '</tr></thead><tbody>';
+        evals.forEach(function (ev) {
+            html += '<tr>';
+            html += '<td style="font-weight:700;">' + ev.student_name + '</td>';
+            html += '<td>' + (ev.plan_type || '—') + '</td>';
+            html += '<td>' + (ev.plan_start || '—') + '</td>';
+            html += '<td>' + ev.evaluation_date + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div></div>';
+        detailsDiv.innerHTML = html;
+        detailsDiv.style.display = 'block';
+        detailsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    /* ── Toast auto-dismiss ── */
+    document.querySelectorAll('[data-toast]').forEach((el, i) => {
+        setTimeout(() => {
+            el.classList.add('toast-out');
+            setTimeout(() => el.remove(), 380);
+        }, 3000 + i * 350);
+    });
+});
+</script>
+<script src="{{ url_for('static', filename='js/confirm-modal.js') }}"></script>
+</body>
+</html>{% if false %}<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>لوحة الإدارة - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    /* ═══════════════════════════════════════════
+       DESIGN TOKENS — ثيم حديث 2025
+    ═══════════════════════════════════════════ */
+    :root {
+        --bg:          #0f1117;
+        --surface:     #1a1d27;
+        --surface-2:   #22263a;
+        --surface-3:   #2b3050;
+        --border:      rgba(255,255,255,0.07);
+        --border-soft: rgba(255,255,255,0.04);
+
+        --accent:      #6c63ff;
+        --accent-2:    #00d4aa;
+        --accent-3:    #ff6b6b;
+        --accent-4:    #ffd93d;
+        --accent-5:    #4facfe;
+
+        --text-1: #f0f2ff;
+        --text-2: #9ba3bf;
+        --text-3: #5a6280;
+
+        --grad-purple:  linear-gradient(135deg,#6c63ff,#a855f7);
+        --grad-teal:    linear-gradient(135deg,#00d4aa,#00b4d8);
+        --grad-red:     linear-gradient(135deg,#ff6b6b,#ee5a24);
+        --grad-gold:    linear-gradient(135deg,#ffd93d,#ff9f43);
+        --grad-blue:    linear-gradient(135deg,#4facfe,#00f2fe);
+        --grad-green:   linear-gradient(135deg,#43e97b,#38f9d7);
+        --grad-pink:    linear-gradient(135deg,#f093fb,#f5576c);
+
+        --radius-sm: 10px;
+        --radius-md: 16px;
+        --radius-lg: 24px;
+        --radius-xl: 32px;
+
+        --shadow-sm:  0 2px 8px rgba(0,0,0,0.3);
+        --shadow-md:  0 8px 24px rgba(0,0,0,0.4);
+        --shadow-lg:  0 16px 48px rgba(0,0,0,0.5);
+        --glow-purple: 0 0 20px rgba(108,99,255,0.25);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+        font-family: 'Tajawal','Cairo',sans-serif;
+        background: var(--bg);
+        min-height: 100vh;
+        color: var(--text-1);
+        padding: 0.75rem;
+        /* subtle grid pattern */
+        background-image:
+            radial-gradient(ellipse 800px 500px at 20% 10%, rgba(108,99,255,0.06) 0%, transparent 70%),
+            radial-gradient(ellipse 600px 400px at 80% 80%, rgba(0,212,170,0.04) 0%, transparent 70%);
+    }
+
+    .wrap { max-width: 1200px; margin: 0 auto; }
+
+    /* ─── NAVBAR ─── */
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 0.65rem 1.2rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow-sm);
+    }
+    .brand {
+        font-size: 1.05rem;
+        font-weight: 800;
+        background: var(--grad-purple);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .topbar-actions { display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; }
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.9rem;
+        border-radius: 99px;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+    .chip-purple { background: rgba(108,99,255,0.15); color: #a89fff; border: 1px solid rgba(108,99,255,0.25); }
+    .chip-red    { background: rgba(255,107,107,0.15); color: #ff9f9f; border: 1px solid rgba(255,107,107,0.25); }
+    .chip-teal   { background: rgba(0,212,170,0.12);   color: #5fffc5; border: 1px solid rgba(0,212,170,0.2); }
+    .chip-gold   { background: rgba(255,217,61,0.12);  color: #ffe680; border: 1px solid rgba(255,217,61,0.2); }
+    .chip-blue   { background: rgba(79,172,254,0.12);  color: #8fd4ff; border: 1px solid rgba(79,172,254,0.2); }
+    .chip-gray   { background: rgba(255,255,255,0.07); color: var(--text-2); border: 1px solid var(--border); }
+    a.chip { text-decoration: none; transition: 0.2s; }
+    a.chip:hover { filter: brightness(1.2); }
+
+    /* ─── QUICK ACTIONS ─── */
+    .quick-row {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+        flex-wrap: wrap;
+    }
+    .qbtn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.45rem 1rem;
+        border-radius: 99px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-decoration: none;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .qbtn:hover { transform: translateY(-2px); filter: brightness(1.1); color:white; }
+    .qbtn-teal   { background: var(--grad-teal);   box-shadow: 0 4px 14px rgba(0,212,170,0.3); }
+    .qbtn-gold   { background: var(--grad-gold);   box-shadow: 0 4px 14px rgba(255,217,61,0.3); }
+    .qbtn-gray   { background: linear-gradient(135deg,#3a3f5c,#2b3050); box-shadow: var(--shadow-sm); }
+    .qbtn-purple { background: var(--grad-purple);  box-shadow: 0 4px 14px rgba(108,99,255,0.3); }
+
+    /* ─── PHASE TOGGLE CARD ─── */
+    .phase-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    .phase-card label { font-size: 0.82rem; color: var(--text-2); font-weight:600; }
+    .form-check-input { cursor:pointer; }
+    .form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
+
+    /* ─── TABS ─── */
+    .tab-rail {
+        display: flex;
+        gap: 0.3rem;
+        flex-wrap: wrap;
+        margin-bottom: 0;
+        padding: 0.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    .tab-rail .nav-link {
+        background: transparent;
+        border: none;
+        color: var(--text-2);
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 0.4rem 0.85rem;
+        border-radius: var(--radius-sm);
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+    .tab-rail .nav-link:hover { background: var(--surface-2); color: var(--text-1); }
+    .tab-rail .nav-link.active {
+        background: var(--grad-purple);
+        color: white;
+        box-shadow: var(--glow-purple);
+    }
+
+    .tab-body {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.2rem;
+    }
+    /* اصلاح التبويبات: تجاوز Bootstrap fade لمنع المساحة الفارغة */
+    .tab-body .tab-pane         { display: none !important; opacity: 1 !important; }
+    .tab-body .tab-pane.show    { display: block !important; }
+
+    /* SECTION HEADER */
+    .sec-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .sec-head h5 {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: var(--text-1);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    /* ─── LIST ITEMS ─── */
+    .list-card {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 0.7rem 1rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        transition: 0.2s;
+    }
+    .list-card:hover { border-color: rgba(108,99,255,0.3); background: var(--surface-3); }
+    .list-card .info { display:flex; align-items:center; gap:0.6rem; }
+    .list-card .info .avatar {
+        width: 36px; height: 36px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+    .av-green  { background: rgba(67,233,123,0.15); color: #43e97b; }
+    .av-purple { background: rgba(108,99,255,0.15); color: #a89fff; }
+    .list-card .info h6 { margin:0; font-size:0.85rem; font-weight:700; color:var(--text-1); }
+    .list-card .info small { color:var(--text-3); font-size:0.7rem; }
+    .row-actions { display:flex; gap:0.35rem; flex-wrap:wrap; }
+
+    /* ─── ACTION BUTTONS ─── */
+    .abtn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.28rem 0.7rem;
+        border-radius: 99px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+    .abtn:hover { transform:translateY(-1px); filter:brightness(1.15); }
+    .abtn-gold   { background:rgba(255,217,61,0.15); color:#ffe680; border:1px solid rgba(255,217,61,0.25); }
+    .abtn-red    { background:rgba(255,107,107,0.15); color:#ff9f9f; border:1px solid rgba(255,107,107,0.25); }
+    .abtn-purple { background:rgba(108,99,255,0.15); color:#a89fff; border:1px solid rgba(108,99,255,0.25); }
+    .abtn-teal   { background:rgba(0,212,170,0.12);  color:#5fffc5; border:1px solid rgba(0,212,170,0.2); }
+    .abtn-blue   { background:rgba(79,172,254,0.12); color:#8fd4ff; border:1px solid rgba(79,172,254,0.2); }
+    .abtn-green  { background:rgba(67,233,123,0.12); color:#7fffb0; border:1px solid rgba(67,233,123,0.2); }
+    .abtn-gray   { background:rgba(255,255,255,0.07);color:var(--text-2);border:1px solid var(--border); }
+
+    /* ─── FORMS ─── */
+    .f-control {
+        width: 100%;
+        background: var(--surface-3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-1);
+        padding: 0.5rem 0.85rem;
+        font-size: 0.83rem;
+        font-family: inherit;
+        transition: 0.2s;
+    }
+    .f-control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,99,255,0.15); }
+    .f-control::placeholder { color: var(--text-3); }
+    .f-label { font-size: 0.75rem; font-weight: 700; color: var(--text-2); margin-bottom: 0.3rem; display:block; }
+
+    .btn-submit {
+        background: var(--grad-purple);
+        color: white;
+        border: none;
+        border-radius: 99px;
+        padding: 0.5rem 1.4rem;
+        font-weight: 700;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: 0.2s;
+        font-family: inherit;
+    }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: var(--glow-purple); }
+
+    .btn-cancel {
+        background: var(--surface-3);
+        color: var(--text-2);
+        border: 1px solid var(--border);
+        border-radius: 99px;
+        padding: 0.5rem 1.2rem;
+        font-weight: 700;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: 0.2s;
+        font-family: inherit;
+    }
+    .btn-cancel:hover { border-color: rgba(255,255,255,0.15); color:var(--text-1); }
+
+    /* ─── TABLE ─── */
+    .dark-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.78rem;
+    }
+    .dark-table thead tr {
+        background: var(--surface-3);
+    }
+    .dark-table thead th {
+        padding: 0.65rem 0.9rem;
+        color: var(--text-2);
+        font-weight: 700;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+    }
+    .dark-table tbody tr {
+        border-bottom: 1px solid var(--border-soft);
+        transition: background 0.15s;
+    }
+    .dark-table tbody tr:hover { background: var(--surface-2); }
+    .dark-table tbody td { padding: 0.7rem 0.9rem; vertical-align:middle; color:var(--text-1); }
+
+    /* ─── MODAL ─── */
+    .modal-content {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        color: var(--text-1);
+    }
+    .modal-header {
+        border-bottom: 1px solid var(--border);
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        padding: 1rem 1.2rem;
+    }
+    .modal-body { padding: 1.2rem; }
+    .modal-footer {
+        border-top: 1px solid var(--border);
+        padding: 0.8rem 1.2rem;
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+    .modal-title { font-size: 0.95rem; font-weight: 800; color: var(--text-1); display:flex; align-items:center; gap:0.4rem; }
+
+    /* ─── PERMISSIONS GRID ─── */
+    .perm-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 0.6rem;
+        margin-top: 0.5rem;
+    }
+    .perm-card {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 0.65rem 0.85rem;
+        transition: 0.2s;
+    }
+    .perm-card:has(input:checked) {
+        border-color: rgba(108,99,255,0.4);
+        background: rgba(108,99,255,0.08);
+    }
+    .perm-card label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-2);
+        margin: 0;
+        user-select: none;
+    }
+    .perm-card:has(input:checked) label { color: var(--text-1); }
+    .perm-card input[type=checkbox] {
+        width: 15px; height: 15px;
+        accent-color: var(--accent);
+        flex-shrink: 0;
+    }
+    .perm-section-title {
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0.9rem 0 0.4rem;
+    }
+
+    /* ─── STATUS BADGES ─── */
+    .sbadge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+        padding: 0.18rem 0.55rem;
+        border-radius: 99px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        margin: 1px;
+    }
+    .sbadge-on  { background:rgba(67,233,123,0.15); color:#7fffb0; border:1px solid rgba(67,233,123,0.2); }
+    .sbadge-off { background:rgba(255,255,255,0.05);color:var(--text-3);border:1px solid var(--border); }
+    .sbadge-super { background:var(--grad-purple);color:white; }
+
+    /* ─── SEPARATOR ─── */
+    .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 0.9rem 0;
+    }
+
+    /* ─── ASSIGN CARD ─── */
+    .acard {
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+    }
+    .student-check-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 0.4rem;
+    }
+    .student-check-item {
+        background: var(--surface-3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 0.4rem 0.65rem;
+        transition: 0.2s;
+    }
+    .student-check-item:has(input:checked) {
+        border-color: rgba(0,212,170,0.4);
+        background: rgba(0,212,170,0.08);
+    }
+    .student-check-item label {
+        display:flex; align-items:center; gap:0.4rem;
+        font-size:0.75rem; font-weight:600; color:var(--text-2);
+        cursor:pointer; margin:0;
+    }
+    .student-check-item:has(input:checked) label { color:var(--text-1); }
+
+    /* ─── REPORT TABLE ─── */
+    .form-row { display:flex; gap:0.6rem; align-items:flex-end; flex-wrap:wrap; margin-bottom:0.8rem; }
+    .form-group { flex:1; min-width:130px; }
+
+    /* ─── DANGER ZONE ─── */
+    .danger-box {
+        border: 1px solid rgba(255,107,107,0.3);
+        background: rgba(255,107,107,0.05);
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    .danger-box h6 { color: #ff9f9f; font-weight:800; margin-bottom:0.4rem; }
+
+    /* ─── POINTS (leaderboard stays) ─── */
+    .points-hero {
+        background: linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        position:relative; overflow:hidden;
+    }
+    .points-hero::before {
+        content:'✦'; position:absolute;
+        font-size:10rem; color:rgba(255,215,0,0.03);
+        top:-2rem; left:-2rem; line-height:1;
+    }
+    .stat-pill {
+        background:rgba(255,255,255,0.07);
+        border:1px solid rgba(255,255,255,0.1);
+        border-radius:14px; padding:1rem 1.2rem;
+        text-align:center; transition:0.2s;
+    }
+    .stat-pill:hover{transform:translateY(-3px);}
+    .stat-pill .val{font-size:1.8rem;font-weight:800;color:#FFD700;line-height:1;}
+    .stat-pill .lbl{font-size:0.72rem;color:rgba(255,255,255,0.5);}
+    .leaderboard-wrap{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
+    .lb-head{background:linear-gradient(90deg,#1a1a2e,#0f3460);padding:0.85rem 1.2rem;display:flex;align-items:center;justify-content:space-between;}
+    .lb-head h6{color:#FFD700;margin:0;font-weight:800;font-size:0.9rem;}
+    .rank-badge{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:0.78rem;}
+    .rank-1{background:linear-gradient(135deg,#FFD700,#FFA500);color:#fff;box-shadow:0 3px 10px rgba(255,165,0,.4);}
+    .rank-2{background:linear-gradient(135deg,#C0C0C0,#a0a0a0);color:#fff;}
+    .rank-3{background:linear-gradient(135deg,#CD7F32,#a0522d);color:#fff;}
+    .rank-other{background:rgba(255,255,255,0.08);color:var(--text-3);}
+    .points-bar-wrap{display:flex;align-items:center;gap:0.5rem;min-width:120px;}
+    .points-bar{flex:1;height:5px;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;}
+    .points-bar-fill{height:100%;background:var(--grad-blue);border-radius:10px;}
+    .points-badge{background:var(--grad-purple);color:white;border-radius:20px;padding:0.18rem 0.65rem;font-size:0.78rem;font-weight:700;white-space:nowrap;}
+    .cycle-badge{background:var(--grad-green);color:#1a1a2e;border-radius:20px;padding:0.18rem 0.65rem;font-size:0.75rem;font-weight:700;}
+    .stars-row{display:flex;gap:2px;align-items:center;}
+    .btn-log{background:transparent;border:1.5px solid rgba(79,172,254,0.4);color:#8fd4ff;border-radius:20px;padding:0.22rem 0.75rem;font-size:0.72rem;font-weight:700;cursor:pointer;transition:0.2s;}
+    .btn-log:hover{background:rgba(79,172,254,0.15);border-color:#4facfe;}
+    .archive-bar{background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-radius:var(--radius-md);padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;}
+    .archive-bar .ttl{font-weight:800;color:#ffe680;}
+    .archive-bar .dsc{font-size:0.75rem;color:rgba(255,230,128,0.6);margin-top:0.15rem;}
+    .btn-archive{background:var(--grad-gold);border:none;color:#1a1a2e;border-radius:var(--radius-sm);padding:0.5rem 1.1rem;font-weight:800;font-size:0.8rem;cursor:pointer;white-space:nowrap;transition:0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem;}
+    .btn-archive:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(255,193,7,.4);color:#1a1a2e;}
+    .btn-archive-blue{background:var(--grad-blue);}
+    .log-modal-header{background:linear-gradient(135deg,#1a1a2e,#0f3460);}
+    .log-entry{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid var(--border);gap:0.5rem;}
+    .log-entry:last-child{border-bottom:none;}
+    .log-date{font-size:0.72rem;color:var(--text-3);}
+    .log-type{font-size:0.7rem;background:var(--surface-3);border-radius:6px;padding:0.1rem 0.45rem;color:var(--text-2);}
+    .log-pts{font-weight:800;color:#43e97b;font-size:0.95rem;}
+
+    /* ─── TOAST ─── */
+    .toast-wrap {
+        position: fixed; top: 1rem; left: 50%;
+        transform: translateX(-50%);
+        z-index: 99999; display:flex; flex-direction:column;
+        gap:0.5rem; pointer-events:none;
+        width:92%; max-width:420px;
+    }
+    .toast-item {
+        display:flex; align-items:center; gap:0.65rem;
+        padding:0.75rem 1.1rem; border-radius:var(--radius-md);
+        font-size:0.88rem; font-weight:700;
+        box-shadow:var(--shadow-md); pointer-events:auto;
+        animation: toastIn 0.35s cubic-bezier(.22,1,.36,1) forwards;
+        border-right: 4px solid transparent;
+    }
+    .t-success{background:#0d2818;border-color:#43e97b;color:#7fffb0;}
+    .t-error  {background:#2a0a0a;border-color:#ff6b6b;color:#ff9f9f;}
+    .t-warning{background:#2a1e00;border-color:#ffd93d;color:#ffe680;}
+    .t-info   {background:#0a1a2a;border-color:#4facfe;color:#8fd4ff;}
+    .toast-item.toast-out{animation:toastOut 0.35s ease forwards;}
+    @keyframes toastIn  {from{opacity:0;transform:translateY(-16px) scale(.95);}to{opacity:1;transform:none;}}
+    @keyframes toastOut {from{opacity:1;}to{opacity:0;transform:translateY(-12px) scale(.95);}}
+
+    /* ─── EMPTY STATE ─── */
+    .empty {
+        text-align:center; padding:2.5rem 1rem;
+        color:var(--text-3);
+    }
+    .empty i{font-size:2.5rem;margin-bottom:0.6rem;opacity:0.4;}
+    .empty p{font-size:0.85rem;}
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar{width:6px;height:6px;}
+    ::-webkit-scrollbar-track{background:var(--surface);}
+    ::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:99px;}
+
+    /* ── تجاوز Bootstrap كاملاً لمنع المساحة الفارغة ── */
+    .tab-pane                   { display: none !important; }
+    .tab-pane.show, 
+    .tab-pane.active            { display: block !important; }
+    /* منع Bootstrap من التدخل بـ opacity */
+    .tab-pane.fade              { opacity: 1 !important; transition: none !important; }
+
+    /* ─── HAMBURGER ─── */
+    .hamburger {
+        background: transparent;
+        border: none;
+        color: var(--text-1);
+        font-size: 1.4rem;
+        padding: 0.2rem 0.4rem;
+        cursor: pointer;
+        border-radius: var(--radius-sm);
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .hamburger:hover { background: var(--surface-2); color: var(--accent); }
+
+    /* ─── SIDEBAR OVERLAY ─── */
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 99990;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: auto;
+        right: -300px;
+        width: 280px;
+        height: 100vh;
+        background: var(--surface);
+        border-left: 1px solid var(--border);
+        z-index: 99991;
+        overflow-y: auto;
+        transition: right 0.3s cubic-bezier(.22,1,.36,1);
+        padding: 1rem 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .sidebar.open { right: 0; }
+
+    .sidebar-header {
+        padding: 0.5rem 1.2rem 1rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .sidebar-header .brand-small {
+        font-size: 1rem;
+        font-weight: 800;
+        background: var(--grad-purple);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .sidebar-close {
+        background: transparent;
+        border: none;
+        color: var(--text-2);
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0.2rem;
+        transition: 0.2s;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px; height: 32px;
+    }
+    .sidebar-close:hover { background: var(--surface-2); color: var(--text-1); }
+
+    .sidebar-nav { list-style: none; padding: 0; margin: 0; flex: 1; }
+    .sidebar-nav li { margin: 0; }
+    .sidebar-nav .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.7rem 1.2rem;
+        color: var(--text-2);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        background: transparent;
+        width: 100%;
+        text-align: right;
+        cursor: pointer;
+        transition: 0.15s;
+        font-family: inherit;
+        border-right: 3px solid transparent;
+    }
+    .sidebar-nav .nav-link:hover {
+        background: var(--surface-2);
+        color: var(--text-1);
+    }
+    .sidebar-nav .nav-link.active {
+        background: rgba(108,99,255,0.1);
+        color: var(--accent);
+        border-right-color: var(--accent);
+    }
+    .sidebar-nav .nav-link i { width: 20px; text-align: center; font-size: 0.9rem; }
+
+    .sidebar-footer {
+        padding: 0.8rem 1.2rem;
+        border-top: 1px solid var(--border);
+        font-size: 0.7rem;
+        color: var(--text-3);
+    }
+
+</style>
+</head>
+<body>
+
+<!-- ══ Toast ══ -->
+<div class="toast-wrap" id="toastWrap">
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}
+    <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}"
+         data-toast="{{ loop.index }}">
+        <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+        <span>{{ message }}</span>
+    </div>
+    {% endfor %}{% endif %}
+{% endwith %}
+</div>
+
+<div class="wrap">
+
+    <!-- ══ TOPBAR ══ -->
+    <nav class="topbar">
+        <button class="hamburger" id="sidebarToggle" aria-label="القائمة">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="topbar-actions">
+            <span class="chip chip-purple"><i class="fas fa-user-cog"></i> {{ current_user.username }}</span>
+            {% if current_user.is_super_admin %}
+            <span class="chip chip-gold"><i class="fas fa-crown"></i> مدير عام</span>
+            {% endif %}
+            <a href="{{ url_for('change_password') }}" class="chip chip-gray"><i class="fas fa-key"></i> كلمة المرور</a>
+            <a href="{{ url_for('logout') }}" class="chip chip-red"><i class="fas fa-sign-out-alt"></i> خروج</a>
+        </div>
+    </nav>
+
+    <!-- ══ PHASE TOGGLE (moved to settings tab) ══ -->
+
+    {% if error %}
+    <div style="background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);border-radius:var(--radius-sm);padding:0.6rem 1rem;margin-bottom:0.8rem;font-size:0.82rem;color:#ff9f9f;">
+        <i class="fas fa-exclamation-circle"></i> {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- ══ SIDEBAR OVERLAY ══ -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="brand-small"><i class="fas fa-quran"></i> أشبال القرآن</span>
+            <button class="sidebar-close" id="sidebarClose" aria-label="إغلاق"><i class="fas fa-times"></i></button>
+        </div>
+        <ul class="sidebar-nav">
+            {% if current_user.is_super_admin or current_user.can_access_students %}
+            <li><button class="nav-link {% if active_tab=='students' %}active{% endif %}" data-tab="students">
+                <i class="fas fa-user-graduate"></i> الطلاب
+            </button></li>
+            {% endif %}
+            {% if current_user.is_super_admin or current_user.can_access_teachers %}
+            <li><button class="nav-link {% if active_tab=='teachers' %}active{% endif %}" data-tab="teachers">
+                <i class="fas fa-chalkboard-teacher"></i> المعلمون
+            </button></li>
+            {% endif %}
+            <li><button class="nav-link {% if active_tab=='assign' %}active{% endif %}" data-tab="assign">
+                <i class="fas fa-link"></i> الربط
+            </button></li>
+            {% if current_user.is_super_admin or current_user.can_access_reports %}
+            <li><button class="nav-link {% if active_tab=='reports' %}active{% endif %}" data-tab="reports">
+                <i class="fas fa-chart-bar"></i> التقارير
+            </button></li>
+            <li><button class="nav-link {% if active_tab=='points' %}active{% endif %}" data-tab="points">
+                <i class="fas fa-star" style="color:#FFD700;"></i> النقاط
+            </button></li>
+            <li><button class="nav-link {% if active_tab=='rewards' %}active{% endif %}" data-tab="rewards">
+                <i class="fas fa-gift"></i> المكافآت
+            </button></li>
+            <li><a class="nav-link" href="{{ url_for('missing_reports') }}">
+                <i class="fas fa-chart-line" style="color:var(--accent-2);"></i> تقرير المتخلفين
+            </a></li>
+            <li><a class="nav-link" href="{{ url_for('admin_warnings_simple') }}">
+                <i class="fas fa-exclamation-triangle" style="color:var(--accent-4);"></i> إدارة الإنذارات
+            </a></li>
+            {% endif %}
+            {% if current_user.is_super_admin %}
+            <li><button class="nav-link {% if active_tab=='settings' %}active{% endif %}" data-tab="settings">
+                <i class="fas fa-cog"></i> إعدادات النظام
+            </button></li>
+            {% endif %}
+            {% if current_user.is_super_admin or current_user.can_access_backup %}
+            <li><button class="nav-link {% if active_tab=='data' %}active{% endif %}" data-tab="data">
+                <i class="fas fa-database"></i> البيانات
+            </button></li>
+            {% endif %}
+            {% if current_user.is_super_admin %}
+            <li><button class="nav-link {% if active_tab=='admins' %}active{% endif %}" data-tab="admins">
+                <i class="fas fa-user-shield"></i> المستخدمون
+            </button></li>
+            {% endif %}
+            {% if current_user.is_super_admin %}
+            <li><a class="nav-link {% if active_tab=='poems' %}active{% endif %}"
+                   href="{{ url_for('admin_poems') }}">
+                <i class="fas fa-feather-alt" style="color:var(--accent-2);"></i> القصائد
+            </a></li>
+            {% endif %}
+            {% if current_user.is_super_admin or current_user.can_access_reports %}
+            <li><a class="nav-link {% if active_tab=='duplicates' %}active{% endif %}"
+                   href="{{ url_for('admin_duplicates') }}">
+                <i class="fas fa-copy" style="color:var(--accent-4);"></i> مقررات مكررة
+            </a></li>
+            {% endif %}
+        </ul>
+        <div class="sidebar-footer">
+            <i class="fas fa-user-cog"></i> {{ current_user.username }}
+            {% if current_user.is_super_admin %} · مدير عام{% endif %}
+        </div>
+    </aside>
+
+    <!-- ══ TOPBAR TABS (hidden, used for active_tab tracking) ══ -->
+    <div style="display:none" id="adminTabs" data-active="{{ active_tab }}"></div>
+
+    <!-- ══ TAB CONTENT ══ -->
+    <div class="tab-body" id="adminTabsContent">
+
+        <!-- ═══ STUDENTS ═══ -->
+        <div class="tab-pane {% if active_tab=='students' %}show active{% endif %}" id="students" role="tabpanel">
+            <div class="sec-head">
+                <h5><i class="fas fa-user-graduate" style="color:var(--accent-2);"></i> قائمة الطلاب</h5>
+                {% if current_user.is_super_admin or current_user.can_edit_students %}
+                <button class="abtn abtn-teal" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+                    <i class="fas fa-plus-circle"></i> إضافة طالب
+                </button>
+                {% endif %}
+            </div>
+            {% if students %}
+            {% for student in students|sort(attribute='full_name') %}
+            <div class="list-card">
+                <div class="info">
+                    <div class="avatar av-green"><i class="fas fa-user-graduate"></i></div>
+                    <div>
+                        <h6>{{ student.full_name }}</h6>
+                        <small>@{{ student.username }} · {{ student.memorization_level or 'غير محدد' }}</small>
+                    </div>
+                </div>
+                <div class="row-actions">
+                    {% if student.is_suspended %}
+                    <span class="sbadge sbadge-off"><i class="fas fa-ban"></i> موقوف</span>
+                    {% endif %}
+                    {% if current_user.is_super_admin or current_user.can_edit_students %}
+                    <a href="{{ url_for('edit_student', id=student.id) }}" class="abtn abtn-gold">
+                        <i class="fas fa-edit"></i> تعديل
+                    </a>
+                    <a href="{{ url_for('delete_student', id=student.id, tab=active_tab) }}" class="abtn abtn-red tab-sync"
+                       data-confirm="حذف هذا الطالب؟">
+                        <i class="fas fa-trash"></i> حذف
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('view_student_plans', student_id=student.id) }}" class="abtn abtn-purple">
+                        <i class="fas fa-list"></i> مقرراته
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty"><i class="fas fa-users d-block"></i><p>لا يوجد طلاب مسجّلون</p></div>
+            {% endif %}
+        </div>
+
+        <!-- ═══ TEACHERS ═══ -->
+        <div class="tab-pane {% if active_tab=='teachers' %}show active{% endif %}" id="teachers" role="tabpanel">
+            <div class="sec-head">
+                <h5><i class="fas fa-chalkboard-teacher" style="color:var(--accent);"></i> قائمة المعلمين</h5>
+                {% if current_user.is_super_admin or current_user.can_edit_teachers %}
+                <button class="abtn abtn-purple" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
+                    <i class="fas fa-plus-circle"></i> إضافة معلم
+                </button>
+                {% endif %}
+            </div>
+            {% if teachers %}
+            {% for teacher in teachers|sort(attribute='full_name') %}
+            <div class="list-card">
+                <div class="info">
+                    <div class="avatar av-purple"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <div>
+                        <h6>{{ teacher.full_name }}</h6>
+                        <small>@{{ teacher.username }}</small>
+                        <div style="margin-top:2px;">
+                            {% if teacher.can_view_missing_reports %}
+                            <span class="sbadge sbadge-on"><i class="fas fa-eye"></i> مشرف تقارير</span>
+                            {% endif %}
+                            {% if teacher.can_add_plan %}
+                            <span class="sbadge sbadge-on"><i class="fas fa-plus-circle"></i> إضافة مقررات</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row-actions">
+                    {% if current_user.is_super_admin %}
+                    <a href="{{ url_for('toggle_teacher_report_permission', teacher_id=teacher.id, tab=active_tab) }}"
+                       class="abtn {% if teacher.can_view_missing_reports %}abtn-teal{% else %}abtn-gray{% endif %} tab-sync"
+                       data-confirm="تغيير صلاحية التقارير؟" title="صلاحية تقرير المتخلفين">
+                        <i class="fas fa-eye"></i> {{ 'مشرف ✓' if teacher.can_view_missing_reports else 'مشرف ✗' }}
+                    </a>
+                    <a href="{{ url_for('toggle_teacher_add_plan_permission', teacher_id=teacher.id, tab=active_tab) }}"
+                       class="abtn {% if teacher.can_add_plan %}abtn-blue{% else %}abtn-gray{% endif %} tab-sync"
+                       data-confirm="تغيير صلاحية إضافة المقررات؟" title="صلاحية إضافة المقررات">
+                        <i class="fas fa-{% if teacher.can_add_plan %}plus-circle{% else %}ban{% endif %}"></i>
+                        {{ 'مقرر ✓' if teacher.can_add_plan else 'مقرر ✗' }}
+                    </a>
+                    <a href="{{ url_for('toggle_teacher_add_poem_plan_permission', teacher_id=teacher.id, tab=active_tab) }}"
+                       class="abtn {% if teacher.can_add_poem_plan %}abtn-purple{% else %}abtn-gray{% endif %} tab-sync"
+                       data-confirm="تغيير صلاحية إضافة مقررات القصائد؟" title="صلاحية إضافة مقررات القصائد">
+                        <i class="fas fa-{% if teacher.can_add_poem_plan %}feather-alt{% else %}ban{% endif %}"></i>
+                        {{ 'قصائد ✓' if teacher.can_add_poem_plan else 'قصائد ✗' }}
+                    </a>
+                    {% endif %}
+                    {% if current_user.is_super_admin or current_user.can_edit_teachers %}
+                    <a href="{{ url_for('edit_teacher', id=teacher.id) }}" class="abtn abtn-gold">
+                        <i class="fas fa-edit"></i> تعديل
+                    </a>
+                    <a href="{{ url_for('delete_teacher', id=teacher.id, tab=active_tab) }}" class="abtn abtn-red tab-sync"
+                       data-confirm="إخفاء هذا المعلم؟ لن يتم حذف أي بيانات مرتبطة به.">
+                        <i class="fas fa-eye-slash"></i> إخفاء
+                    </a>
+                    {% else %}
+                    <span class="sbadge sbadge-off">عرض فقط</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty"><i class="fas fa-chalkboard-teacher d-block"></i><p>لا يوجد معلمون مسجّلون</p></div>
+            {% endif %}
+        </div>
+
+        <!-- ═══ ASSIGN ═══ -->
+        <div class="tab-pane {% if active_tab=='assign' %}show active{% endif %}" id="assign" role="tabpanel">
+            <h5 style="font-size:0.95rem;font-weight:800;color:var(--text-1);margin-bottom:1rem;">
+                <i class="fas fa-link" style="color:var(--accent-2);"></i> ربط المعلمين بالطلاب
+            </h5>
+
+            <form action="{{ url_for('assign_teacher_students') }}" method="post" id="assignForm">
+                <input type="hidden" name="tab" value="assign">
+                <input type="hidden" name="teacher_id" id="selectedTeacherId" value="">
+                <!-- student_ids تضاف ديناميكياً عبر JavaScript قبل الإرسال -->
+
+                <!-- ─── معلمين ─── -->
+                <div style="margin-bottom:1rem;">
+                    <div style="font-size:0.7rem;font-weight:700;color:var(--text-3);margin-bottom:0.4rem;">
+                        <i class="fas fa-chalkboard-teacher"></i> اختر معلماً
+                    </div>
+                    <select id="teacherSelect" onchange="selectTeacher(this)"
+                            style="width:100%;padding:0.6rem 0.8rem;border-radius:10px;
+                                   border:1.5px solid var(--border);background:var(--surface-3);
+                                   color:var(--text-1);font-size:0.85rem;font-weight:600;
+                                   appearance:auto;cursor:pointer;">
+                        <option value="">— اختر معلماً —</option>
+                        {% for teacher in teachers %}
+                        <option value="{{ teacher.id }}">{{ teacher.full_name }} ({{ teacher.students|length }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- ─── طلاب ─── -->
+                <div id="studentArea" style="display:none;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+                        <div style="font-size:0.7rem;font-weight:700;color:var(--text-3);">
+                            <i class="fas fa-users"></i> <span id="studentCountLabel">0</span> طالب
+                        </div>
+                        <div style="display:flex;gap:0.4rem;">
+                            <span id="assignedCount" class="sbadge sbadge-on" style="font-size:0.65rem;">0 مرتبط</span>
+                            <span id="unassignedCount" class="sbadge sbadge-off" style="font-size:0.65rem;">0 غير مرتبط</span>
+                        </div>
+                    </div>
+                    <div id="studentGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:0.4rem;">
+                        {% for student in students %}
+                        <div class="assign-student-item" data-id="{{ student.id }}"
+                             style="display:flex;align-items:center;gap:0.5rem;
+                                    background:var(--surface-3);border:1.5px solid var(--border);
+                                    border-radius:10px;padding:0.45rem 0.65rem;
+                                    cursor:pointer;transition:all .2s;
+                                    font-size:0.75rem;font-weight:600;color:var(--text-2);"
+                             onclick="toggleStudent(this)">
+                            <div class="assign-avatar"
+                                 style="width:28px;height:28px;border-radius:50%;
+                                        background:var(--accent-2);color:#fff;
+                                        display:flex;align-items:center;justify-content:center;
+                                        font-size:0.7rem;font-weight:700;flex-shrink:0;">
+                                {{ student.full_name[0] }}
+                            </div>
+                            <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ student.full_name }}</span>
+                            <div class="assign-toggle"
+                                 style="width:18px;height:18px;border-radius:50%;
+                                        border:2px solid var(--border);
+                                        transition:all .2s;flex-shrink:0;"></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- ─── شريط الحفظ الثابت ─── -->
+                <div id="saveBar" style="display:none;position:sticky;bottom:0;margin-top:1rem;
+                        background:var(--surface-2);border:1px solid var(--border);
+                        border-radius:14px;padding:0.8rem 1rem;
+                        align-items:center;justify-content:space-between;gap:1rem;
+                        box-shadow:0 -4px 20px rgba(0,0,0,.15);">
+                    <div>
+                        <div style="font-size:0.7rem;color:var(--text-3);">المعلم المحدد</div>
+                        <div style="font-weight:700;font-size:0.9rem;color:var(--text-1);" id="saveBarTeacher">—</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.8rem;">
+                        <span id="saveBarCount" style="font-size:0.75rem;color:var(--text-2);"><span id="checkedCount">0</span> طالب</span>
+                        <button type="submit" class="abtn abtn-green" style="padding:0.45rem 1.2rem;font-size:0.8rem;">
+                            <i class="fas fa-save"></i> حفظ
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+
+        <script>
+        // بيانات ارتباطات كل معلم (مجمعة مسبقاً)
+        var teacherStudents = {
+            {% for teacher in teachers %}
+            {{ teacher.id }}: [{% for s in teacher.students %}{{ s.id }}{% if not loop.last %},{% endif %}{% endfor %}],
+            {% endfor %}
+        };
+        var selectedTeacherId = null;
+        var allStudentIds = [{% for s in students %}{{ s.id }}{% if not loop.last %},{% endif %}{% endfor %}];
+
+        function selectTeacher(el) {
+            var id = parseInt(el.value);
+            if (!id) {
+                document.getElementById('studentArea').style.display = 'none';
+                document.getElementById('saveBar').style.display = 'none';
+                return;
+            }
+
+            selectedTeacherId = id;
+            document.getElementById('selectedTeacherId').value = id;
+            document.getElementById('studentArea').style.display = 'block';
+            document.getElementById('saveBar').style.display = 'flex';
+
+            var assigned = teacherStudents[id] || [];
+            var items = document.querySelectorAll('.assign-student-item');
+            items.forEach(function(item) {
+                var sid = parseInt(item.dataset.id);
+                var toggle = item.querySelector('.assign-toggle');
+                item.style.borderColor = 'var(--border)';
+                item.style.background = 'var(--surface-3)';
+                toggle.style.background = 'transparent';
+                toggle.style.borderColor = 'var(--border)';
+                if (assigned.indexOf(sid) !== -1) {
+                    item.style.borderColor = 'rgba(0,212,170,0.35)';
+                    item.style.background = 'rgba(0,212,170,0.06)';
+                    toggle.style.background = '#0dc8a0';
+                    toggle.style.borderColor = '#0dc8a0';
+                }
+            });
+
+            updateCounts();
+            document.getElementById('saveBarTeacher').textContent = el.options[el.selectedIndex].text.replace(/\(\d+\)$/, '').trim();
+        }
+
+        function toggleStudent(el) {
+            if (!selectedTeacherId) return;
+            var toggle = el.querySelector('.assign-toggle');
+            var isOn = toggle.style.background === 'rgb(13, 200, 160)' || toggle.style.background === '#0dc8a0';
+
+            if (isOn) {
+                el.style.borderColor = 'var(--border)';
+                el.style.background = 'var(--surface-3)';
+                toggle.style.background = 'transparent';
+                toggle.style.borderColor = 'var(--border)';
+            } else {
+                el.style.borderColor = 'rgba(0,212,170,0.35)';
+                el.style.background = 'rgba(0,212,170,0.06)';
+                toggle.style.background = '#0dc8a0';
+                toggle.style.borderColor = '#0dc8a0';
+            }
+            updateCounts();
+        }
+
+        function updateCounts() {
+            var items = document.querySelectorAll('.assign-student-item');
+            var checked = 0;
+            items.forEach(function(item) {
+                var toggle = item.querySelector('.assign-toggle');
+                if (toggle.style.background === 'rgb(13, 200, 160)' || toggle.style.background === '#0dc8a0') checked++;
+            });
+            document.getElementById('checkedCount').textContent = checked;
+            document.getElementById('studentCountLabel').textContent = items.length + ' طالب — ' + checked + ' مرتبط';
+            var assignedSpan = document.getElementById('assignedCount');
+            var unassignedSpan = document.getElementById('unassignedCount');
+            assignedSpan.textContent = checked + ' مرتبط';
+            unassignedSpan.textContent = (items.length - checked) + ' غير مرتبط';
+        }
+
+        function syncFormBeforeSubmit() {
+            var items = document.querySelectorAll('.assign-student-item');
+            var checked = [];
+            items.forEach(function(item) {
+                var toggle = item.querySelector('.assign-toggle');
+                if (toggle.style.background === 'rgb(13, 200, 160)' || toggle.style.background === '#0dc8a0') {
+                    checked.push(item.dataset.id);
+                }
+            });
+            // إزالة أي student_ids سابقة وإضافة المحددة
+            var form = document.getElementById('assignForm');
+            form.querySelectorAll('input[name="student_ids"]').forEach(function(i) { i.remove(); });
+            checked.forEach(function(id) {
+                var inp = document.createElement('input');
+                inp.type = 'hidden';
+                inp.name = 'student_ids';
+                inp.value = id;
+                form.appendChild(inp);
+            });
+            return true;
+        }
+
+        document.getElementById('assignForm').addEventListener('submit', syncFormBeforeSubmit);
+
+        // تفعيل أول معلم تلقائياً
+        document.addEventListener('DOMContentLoaded', function() {
+            var firstCard = document.querySelector('.assign-teacher-card');
+            if (firstCard) selectTeacher(firstCard, parseInt(firstCard.dataset.id));
+        });
+        </script>
+
+        <!-- ═══ REPORTS ═══ -->
+        <div class="tab-pane {% if active_tab=='reports' %}show active{% endif %}" id="reports" role="tabpanel">
+            <h5 style="font-size:0.95rem;font-weight:800;color:var(--text-1);margin-bottom:1rem;">
+                <i class="fas fa-chart-bar" style="color:var(--accent-4);"></i> تقرير الأداء
+            </h5>
+            <div class="acard">
+                <form method="get" action="{{ url_for('admin') }}">
+                    <input type="hidden" name="tab" value="reports">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="f-label">من تاريخ</label>
+                            <input type="date" name="start_date" class="f-control"
+                                   value="{{ start_date.strftime('%Y-%m-%d') if start_date else '' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="f-label">إلى تاريخ</label>
+                            <input type="date" name="end_date" class="f-control"
+                                   value="{{ end_date.strftime('%Y-%m-%d') if end_date else '' }}" required>
+                        </div>
+                        <button type="submit" class="btn-submit" style="align-self:flex-end;">عرض</button>
+                    </div>
+                </form>
+            </div>
+            {% if report_data %}
+            <div class="table-responsive">
+                <table class="dark-table">
+                    <thead><tr><th>الطالب</th><th>المقررات</th><th>مقيّمة</th><th>غير مقيّمة</th><th>أيام الغياب*</th><th>المتوسط</th></tr></thead>
+                    <tbody>
+                    {% for item in report_data %}
+                    <tr>
+                        <td style="font-weight:700;">{{ item.student.full_name }}</td>
+                        <td>{{ item.total_plans }}</td>
+                        <td><span class="sbadge sbadge-on">{{ item.evaluated_plans }}</span></td>
+                        <td><span class="sbadge {% if item.unevaluated_plans>0 %}sbadge-off{% else %}sbadge-on{% endif %}">{{ item.unevaluated_plans }}</span></td>
+                        <td>{{ item.absent_days }}</td>
+                        <td><strong>{{ item.avg_score }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p style="font-size:0.7rem;color:var(--text-3);margin-top:0.5rem;">* أيام الغياب من الأحد إلى الجمعة (السبت مستثنى)</p>
+            {% else %}
+            <div class="empty"><i class="fas fa-chart-bar d-block"></i><p>اختر فترة زمنية لعرض التقرير</p></div>
+            {% endif %}
+
+            <!-- ═══ TEACHER EVALUATIONS REPORT ═══ -->
+            <div class="divider"></div>
+            <h5 style="font-size:0.95rem;font-weight:800;color:var(--text-1);margin:1rem 0;">
+                <i class="fas fa-chalkboard-teacher" style="color:var(--accent);"></i> تقييمات المعلمين
+            </h5>
+            <div class="acard">
+                <form method="get" action="{{ url_for('admin') }}">
+                    <input type="hidden" name="tab" value="reports">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="f-label">من تاريخ</label>
+                            <input type="date" name="tr_start" class="f-control"
+                                   value="{{ tr_start.strftime('%Y-%m-%d') if tr_start else '' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="f-label">إلى تاريخ</label>
+                            <input type="date" name="tr_end" class="f-control"
+                                   value="{{ tr_end.strftime('%Y-%m-%d') if tr_end else '' }}" required>
+                        </div>
+                        <button type="submit" class="btn-submit" style="align-self:flex-end;">بحث</button>
+                    </div>
+                </form>
+            </div>
+            {% if teacher_report_data is not none and teacher_report_data|length > 0 %}
+            <div class="table-responsive">
+                <table class="dark-table" id="teacherEvalTable">
+                    <thead>
+                        <tr>
+                            <th>المعلم</th>
+                            <th>عدد المقررات المقيمة</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in teacher_report_data %}
+                    <tr>
+                        <td style="font-weight:700;">{{ item.teacher_name }}</td>
+                        <td>
+                            <a href="#" class="abtn abtn-teal eval-count-btn"
+                               data-teacher="{{ item.teacher_name }}"
+                               data-evals='{{ item.evaluations | tojson | safe }}'>
+                                <i class="fas fa-list"></i> {{ item.evaluations | length }}
+                            </a>
+                        </td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="evalDetails" style="display:none;margin-top:0.8rem;"></div>
+            {% elif teacher_report_data is not none and teacher_report_data|length == 0 %}
+            <div class="empty"><i class="fas fa-chalkboard-teacher d-block"></i><p>لا توجد تقييمات في هذه الفترة</p></div>
+            {% endif %}
+        </div>
+
+        <!-- ═══ POINTS ═══ -->
+        <div class="tab-pane {% if active_tab=='points' %}show active{% endif %}" id="points" role="tabpanel">
+
+            <!-- إعادة حساب النقاط بالمنطق الجديد -->
+            <div style="background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.2);border-radius:var(--radius-md);padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:0.8rem;">
+                <div>
+                    <div style="font-weight:800;color:#ff9f9f;font-size:0.85rem;display:flex;align-items:center;gap:0.4rem;">
+                        <i class="fas fa-calculator"></i> إعادة حساب نقاط جميع الطلاب
+                    </div>
+                    <div style="font-size:0.72rem;color:rgba(255,159,159,0.6);margin-top:0.2rem;line-height:1.5;">
+                        يُطبّق المنطق الجديد: 100 درجة/مقرر · 600 للدورة · 5 نجوم · كل نجمة = 120 درجة
+                    </div>
+                </div>
+                <form method="post" action="{{ url_for('recalculate_all_points') }}"
+                      data-confirm="إعادة حساب نقاط جميع الطلاب بالمنطق الجديد؟
+سيتم تحديث جميع النقاط والنجوم فوراً.">
+                    <button type="submit" style="background:linear-gradient(135deg,#ff6b6b,#ee5a24);border:none;color:white;border-radius:var(--radius-sm);padding:0.5rem 1.1rem;font-weight:800;font-size:0.8rem;cursor:pointer;white-space:nowrap;transition:0.2s;display:inline-flex;align-items:center;gap:0.4rem;font-family:inherit;"
+                            onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+                        <i class="fas fa-sync-alt"></i> إعادة الحساب الآن
+                    </button>
+                </form>
+            </div>
+
+            <!-- أرشفة -->
+            <div class="archive-bar">
+                <div>
+                    <div class="ttl"><i class="fas fa-archive"></i> أرشفة الدورة الحالية</div>
+                    <div class="dsc">سيتم إنشاء دورة جديدة مع الاحتفاظ بالنقاط التراكمية وتصفير نقاط الدورة والنجوم.</div>
+                </div>
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                    <a href="{{ url_for('points_cycle_history') }}" class="btn-archive btn-archive-blue">
+                        <i class="fas fa-history"></i> الدورات السابقة
+                    </a>
+                    <form method="post" action="{{ url_for('archive_points_cycle') }}"
+                          data-confirm="⚠️ سيتم أرشفة الدورة الحالية وبدء دورة جديدة. هل أنت متأكد؟">
+                        <button type="submit" class="btn-archive"><i class="fas fa-archive"></i> أرشفة وبدء دورة</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="leaderboard-wrap">
+                <div class="lb-head">
+                    <h6><i class="fas fa-ranking-star"></i> ترتيب الطلاب — الدورة الحالية</h6>
+                    <span style="color:rgba(255,255,255,0.4);font-size:0.72rem;">مرتب حسب النقاط التراكمية</span>
+                </div>
+                {% set max_pts = students_with_points_data[0].total_points if students_with_points_data and students_with_points_data[0].total_points > 0 else 1 %}
+                <table class="dark-table">
+                    <thead><tr><th style="width:44px;">#</th><th>الطالب</th><th>النقاط الكلية</th><th>نقاط الدورة</th><th>النجوم / 5</th><th>السجل</th></tr></thead>
+                    <tbody>
+                    {% for student in students_with_points_data %}
+                    {% set loop_idx = loop.index %}
+                    <tr>
+                        <td>
+                            <span class="rank-badge {% if loop_idx==1 %}rank-1{% elif loop_idx==2 %}rank-2{% elif loop_idx==3 %}rank-3{% else %}rank-other{% endif %}">
+                                {{ loop_idx }}
+                            </span>
+                        </td>
+                        <td style="font-weight:700;">{{ student.full_name }}</td>
+                        <td>
+                            <div class="points-bar-wrap">
+                                <div class="points-bar">
+                                    <div class="points-bar-fill" style="width:{{ [((student.total_points / max_pts)*100)|round|int, 100]|min }}%;"></div>
+                                </div>
+                                <span class="points-badge">{{ student.total_points }}</span>
+                            </div>
+                        </td>
+                        <td><span class="cycle-badge">{{ student.current_cycle_points }}</span></td>
+                        <td>
+                            <div class="stars-row">
+                                {% for i in range(student.star_level) %}<i class="fas fa-star" style="color:#FFD700;font-size:0.8rem;"></i>{% endfor %}
+                                {% for i in range(5 - student.star_level) %}<i class="far fa-star" style="color:var(--text-3);font-size:0.8rem;"></i>{% endfor %}
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn-log" data-bs-toggle="modal" data-bs-target="#logModal{{ student.id }}">
+                                <i class="fas fa-list-ul"></i> عرض
+                            </button>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="text-center" style="padding:2rem;color:var(--text-3);">لا توجد بيانات</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Log Modals -->
+            {% for student in students_with_points_data %}
+            <div class="modal fade" id="logModal{{ student.id }}" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header log-modal-header">
+                            <span class="modal-title"><i class="fas fa-history" style="color:#FFD700;"></i> سجل نقاط {{ student.full_name }}</span>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% if student.points_logs %}
+                            <div style="display:flex;justify-content:space-between;background:var(--surface-2);border-radius:var(--radius-sm);padding:0.6rem 0.9rem;margin-bottom:0.75rem;font-size:0.82rem;">
+                                <span>الإجمالي: <strong style="color:var(--accent);">{{ student.total_points }}</strong></span>
+                                <span>الدورة: <strong style="color:var(--accent-2);">{{ student.current_cycle_points }}</strong></span>
+                            </div>
+                            {% for log in student.points_logs|sort(attribute='evaluation_date',reverse=True) %}
+                            <div class="log-entry">
+                                <div>
+                                    <span class="log-type">{{ log.plan.plan_type if log.plan else '—' }}</span>
+                                    <span class="log-date" style="margin-right:0.5rem;">{{ log.evaluation_date }}</span>
+                                </div>
+                                <div style="display:flex;align-items:center;gap:0.5rem;">
+                                    <div class="stars-row">
+                                        {% for i in range(log.stars_earned) %}<i class="fas fa-star" style="color:#FFD700;font-size:0.8rem;"></i>{% endfor %}
+                                        {% for i in range(5-log.stars_earned) %}<i class="far fa-star" style="color:var(--text-3);font-size:0.8rem;"></i>{% endfor %}
+                                    </div>
+                                    <span class="log-pts">+{{ log.points_earned }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="empty"><i class="fas fa-inbox d-block"></i><p>لا توجد سجلات نقاط</p></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- ═══ REWARDS ═══ -->
+        <div class="tab-pane {% if active_tab=='rewards' %}show active{% endif %}" id="rewards" role="tabpanel">
+            <iframe src="{{ url_for('admin_reward_rules') }}" style="width:100%;height:600px;border:none;border-radius:var(--radius-md);"></iframe>
+        </div>
+
+        <!-- ═══ SETTINGS ═══ -->
+        {% if current_user.is_super_admin %}
+        <div class="tab-pane {% if active_tab=='settings' %}show active{% endif %}" id="settings" role="tabpanel">
+            <h5 style="font-size:0.95rem;font-weight:800;color:var(--text-1);margin-bottom:1rem;">
+                <i class="fas fa-cog" style="color:var(--accent-5);"></i> إعدادات النظام
+            </h5>
+            <div class="acard">
+                <h6 style="font-size:0.82rem;font-weight:800;color:var(--text-2);margin-bottom:0.6rem;">
+                    <i class="fas fa-toggle-on" style="color:var(--accent-2);"></i> مقرر تقييم المرحلة
+                </h6>
+                <p style="font-size:0.75rem;color:var(--text-3);margin-bottom:0.75rem;">تفعيل مقرر تقييم المرحلة للطلاب.</p>
+                <form method="post" action="{{ url_for('toggle_phase_plan') }}" style="display:flex;align-items:center;gap:0.6rem;">
+                    <input type="hidden" name="tab" value="settings">
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" role="switch" id="phaseSwitch"
+                               name="phase_plan_enabled" {% if phase_plan_enabled %}checked{% endif %}>
+                        <label class="form-check-label" for="phaseSwitch" style="font-size:0.78rem;color:var(--text-2);">
+                            {{ 'مفعّل' if phase_plan_enabled else 'غير مفعّل' }}
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-submit" style="padding:0.3rem 0.9rem;font-size:0.75rem;">حفظ</button>
+                </form>
+            </div>
+            <div class="acard">
+                <iframe src="{{ url_for('admin_settings') }}" style="width:100%;min-height:500px;border:none;border-radius:var(--radius-md);background:#fff;"></iframe>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ═══ DATA ═══ -->
+        <div class="tab-pane {% if active_tab=='data' %}show active{% endif %}" id="data" role="tabpanel">
+            <h5 style="font-size:0.95rem;font-weight:800;color:var(--text-1);margin-bottom:1rem;">
+                <i class="fas fa-database" style="color:var(--accent-5);"></i> النسخ الاحتياطي
+            </h5>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="acard">
+                        <h6 style="font-size:0.82rem;font-weight:800;color:var(--text-2);margin-bottom:0.6rem;">
+                            <i class="fas fa-download" style="color:var(--accent);"></i> إنشاء نسخة احتياطية
+                        </h6>
+                        <p style="font-size:0.75rem;color:var(--text-3);margin-bottom:0.75rem;">سيتم تنزيل ملف JSON يحتوي على جميع البيانات الحالية.</p>
+                        <form method="post" action="{{ url_for('backup') }}">
+                            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> إنشاء نسخة</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="acard">
+                        <h6 style="font-size:0.82rem;font-weight:800;color:var(--text-2);margin-bottom:0.6rem;">
+                            <i class="fas fa-upload" style="color:var(--accent-2);"></i> استعادة نسخة احتياطية
+                        </h6>
+                        <form method="post" action="{{ url_for('restore') }}" enctype="multipart/form-data"
+                              data-confirm="تأكيد استعادة البيانات؟ سيتم حذف جميع البيانات الحالية.">
+                            <label class="f-label">ملف النسخة الاحتياطية (JSON)</label>
+                            <input type="file" name="backup_file" accept=".json" class="f-control" required style="margin-bottom:0.6rem;">
+                            <div style="background:rgba(255,217,61,0.08);border:1px solid rgba(255,217,61,0.2);border-radius:var(--radius-sm);padding:0.5rem 0.7rem;font-size:0.72rem;color:#ffe680;margin-bottom:0.65rem;">
+                                <i class="fas fa-exclamation-triangle"></i> تحذير: استعادة النسخة ستحذف جميع البيانات الحالية. لا يمكن التراجع.
+                            </div>
+                            {% if current_user.is_super_admin or current_user.can_restore_backup %}
+                            <button type="submit" class="btn-submit" style="background:var(--grad-teal);">
+                                <i class="fas fa-undo"></i> استعادة البيانات
+                            </button>
+                            {% else %}
+                            <button type="button" class="btn-cancel" disabled>لا تملك صلاحية الاستعادة</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% if current_user.is_super_admin or current_user.can_restore_backup %}
+            <div class="danger-box">
+                <h6><i class="fas fa-skull-crossbones"></i> منطقة الخطر</h6>
+                <p style="font-size:0.75rem;color:var(--text-3);margin-bottom:0.75rem;">إعادة تهيئة قاعدة البيانات تحذف جميع البيانات من الجداول مع الحفاظ على هيكلها. لا يمكن التراجع.</p>
+                <form method="post" action="{{ url_for('reset_database') }}"
+                      data-confirm="⚠️ تحذير شديد: سيتم حذف جميع البيانات بشكل نهائي. هل أنت متأكد تماماً؟">
+                    <button type="submit" class="abtn abtn-red" style="padding:0.4rem 1rem;font-size:0.78rem;">
+                        <i class="fas fa-trash-alt"></i> إعادة تهيئة قاعدة البيانات
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- ═══ ADMINS ═══ -->
+        {% if current_user.is_super_admin %}
+        <div class="tab-pane {% if active_tab=='admins' %}show active{% endif %}" id="admins" role="tabpanel">
+            <div class="sec-head">
+                <h5><i class="fas fa-user-shield" style="color:var(--accent);"></i> إدارة المستخدمين</h5>
+                <button class="abtn abtn-teal" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+                    <i class="fas fa-plus-circle"></i> إضافة مستخدم
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="dark-table">
+                    <thead>
+                        <tr>
+                            <th>المستخدم</th>
+                            <th>الطلاب</th>
+                            <th>المعلمون</th>
+                            <th>التقارير</th>
+                            <th>الإنذارات</th>
+                            <th>النقاط</th>
+                            <th>المكافآت</th>
+                            <th>البيانات</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for admin in admins %}
+                    <tr>
+                        <td>
+                            <span style="font-weight:800;">{{ admin.username }}</span>
+                            {% if admin.is_super_admin %}<span class="sbadge sbadge-super"><i class="fas fa-crown"></i> مدير عام</span>{% endif %}
+                        </td>
+                        <td>
+                            <span class="sbadge {% if admin.can_access_students %}sbadge-on{% else %}sbadge-off{% endif %}">دخول</span>
+                            {% if admin.can_edit_students %}<span class="sbadge sbadge-on">تعديل</span>{% endif %}
+                        </td>
+                        <td>
+                            <span class="sbadge {% if admin.can_access_teachers %}sbadge-on{% else %}sbadge-off{% endif %}">دخول</span>
+                            {% if admin.can_edit_teachers %}<span class="sbadge sbadge-on">تعديل</span>{% endif %}
+                        </td>
+                        <td><span class="sbadge {% if admin.can_access_reports %}sbadge-on{% else %}sbadge-off{% endif %}">{{ '✓' if admin.can_access_reports else '✗' }}</span></td>
+                        <td><span class="sbadge {% if admin.can_access_warnings %}sbadge-on{% else %}sbadge-off{% endif %}">{{ '✓' if admin.can_access_warnings else '✗' }}</span></td>
+                        <td><span class="sbadge {% if admin.can_access_reports %}sbadge-on{% else %}sbadge-off{% endif %}">{{ '✓' if admin.can_access_reports else '✗' }}</span></td>
+                        <td><span class="sbadge {% if admin.can_access_reports %}sbadge-on{% else %}sbadge-off{% endif %}">{{ '✓' if admin.can_access_reports else '✗' }}</span></td>
+                        <td>
+                            <span class="sbadge {% if admin.can_access_backup %}sbadge-on{% else %}sbadge-off{% endif %}">نسخ</span>
+                            {% if admin.can_restore_backup %}<span class="sbadge sbadge-on">استعادة</span>{% endif %}
+                        </td>
+                        <td>
+                            <div class="row-actions">
+                                <a href="#" class="abtn abtn-gold" data-bs-toggle="modal"
+                                   data-bs-target="#editAdminModal{{ admin.id }}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% if admin.id != current_user.id and not admin.is_super_admin %}
+                                <a href="{{ url_for('delete_admin', id=admin.id) }}" class="abtn abtn-red"
+                                   data-confirm="حذف هذا المستخدم؟">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- ── EDIT ADMIN MODAL ── -->
+                    <div class="modal fade" id="editAdminModal{{ admin.id }}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background:var(--surface-3);">
+                                    <span class="modal-title"><i class="fas fa-user-edit" style="color:var(--accent-4);"></i> تعديل: {{ admin.username }}</span>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="post" action="{{ url_for('edit_admin', id=admin.id) }}" id="editAdminForm{{ admin.id }}">
+                                        <div class="row g-3 mb-3">
+                                            <div class="col-md-6">
+                                                <label class="f-label">اسم المستخدم</label>
+                                                <input type="text" name="username" class="f-control" value="{{ admin.username }}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="f-label">كلمة المرور الجديدة</label>
+                                                <input type="password" name="password" class="f-control" placeholder="اتركه فارغاً إذا لم ترد التغيير">
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-users"></i> الطلاب</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_students" {% if admin.can_access_students %}checked{% endif %}> عرض قائمة الطلاب</label>
+                                            </div>
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_edit_students" {% if admin.can_edit_students %}checked{% endif %}> إضافة / تعديل / حذف</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-chalkboard-teacher"></i> المعلمون</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_teachers" {% if admin.can_access_teachers %}checked{% endif %}> عرض قائمة المعلمين</label>
+                                            </div>
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_edit_teachers" {% if admin.can_edit_teachers %}checked{% endif %}> إضافة / تعديل / حذف</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-chart-bar"></i> التقارير والنقاط والمكافآت</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_reports" {% if admin.can_access_reports %}checked{% endif %}> تقارير الأداء والمتخلفين</label>
+                                            </div>
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_reports" {% if admin.can_access_reports %}checked{% endif %}> إدارة النقاط والدورات</label>
+                                            </div>
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_reports" {% if admin.can_access_reports %}checked{% endif %}> قواعد المكافآت</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-exclamation-triangle"></i> الإنذارات</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_warnings" {% if admin.can_access_warnings %}checked{% endif %}> إدارة إنذارات الطلاب</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-database"></i> النسخ الاحتياطي</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_access_backup" {% if admin.can_access_backup %}checked{% endif %}> إنشاء نسخة احتياطية</label>
+                                            </div>
+                                            <div class="perm-card">
+                                                <label><input type="checkbox" name="can_restore_backup" {% if admin.can_restore_backup %}checked{% endif %}> استعادة / إعادة تهيئة</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="perm-section-title"><i class="fas fa-crown"></i> صلاحية خاصة</div>
+                                        <div class="perm-grid">
+                                            <div class="perm-card" style="border-color:rgba(108,99,255,0.3);">
+                                                <label><input type="checkbox" name="is_super_admin" {% if admin.is_super_admin %}checked{% endif %}> مدير عام (صلاحيات كاملة)</label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                                    <button type="submit" form="editAdminForm{{ admin.id }}" class="btn-submit">حفظ التغييرات</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+    </div><!-- /tab-body -->
+
+    <!-- ══ DUPLICATES REDIRECT NOTE (not a tab-pane — it's a link to separate page) ══ -->
+    {% if active_tab == 'duplicates' %}
+    <script>window.location.href = "{{ url_for('admin_duplicates') }}";</script>
+    {% endif %}
+
+</div><!-- /wrap -->
+
+<!-- ══════════════════════════════════════
+     MODALS — ADD STUDENT / TEACHER / ADMIN
+══════════════════════════════════════════ -->
+
+<!-- ADD STUDENT -->
+<div class="modal fade" id="addStudentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--surface-3);">
+                <span class="modal-title"><i class="fas fa-user-plus" style="color:var(--accent-2);"></i> إضافة طالب جديد</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('add_student') }}" method="post" id="addStudentForm">
+                    <input type="hidden" name="tab" value="{{ active_tab }}" class="tab-sync">
+                    <div class="mb-3">
+                        <label class="f-label">الاسم الكامل</label>
+                        <input type="text" name="full_name" class="f-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">اسم المستخدم</label>
+                        <input type="text" name="username" class="f-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">كلمة المرور</label>
+                        <input type="password" name="password" class="f-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">رقم الهاتف</label>
+                        <input type="text" name="phone" class="f-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">مستوى الحفظ</label>
+                        <input type="text" name="level" class="f-control" placeholder="مثال: جزء عم">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                <button type="submit" form="addStudentForm" class="btn-submit" style="background:var(--grad-teal);">حفظ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD TEACHER -->
+<div class="modal fade" id="addTeacherModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--surface-3);">
+                <span class="modal-title"><i class="fas fa-chalkboard-teacher" style="color:var(--accent);"></i> إضافة معلم جديد</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('add_teacher') }}" method="post" id="addTeacherForm">
+                    <input type="hidden" name="tab" value="{{ active_tab }}" class="tab-sync">
+                    <div class="mb-3">
+                        <label class="f-label">الاسم الكامل</label>
+                        <input type="text" name="full_name" class="f-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">اسم المستخدم</label>
+                        <input type="text" name="username" class="f-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="f-label">كلمة المرور</label>
+                        <input type="password" name="password" class="f-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                <button type="submit" form="addTeacherForm" class="btn-submit">حفظ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD ADMIN -->
+<div class="modal fade" id="addAdminModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background:var(--surface-3);">
+                <span class="modal-title"><i class="fas fa-user-shield" style="color:var(--accent);"></i> إضافة مستخدم جديد</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('add_admin') }}" method="post" id="addAdminForm">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="f-label">اسم المستخدم</label>
+                            <input type="text" name="username" class="f-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="f-label">كلمة المرور</label>
+                            <input type="password" name="password" class="f-control" required>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-users"></i> الطلاب</div>
+                    <div class="perm-grid">
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_students" checked> عرض قائمة الطلاب</label>
+                        </div>
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_edit_students" checked> إضافة / تعديل / حذف</label>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-chalkboard-teacher"></i> المعلمون</div>
+                    <div class="perm-grid">
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_teachers" checked> عرض قائمة المعلمين</label>
+                        </div>
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_edit_teachers" checked> إضافة / تعديل / حذف</label>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-chart-bar"></i> التقارير والنقاط والمكافآت</div>
+                    <div class="perm-grid">
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_reports" checked> تقارير الأداء والمتخلفين</label>
+                        </div>
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_reports" checked> إدارة النقاط والدورات</label>
+                        </div>
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_reports" checked> قواعد المكافآت</label>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-exclamation-triangle"></i> الإنذارات</div>
+                    <div class="perm-grid">
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_warnings" checked> إدارة إنذارات الطلاب</label>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-database"></i> النسخ الاحتياطي</div>
+                    <div class="perm-grid">
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_access_backup" checked> إنشاء نسخة احتياطية</label>
+                        </div>
+                        <div class="perm-card">
+                            <label><input type="checkbox" name="can_restore_backup" checked> استعادة / إعادة تهيئة</label>
+                        </div>
+                    </div>
+
+                    <div class="perm-section-title"><i class="fas fa-crown"></i> صلاحية خاصة</div>
+                    <div class="perm-grid">
+                        <div class="perm-card" style="border-color:rgba(108,99,255,0.3);">
+                            <label><input type="checkbox" name="is_super_admin"> مدير عام (صلاحيات كاملة)</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                <button type="submit" form="addAdminForm" class="btn-submit">إضافة المستخدم</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* ── Sidebar toggle ── */
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const closeBtn = document.getElementById('sidebarClose');
+
+    function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+    if (toggleBtn) toggleBtn.addEventListener('click', openSidebar);
+    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+
+    /* ── Sidebar tab switching ── */
+    function syncActiveTab(tab) {
+        // حدّث روابط/نماذج تحمل tab=active_tab لتتبع التبويب الحالي
+        document.querySelectorAll('a.tab-sync').forEach(a => {
+            const url = new URL(a.href);
+            url.searchParams.set('tab', tab);
+            a.href = url.toString();
+        });
+        document.querySelectorAll('input.tab-sync').forEach(i => {
+            i.value = tab;
+        });
+    }
+
+    function selectTab(tab) {
+        document.querySelectorAll('.sidebar-nav .nav-link').forEach(l => l.classList.remove('active'));
+        const navBtn = document.querySelector('.sidebar-nav .nav-link[data-tab="' + tab + '"]');
+        if (navBtn) navBtn.classList.add('active');
+        document.querySelectorAll('.tab-body .tab-pane').forEach(p => p.classList.remove('show', 'active'));
+        const target = document.getElementById(tab);
+        if (target) target.classList.add('show', 'active');
+        syncActiveTab(tab);
+        const url = new URL(window.location);
+        url.searchParams.set('tab', tab);
+        history.replaceState({}, '', url);
+    }
+
+    document.querySelectorAll('.sidebar-nav .nav-link[data-tab]').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            closeSidebar();
+            selectTab(this.getAttribute('data-tab'));
+        });
+    });
+
+    /* ── Teacher-student assignment ── */
+    const sel = document.getElementById('teacherSelect');
+    if (sel) {
+        sel.addEventListener('change', function () {
+            const id = this.value;
+            document.querySelectorAll('.student-checkbox').forEach(cb => cb.checked = false);
+            if (!id) return;
+            fetch(`/get_teacher_students/${id}`)
+                .then(r => r.json())
+                .then(data => {
+                    document.querySelectorAll('.student-checkbox').forEach(cb => {
+                        if (data.student_ids.includes(parseInt(cb.value))) cb.checked = true;
+                    });
+                })
+                .catch(console.error);
+        });
+        if (sel.value) sel.dispatchEvent(new Event('change'));
+    }
+
+    /* ── Teacher evaluation details expand ── */
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.eval-count-btn');
+        if (!btn) return;
+        e.preventDefault();
+        const detailsDiv = document.getElementById('evalDetails');
+        const teacher = btn.dataset.teacher;
+        let evals;
+        try { evals = JSON.parse(btn.dataset.evals); } catch(_) { evals = []; }
+        if (!evals.length) {
+            detailsDiv.innerHTML = '<div class="empty"><p>لا توجد تفاصيل</p></div>';
+            detailsDiv.style.display = 'block';
+            return;
+        }
+        let html = '<div class="acard" style="background:var(--surface-3);">';
+        html += '<h6 style="font-size:0.82rem;font-weight:800;color:var(--accent);margin-bottom:0.6rem;">';
+        html += '<i class="fas fa-chalkboard-teacher"></i> ' + teacher + '</h6>';
+        html += '<div class="table-responsive"><table class="dark-table"><thead><tr>';
+        html += '<th>الطالب</th><th>نوع المقرر</th><th>فترة المقرر</th><th>تاريخ التقييم</th>';
+        html += '</tr></thead><tbody>';
+        evals.forEach(function (ev) {
+            html += '<tr>';
+            html += '<td style="font-weight:700;">' + ev.student_name + '</td>';
+            html += '<td>' + (ev.plan_type || '—') + '</td>';
+            html += '<td>' + (ev.plan_start || '—') + '</td>';
+            html += '<td>' + ev.evaluation_date + '</td>';
+            html += '</tr>';
+        });
+        html += '</tbody></table></div></div>';
+        detailsDiv.innerHTML = html;
+        detailsDiv.style.display = 'block';
+        detailsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    /* ── Toast auto-dismiss ── */
+    document.querySelectorAll('[data-toast]').forEach((el, i) => {
+        setTimeout(() => {
+            el.classList.add('toast-out');
+            setTimeout(() => el.remove(), 380);
+        }, 3000 + i * 350);
+    });
+});
+</script>
+<script src="{{ url_for('static', filename='js/confirm-modal.js') }}"></script>
+</body>
+</html>{% endif %}

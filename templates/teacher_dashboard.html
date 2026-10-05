@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- ══ PWA ══ -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#1a5c40">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="أشبال القرآن">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>لوحة المعلم — أشبال القرآن</title>
+
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+:root {
+  --bg:       #f2f0eb;
+  --surface:  #faf9f6;
+  --white:    #ffffff;
+  --jade:     #1a5c40;
+  --jade-md:  #226b4a;
+  --jade-lt:  #cde8da;
+  --jade-xs:  #ebf5f0;
+  --gold:     #c49a2a;
+  --gold-lt:  #fdf3d0;
+  --amber:    #d97706;
+  --amber-lt: #fef3c7;
+  --ink:      #1c2b22;
+  --muted:    #6b7d72;
+  --border:   #dde8e2;
+  --danger:   #c0392b;
+  --danger-lt:#fdecea;
+  --blue:     #1d4ed8;
+  --blue-lt:  #dbeafe;
+
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  direction: rtl;
+  padding-bottom: 3.5rem;
+}
+
+/* ══ HEADER ══════════════════════════════════════ */
+.header-strip {
+  background: var(--jade);
+  padding: 1.1rem 1.2rem 4.2rem;
+  position: relative; overflow: hidden;
+}
+.header-strip::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 70% at 115% -10%, rgba(255,255,255,.06) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at -15% 110%, rgba(255,255,255,.04) 0%, transparent 55%);
+}
+.header-strip::after {
+  content: ''; position: absolute; inset: 0; opacity: .045; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 18px, rgba(255,255,255,1) 18px, rgba(255,255,255,1) 19px),
+    repeating-linear-gradient(-45deg, transparent, transparent 18px, rgba(255,255,255,1) 18px, rgba(255,255,255,1) 19px);
+}
+.header-inner {
+  position: relative; z-index: 2; max-width: 520px; margin: 0 auto;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: .8rem;
+}
+.header-info { flex: 1; }
+.header-tag {
+  display: inline-flex; align-items: center; gap: .35rem;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+  color: rgba(255,255,255,.85); font-size: .72rem; font-weight: 600;
+  padding: .28rem .8rem; border-radius: 99px; margin-bottom: .5rem;
+}
+.header-name {
+  font-family: 'Amiri', serif;
+  font-size: 1.55rem; font-weight: 700; color: #fff; line-height: 1.25;
+  margin-bottom: .35rem;
+}
+.header-actions {
+  display: flex; align-items: center; gap: .45rem; flex-shrink: 0; padding-top: .15rem;
+}
+.btn-hdr {
+  display: inline-flex; align-items: center; justify-content: center; gap: .3rem;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+  color: #fff; font-family: 'Cairo', sans-serif;
+  font-size: .76rem; font-weight: 600;
+  padding: .42rem .85rem; border-radius: 99px;
+  text-decoration: none; transition: background .18s;
+}
+.btn-hdr:hover { background: rgba(255,255,255,.25); color: #fff; }
+.btn-hdr-out { background: rgba(192,57,43,.7); border-color: rgba(192,57,43,.5); }
+.btn-hdr-out:hover { background: #c0392b; }
+
+/* ══ SHEET ═══════════════════════════════════════ */
+.sheet {
+  max-width: 520px; margin: -2.8rem auto 0;
+  padding: 0 .9rem; position: relative; z-index: 5;
+}
+
+/* ══ STATS ROW ═══════════════════════════════════ */
+.stats-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: .65rem; margin-bottom: .85rem;
+  animation: fadeUp .4s .05s ease both;
+}
+.stat-cell {
+  background: var(--white); border-radius: var(--r-xl);
+  border: 1px solid var(--border); padding: .95rem 1rem;
+  display: flex; align-items: center; gap: .75rem;
+}
+.stat-cell-icon {
+  width: 42px; height: 42px; border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0;
+}
+.stat-icon-students { background: var(--jade-xs); color: var(--jade); }
+.stat-icon-report   { background: var(--amber-lt); color: var(--amber); }
+.stat-cell-info { min-width: 0; }
+.stat-cell-value { font-size: 1.55rem; font-weight: 800; color: var(--jade); line-height: 1; }
+.stat-cell-label { font-size: .72rem; color: var(--muted); font-weight: 600; margin-top: .1rem; }
+
+/* ══ MISSING REPORTS LINK ════════════════════════ */
+.missing-link {
+  display: flex; align-items: center; gap: .6rem;
+  background: var(--amber-lt); border: 1.5px solid var(--amber);
+  border-radius: var(--r-xl); padding: .9rem 1.1rem;
+  text-decoration: none; margin-bottom: .85rem;
+  transition: background .18s, box-shadow .18s;
+  animation: fadeUp .4s .08s ease both;
+}
+.missing-link:hover { background: #fef3c7; box-shadow: 0 4px 16px rgba(217,119,6,.1); }
+.missing-link-icon {
+  width: 40px; height: 40px; border-radius: 11px;
+  background: var(--amber);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 1rem; flex-shrink: 0;
+}
+.missing-link-text { flex: 1; }
+.missing-link-title { font-size: .9rem; font-weight: 700; color: var(--ink); }
+.missing-link-sub   { font-size: .75rem; color: var(--muted); margin-top: .05rem; }
+.missing-link-arrow { color: var(--amber); font-size: .9rem; }
+.missing-link:hover .missing-link-arrow { color: #92400e; }
+
+/* ══ SECTION TITLE ═══════════════════════════════ */
+.sec-title {
+  display: flex; align-items: center; gap: .6rem; margin: .2rem 0 .65rem;
+  animation: fadeUp .4s .1s ease both;
+}
+.sec-title-icon {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: var(--jade-xs);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: .95rem;
+}
+.sec-title-text { font-weight: 800; font-size: .98rem; color: var(--ink); }
+.sec-title-count {
+  margin-right: auto; font-size: .72rem; font-weight: 700;
+  color: var(--jade); background: var(--jade-xs);
+  padding: .18rem .65rem; border-radius: 99px; border: 1px solid var(--jade-lt);
+}
+
+/* ══ STUDENT CARD ════════════════════════════════ */
+.student-card {
+  background: var(--white);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: .7rem;
+  animation: fadeUp .42s ease both;
+  transition: box-shadow .18s;
+}
+.student-card:nth-child(even) {
+  background: var(--amber-lt);
+}
+.student-card:hover { box-shadow: 0 4px 20px rgba(26,92,64,.09); }
+
+/* رأس البطاقة */
+.student-card-head {
+  display: flex; align-items: center; gap: .85rem;
+  padding: .95rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+.student-avatar {
+  width: 46px; height: 46px; border-radius: 14px;
+  background: var(--jade-xs); border: 1.5px solid var(--jade-lt);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--jade); font-size: 1.15rem; flex-shrink: 0;
+  font-family: 'Amiri', serif; font-weight: 700;
+}
+.student-card-name-wrap { flex: 1; min-width: 0; }
+.student-card-name {
+  font-size: .97rem; font-weight: 800; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.student-card-meta {
+  display: flex; align-items: center; gap: .4rem;
+  flex-wrap: wrap; margin-top: .2rem;
+}
+.student-meta-pill {
+  display: inline-flex; align-items: center; gap: .25rem;
+  font-size: .68rem; font-weight: 600; color: var(--muted);
+  background: var(--bg); border: 1px solid var(--border);
+  padding: .18rem .6rem; border-radius: 99px;
+}
+
+/* درجة المتوسط */
+.avg-badge {
+  display: flex; flex-direction: column; align-items: center;
+  flex-shrink: 0;
+}
+.avg-num {
+  font-size: 1.35rem; font-weight: 800; color: var(--jade); line-height: 1;
+}
+.avg-label { font-size: .62rem; color: var(--muted); font-weight: 600; margin-top: .05rem; }
+
+/* أزرار الإجراءات */
+.student-card-actions {
+  display: flex; gap: .5rem; padding: .8rem 1.1rem;
+}
+.btn-student-action {
+  flex: 1;
+  display: inline-flex; align-items: center; justify-content: center; gap: .35rem;
+  font-family: 'Cairo', sans-serif; font-size: .8rem; font-weight: 700;
+  padding: .6rem .5rem; border-radius: var(--r-md);
+  text-decoration: none; border: 1.5px solid;
+  transition: filter .15s, transform .12s;
+}
+.btn-student-action:hover  { filter: brightness(1.07); }
+.btn-student-action:active { transform: scale(.97); }
+
+.btn-add-plan-s  { background: var(--jade-xs);   color: var(--jade);  border-color: var(--jade-lt); }
+.btn-view-plans  { background: var(--blue-lt);    color: var(--blue);  border-color: #93c5fd; }
+
+/* ══ EMPTY STATE ══════════════════════════════════ */
+.empty-card {
+  background: var(--white); border: 1.5px dashed var(--jade-lt);
+  border-radius: var(--r-xl); padding: 3rem 1.5rem; text-align: center;
+  animation: fadeUp .5s .1s ease both;
+}
+.empty-icon { font-size: 2.8rem; color: var(--jade-lt); margin-bottom: .7rem; }
+.empty-title { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: .35rem; }
+.empty-sub { font-size: .83rem; color: var(--muted); line-height: 1.6; }
+
+/* ══ ANIMATIONS ═══════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.student-card:nth-child(1) { animation-delay: .06s; }
+.student-card:nth-child(2) { animation-delay: .10s; }
+.student-card:nth-child(3) { animation-delay: .14s; }
+.student-card:nth-child(4) { animation-delay: .18s; }
+.student-card:nth-child(5) { animation-delay: .22s; }
+.student-card:nth-child(6) { animation-delay: .26s; }
+.student-card:nth-child(7) { animation-delay: .30s; }
+.student-card:nth-child(n+8) { animation-delay: .34s; }
+
+@media (max-width: 360px) {
+  .stats-row { grid-template-columns: 1fr; }
+  .student-card-actions { flex-direction: column; }
+}
+    </style>
+</head>
+<body>
+
+<!-- ══ Toast Notifications ══ -->
+<div class="toast-wrap" id="toastWrap">
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}
+    <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}"
+         data-toast="{{ loop.index }}">
+        <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+        <span>{{ message }}</span>
+    </div>
+    {% endfor %}{% endif %}
+{% endwith %}
+</div>
+
+<!-- ══ شريط Offline ══ -->
+<div id="pwa-offline-bar" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#fff3cd;color:#856404;border-top:2px solid #ffeeba;padding:.45rem 1rem;z-index:99997;font-family:'Cairo','Tajawal',sans-serif;font-size:.83rem;font-weight:700;text-align:center;direction:rtl;align-items:center;justify-content:center;gap:.5rem;">
+    🔴 غير متصل — البيانات تُحفظ محلياً
+    <span id="pwa-pending-badge" style="background:#856404;color:white;border-radius:99px;padding:.1rem .55rem;font-size:.72rem;display:none;"></span>
+</div>
+
+<!-- ══ زر تثبيت ══ -->
+<button id="pwa-install-btn" style="display:none;position:fixed;bottom:3.8rem;left:50%;transform:translateX(-50%);z-index:9998;background:#1a5c40;color:white;border:none;padding:.65rem 1.5rem;border-radius:99px;font-family:'Cairo','Tajawal',sans-serif;font-weight:700;font-size:.88rem;box-shadow:0 4px 20px rgba(26,92,64,.4);cursor:pointer;white-space:nowrap;">
+    📲 تثبيت التطبيق
+</button>
+
+<!-- ══ HEADER ══════════════════════════════════════ -->
+<div class="header-strip">
+  <div class="header-inner">
+    <div class="header-info">
+      <div class="header-tag">
+        <i class="fas fa-chalkboard-teacher"></i>
+        لوحة المعلم
+      </div>
+      <div class="header-name">
+        {{ current_user.full_name.split()[0] if current_user.full_name.split() else current_user.full_name }}
+        🌿
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="{{ url_for('change_password') }}" class="btn-hdr" title="تغيير كلمة المرور">
+        <i class="fas fa-key"></i>
+      </a>
+      <a href="{{ url_for('logout') }}" class="btn-hdr btn-hdr-out">
+        <i class="fas fa-sign-out-alt"></i> خروج
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SHEET ═══════════════════════════════════════ -->
+<div class="sheet">
+
+  <!-- إحصائيات سريعة -->
+  <div class="stats-row">
+    <div class="stat-cell">
+      <div class="stat-cell-icon stat-icon-students">
+        <i class="fas fa-user-graduate"></i>
+      </div>
+      <div class="stat-cell-info">
+        <div class="stat-cell-value">{{ student_data|length }}</div>
+        <div class="stat-cell-label">طالب</div>
+      </div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-cell-icon stat-icon-report">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="stat-cell-info">
+        {% if student_data %}
+          {% set avg_all = (student_data | map(attribute='avg_score') | sum) / student_data|length %}
+          <div class="stat-cell-value">{{ avg_all | round(1) }}</div>
+        {% else %}
+          <div class="stat-cell-value">—</div>
+        {% endif %}
+        <div class="stat-cell-label">متوسط الدرجات</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- رابط تقرير المتخلفين -->
+  {% if current_user.can_view_missing_reports %}
+  <a href="{{ url_for('teacher_missing_reports') }}" class="missing-link">
+    <div class="missing-link-icon"><i class="fas fa-file-alt"></i></div>
+    <div class="missing-link-text">
+      <div class="missing-link-title">تقرير المتخلفين عن التقارير</div>
+      <div class="missing-link-sub">عرض الطلاب الذين لم يرسلوا تقاريرهم</div>
+    </div>
+    <i class="fas fa-chevron-left missing-link-arrow"></i>
+  </a>
+  {% endif %}
+
+  <!-- قائمة الطلاب -->
+  {% if student_data %}
+
+  <div class="sec-title">
+    <div class="sec-title-icon"><i class="fas fa-users"></i></div>
+    <span class="sec-title-text">الطلاب</span>
+    <span class="sec-title-count">{{ student_data|length }}</span>
+  </div>
+
+  {% for item in student_data %}
+  <div class="student-card">
+
+    <!-- رأس البطاقة: الاسم + المعلومات + المتوسط -->
+    <div class="student-card-head">
+      <!-- أيقونة حرف الاسم -->
+      <div class="student-avatar">
+        {{ item.student.full_name[0] if item.student.full_name else '؟' }}
+      </div>
+
+      <div class="student-card-name-wrap">
+        <div class="student-card-name">{{ item.student.full_name }}</div>
+        <div class="student-card-meta">
+          {% if item.student.memorization_level %}
+          <span class="student-meta-pill">
+            <i class="fas fa-graduation-cap"></i>
+            {{ item.student.memorization_level }}
+          </span>
+          {% endif %}
+          {% if item.student.phone %}
+          {% set wa = item.student.phone|phone_to_whatsapp %}
+          <a href="https://wa.me/{{ wa }}" target="_blank" class="student-meta-pill" style="text-decoration:none;color:inherit;cursor:pointer;">
+            <i class="fab fa-whatsapp" style="color:#25D366;"></i>
+            {{ item.student.phone }}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- متوسط الدرجات -->
+      <div class="avg-badge">
+        <div class="avg-num">{{ item.avg_score }}</div>
+        <div class="avg-label">المتوسط</div>
+      </div>
+    </div>
+
+    <!-- أزرار الإجراءات -->
+    <div class="student-card-actions">
+      {% if current_user.can_add_plan and item.student in current_user.students %}
+      <a href="{{ url_for('add_plan', student_id=item.student.id) }}" class="btn-student-action btn-add-plan-s">
+        <i class="fas fa-plus-circle"></i>
+        إضافة مقرر
+      </a>
+      {% endif %}
+      <a href="{{ url_for('view_student_plans', student_id=item.student.id) }}" class="btn-student-action btn-view-plans">
+        <i class="fas fa-list-alt"></i>
+        المقررات
+      </a>
+    </div>
+
+  </div>
+  {% endfor %}
+
+  {% else %}
+  <div class="empty-card">
+    <div class="empty-icon"><i class="fas fa-user-friends"></i></div>
+    <div class="empty-title">لا يوجد طلاب</div>
+    <div class="empty-sub">لا يوجد طلاب مرتبطون بحسابك حاليًا. تواصل مع الإدارة لإضافة الطلاب.</div>
+  </div>
+  {% endif %}
+
+</div><!-- /sheet -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="{{ url_for('static', filename='pwa-db.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='pwa-sync.js') }}" defer></script>
+
+    <script>
+    /* ═══ Toast dismiss ═══ */
+    (function(){
+        document.querySelectorAll('[data-toast]').forEach(function(el, i){
+            setTimeout(function(){
+                el.classList.add('toast-out');
+                setTimeout(function(){ el.remove(); }, 400);
+            }, 3000 + i * 350);
+        });
+    })();
+
+    /* ═══ PWA — SW + Offline + Install ═══ */
+
+(function() {
+  'use strict';
+
+  // ── 1. تسجيل Service Worker ──────────────────────────────────────────────
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/static/service-worker.js', { scope: '/' })
+        .then(function(reg) {
+          console.log('[PWA] SW مسجّل:', reg.scope);
+
+          // التحقق من وجود تحديث
+          reg.addEventListener('updatefound', function() {
+            var newSW = reg.installing;
+            newSW.addEventListener('statechange', function() {
+              if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+                showUpdateBanner();
+              }
+            });
+          });
+        })
+        .catch(function(err) {
+          console.error('[PWA] فشل تسجيل SW:', err);
+        });
+
+      // استقبال رسائل SW
+      navigator.serviceWorker.addEventListener('message', function(event) {
+        var data = event.data || {};
+        if (data.type === 'SAVE_OFFLINE' && window.QuranSync) {
+          QuranSync.savePostOffline(data.url, data.body);
+        }
+        if (data.type === 'TRIGGER_SYNC' && window.QuranSync) {
+          QuranSync.triggerSync();
+        }
+      });
+    });
+  }
+
+  // ── 2. مراقبة حالة الاتصال ───────────────────────────────────────────────
+  var bar = document.getElementById('pwa-offline-bar');
+  var badge = document.getElementById('pwa-pending-badge');
+
+  function setOnline() {
+    if (bar) bar.style.display = 'none';
+    // مزامنة عند عودة الاتصال
+    if (window.QuranSync) QuranSync.triggerSync();
+  }
+
+  function setOffline() {
+    if (bar) bar.style.display = 'flex';
+    updatePendingBadge();
+  }
+
+  function updatePendingBadge() {
+    if (!badge || !window.QuranDB) return;
+    QuranDB.countPending().then(function(counts) {
+      if (counts.total > 0) {
+        badge.textContent = counts.total + ' معلّق';
+        badge.style.display = 'inline';
+      } else {
+        badge.style.display = 'none';
+      }
+    }).catch(function() {});
+  }
+
+  window.addEventListener('online',  setOnline);
+  window.addEventListener('offline', setOffline);
+
+  // الحالة الأولية
+  if (!navigator.onLine) setOffline();
+
+  // ── 3. زر تثبيت التطبيق ──────────────────────────────────────────────────
+  var deferredPrompt = null;
+  var installBtn = document.getElementById('pwa-install-btn');
+
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    // لا تُظهر إذا كان مثبّتاً مسبقاً
+    if (window.matchMedia('(display-mode: standalone)').matches) return;
+    if (installBtn) installBtn.style.display = 'block';
+  });
+
+  if (installBtn) {
+    installBtn.addEventListener('click', function() {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(result) {
+        deferredPrompt = null;
+        installBtn.style.display = 'none';
+        if (result.outcome === 'accepted') {
+          console.log('[PWA] تم التثبيت');
+        }
+      });
+    });
+  }
+
+  window.addEventListener('appinstalled', function() {
+    if (installBtn) installBtn.style.display = 'none';
+    deferredPrompt = null;
+    console.log('[PWA] التطبيق مثبّت');
+  });
+
+  // ── 4. لافتة التحديث ──────────────────────────────────────────────────────
+  function showUpdateBanner() {
+    var b = document.createElement('div');
+    b.style.cssText = [
+      'position:fixed;top:0;left:0;right:0;z-index:99998;',
+      'background:#1a5c40;color:white;',
+      'padding:.75rem 1rem;text-align:center;direction:rtl;',
+      'font-family:"Cairo","Tajawal",sans-serif;font-weight:700;',
+      'display:flex;align-items:center;justify-content:center;gap:1rem;'
+    ].join('');
+    b.innerHTML = [
+      '<span>🆕 يوجد تحديث للتطبيق</span>',
+      '<button onclick="window.location.reload()" style="',
+        'background:white;color:#1a5c40;border:none;',
+        'padding:.3rem .9rem;border-radius:99px;cursor:pointer;font-weight:700;',
+      '">تحديث الآن</button>',
+      '<button onclick="this.parentElement.remove()" style="',
+        'background:transparent;color:white;border:none;cursor:pointer;font-size:1.1rem;',
+      '">✕</button>'
+    ].join('');
+    document.body.prepend(b);
+  }
+
+})();
+
+    </script>
+</body>
+</html>

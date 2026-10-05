@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- ══ PWA: manifest + theme ══ -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#28a745">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="أشبال القرآن">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>{% block title %}أشبال القرآن{% endblock %}</title>
+
+    <!-- Bootstrap 5 RTL -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
+
+    {% block head %}{% endblock %}
+
+    <style>
+        /* تحسينات عامة */
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            /* مسافة سفلية لشريط الحالة PWA */
+            padding-bottom: 2.5rem;
+        }
+
+        /* ════ Toast Notifications ════ */
+        .toast-wrap {
+            position: fixed;
+            top: 1.2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+            pointer-events: none;
+            width: 92%;
+            max-width: 430px;
+        }
+        .toast-item {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.8rem 1.15rem;
+            border-radius: 1.3rem;
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+            pointer-events: auto;
+            animation: toastSlideIn 0.38s cubic-bezier(.22,1,.36,1) forwards;
+            border-right: 5px solid transparent;
+        }
+        .toast-item.t-success { background:#edfaf1; border-color:#28a745; color:#1a5e2a; }
+        .toast-item.t-error   { background:#fef0f0; border-color:#dc3545; color:#7b1a1a; }
+        .toast-item.t-warning { background:#fffbec; border-color:#ffc107; color:#7a5000; }
+        .toast-item.t-info    { background:#eaf4ff; border-color:#17a2b8; color:#0c4a6e; }
+        .toast-item i         { font-size: 1.15rem; flex-shrink:0; }
+        .toast-item.toast-out { animation: toastSlideOut 0.38s ease forwards; }
+
+        @keyframes toastSlideIn {
+            from { opacity:0; transform:translateY(-18px) scale(.96); }
+            to   { opacity:1; transform:translateY(0)     scale(1);   }
+        }
+        @keyframes toastSlideOut {
+            from { opacity:1; transform:translateY(0)     scale(1);   }
+            to   { opacity:0; transform:translateY(-14px) scale(.96); }
+        }
+
+        /* ════ زر تثبيت التطبيق ════ */
+        #pwa-install-btn {
+            display: none;
+            position: fixed;
+            bottom: 3.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9998;
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: .6rem 1.5rem;
+            border-radius: 2rem;
+            font-family: 'Tajawal','Cairo',sans-serif;
+            font-weight: 700;
+            font-size: .9rem;
+            box-shadow: 0 4px 20px rgba(40,167,69,.4);
+            cursor: pointer;
+            animation: bounceIn .5s ease;
+            white-space: nowrap;
+        }
+        #pwa-install-btn:hover { background: #218838; }
+
+        @keyframes bounceIn {
+            0%   { transform: translateX(-50%) scale(.8); opacity:0; }
+            70%  { transform: translateX(-50%) scale(1.05); }
+            100% { transform: translateX(-50%) scale(1); opacity:1; }
+        }
+
+        /* ════ شارة المزامنة ════ */
+        #pwa-sync-badge {
+            display: none;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 1.1rem;
+            height: 1.1rem;
+            font-size: .65rem;
+            font-weight: 700;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -.3rem;
+            left: -.3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ══ Toast Notifications ══ -->
+    <div class="toast-wrap">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}
+        <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}"
+             data-toast="{{ loop.index }}">
+            <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}{% endif %}
+    {% endwith %}
+    </div>
+
+    <!-- ══ زر تثبيت التطبيق (يظهر تلقائياً عند الدعم) ══ -->
+    <button id="pwa-install-btn">
+        📲 تثبيت التطبيق على هاتفك
+    </button>
+
+    {% block content %}{% endblock %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+
+    <!-- ══ PWA Scripts ══ -->
+    <script src="{{ url_for('static', filename='pwa-db.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='pwa-sync.js') }}" defer></script>
+
+    <script>
+    // ── Toast auto-dismiss ────────────────────────────────────────────
+    (function(){
+        var items = document.querySelectorAll('[data-toast]');
+        items.forEach(function(el, i){
+            setTimeout(function(){
+                el.classList.add('toast-out');
+                setTimeout(function(){ el.remove(); }, 400);
+            }, 3000 + i * 350);
+        });
+    })();
+
+    // ── زر تثبيت PWA ─────────────────────────────────────────────────
+    (function(){
+        let deferredPrompt = null;
+        const installBtn   = document.getElementById('pwa-install-btn');
+
+        // حفظ حدث التثبيت
+        window.addEventListener('beforeinstallprompt', e => {
+            e.preventDefault();
+            deferredPrompt = e;
+
+            // لا نُظهره إذا كان مثبتاً مسبقاً
+            if (window.matchMedia('(display-mode: standalone)').matches) return;
+
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+            if (outcome === 'accepted') {
+                console.log('[PWA] المستخدم وافق على التثبيت');
+            }
+        });
+
+        // إخفاء الزر بعد التثبيت
+        window.addEventListener('appinstalled', () => {
+            installBtn.style.display = 'none';
+            deferredPrompt = null;
+        });
+    })();
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

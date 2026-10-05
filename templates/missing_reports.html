@@ -1,0 +1,397 @@
+<!-- missing_reports.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>نتائج التقرير - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .glass-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .header {
+            margin-bottom: 1.5rem;
+        }
+        .header h2 {
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+        .date-info {
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+        .student-item {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border-right: 5px solid #dc3545;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .student-item h5 {
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+            font-size: 1rem;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 1.5rem;
+            color: #6c757d;
+        }
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        .btn {
+            border-radius: 2rem;
+            padding: 0.6rem 1.2rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #fd7e14, #dc3545);
+            color: white;
+            border: none;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .badge {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.7rem;
+        }
+        .info-box {
+            background: #e7f3ff;
+            border-right: 4px solid #0d6efd;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .badge-evaluated {
+            background: #d4edda;
+            color: #155724;
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .badge-not-evaluated {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        @media (max-width: 768px) {
+            .glass-container { padding: 1rem; }
+            .table { font-size: 0.8rem; }
+            .table th, .table td { padding: 0.4rem; }
+            .badge-evaluated, .badge-not-evaluated { font-size: 0.7rem; padding: 0.2rem 0.6rem; }
+        }
+        .btn-pdf {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            border: none;
+        }
+
+        /* ===== طباعة / تحميل PDF بجودة نص حقيقية (بدون تصوير الشاشة) ===== */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            body {
+                background: #fff !important;
+                padding: 0 !important;
+            }
+            .glass-container {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0.5rem !important;
+                box-shadow: none !important;
+                border: none !important;
+                backdrop-filter: none !important;
+                background: #fff !important;
+            }
+            .btn-group,
+            .btn-pdf,
+            .no-print {
+                display: none !important;
+            }
+            .student-item {
+                box-shadow: none !important;
+                border: 1px solid #dee2e6;
+                border-right: 5px solid #dc3545;
+                page-break-inside: avoid;
+            }
+            .table {
+                width: 100% !important;
+                font-size: 0.85rem;
+            }
+            table, tr, td, th {
+                page-break-inside: avoid;
+            }
+            thead {
+                display: table-header-group;
+            }
+            .empty-state {
+                box-shadow: none !important;
+            }
+            a[href]::after {
+                content: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-container">
+        <div id="pdfContent">
+        <div class="header text-center">
+            <h2><i class="fas fa-chart-line text-primary ms-2"></i> 
+                {% if report_type == 'absence' %}
+                    لم يرسلوا التقرير
+                {% elif report_type == 'no_evaluation' %}
+                    الطلاب غير المقيمين
+                {% elif report_type == 'cumulative' %}
+                    التقرير التراكمي
+                {% else %}
+                    المعسكر الأسبوعي
+                {% endif %}
+            </h2>
+            <div class="date-info">
+                <i class="fas fa-calendar-alt ms-1"></i> 
+                {% if report_type == 'cumulative' %}
+                    الفترة من {{ day_name }} إلى {{ week_end_day }}
+                {% else %}
+                    {{ day_name }} {{ date }}
+                {% endif %}
+            </div>
+        </div>
+
+        {% if report_type == 'cumulative' and cumulative_data %}
+            <!-- التقرير التراكمي -->
+
+
+            <div class="students-list">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>اسم الطالب</th>
+                                {% for day in cumulative_data[0].days_covered %}
+                                    <th>{{ day }}</th>
+                                {% endfor %}
+                                <th>أرسل</th>
+                                <th>لم يرسل</th>
+                                <th>النسبة</th>
+                                {% if show_evaluation_column %}
+                                    <th>
+                                        <i class="fas fa-clipboard-list"></i>
+                                        تقييم المقرر
+                                    </th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cumulative_data %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td class="text-end"><strong>{{ item.student.full_name }}</strong></td>
+                                {% for day_status in item.daily_status %}
+                                    <td class="text-center">
+                                        {% if day_status.status == 'sent' %}
+                                            <i class="fas fa-check-circle text-success" style="font-size: 1.4rem;" title="تم الإرسال"></i>
+                                        {% else %}
+                                            <i class="fas fa-times-circle text-danger" style="font-size: 1.4rem;" title="لم يرسل"></i>
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                                <td><span class="badge bg-success">{{ item.sent_count }}</span></td>
+                                <td><span class="badge bg-danger">{{ item.not_sent_count }}</span></td>
+                                <td>
+                                    <span class="badge 
+                                        {% if item.percentage >= 80 %}bg-success
+                                        {% elif item.percentage >= 50 %}bg-warning text-dark
+                                        {% else %}bg-danger{% endif %}"
+                                        style="font-size: 0.9rem;">
+                                        {{ item.percentage }}%
+                                    </span>
+                                </td>
+                                {% if show_evaluation_column %}
+                                    <td class="text-center">
+                                        {% set evaluation = student_evaluations.get(item.student.id) %}
+                                        {% if evaluation %}
+                                            {% if evaluation.evaluated %}
+                                                <span class="badge-evaluated">
+                                                    <i class="fas fa-check-circle text-success"></i>
+                                                    مقيم
+                                                </span>
+                                            {% else %}
+                                                <span class="badge-not-evaluated">
+                                                    <i class="fas fa-times-circle text-danger"></i>
+                                                    غير مقيم
+                                                </span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="text-muted">—</span>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        {% elif report_type == 'no_evaluation' and missing_students %}
+            <!-- تقرير الطلاب غير المقيمين -->
+            <div class="students-list">
+                <div class="alert alert-secondary mb-3">
+                    <i class="fas fa-users ms-2"></i> عدد الطلاب: {{ missing_students|length }}
+                </div>
+                {% for student in missing_students %}
+                <div class="student-item">
+                    <h5><i class="fas fa-user-graduate text-danger ms-2"></i> {{ student.full_name }}</h5>
+                    {% if student.phone %}
+                        {% set whatsapp = student.phone|phone_to_whatsapp %}
+                        {% if whatsapp %}
+                            <a href="https://wa.me/{{ whatsapp }}" target="_blank" class="btn btn-sm btn-success">
+                                <i class="fab fa-whatsapp"></i> تواصل
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+        {% elif report_type == 'absence' and missing_students %}
+            <!-- تقرير المتخلفين -->
+            <div class="students-list">
+                <div class="alert alert-secondary mb-3">
+                    <i class="fas fa-users ms-2"></i> عدد الطلاب: {{ missing_students|length }}
+                </div>
+                {% for student in missing_students %}
+                <div class="student-item">
+                    <h5><i class="fas fa-user-graduate text-danger ms-2"></i> {{ student.full_name }}</h5>
+                    {% if student.phone %}
+                        {% set whatsapp = student.phone|phone_to_whatsapp %}
+                        {% if whatsapp %}
+                            <a href="https://wa.me/{{ whatsapp }}" target="_blank" class="btn btn-sm btn-success">
+                                <i class="fab fa-whatsapp"></i> تواصل
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+        {% elif missing_students is defined and missing_students|length == 0 %}
+            <div class="empty-state">
+                <i class="fas fa-check-circle fa-4x text-success"></i>
+                <h4 class="mt-3">
+                    {% if report_type == 'cumulative' %}
+                        جميع الطلاب أرسلوا تقاريرهم في هذه الفترة
+                    {% else %}
+                        كل أشبال القرآن ارسلوا تقاريرهم
+                    {% endif %}
+                </h4>
+                <p class="text-muted">هنيئا لكم هذا الانجاز</p>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-check-circle fa-4x text-success"></i>
+                <h4 class="mt-3">لا توجد بيانات لعرضها</h4>
+                <p class="text-muted">يرجى اختيار تاريخ آخر</p>
+            </div>
+        {% endif %}
+        </div>
+
+        <div class="btn-group">
+            <button type="button" id="downloadPdfBtn" class="btn btn-pdf" onclick="downloadReportPdf()">
+                <i class="fas fa-file-pdf ms-2"></i> طباعة / حفظ PDF
+            </button>
+            <a href="{% if is_teacher %}{{ url_for('teacher_missing_reports') }}{% else %}{{ url_for('missing_reports') }}{% endif %}" class="btn btn-primary">
+                <i class="fas fa-search ms-2"></i> تقرير جديد
+            </a>
+            {% if is_teacher %}
+                <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-success"><i class="fas fa-home ms-2"></i> العودة للوحة المعلم</a>
+            {% else %}
+                <a href="{{ url_for('admin') }}" class="btn btn-success"><i class="fas fa-home ms-2"></i> العودة للإدارة</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // يستخدم خاصية الطباعة الأصلية في المتصفح لإنشاء PDF بنص حقيقي (قابل للتحديد والبحث)
+        // وليس صورة/لقطة شاشة. عند فتح نافذة الطباعة، اختر "Save as PDF" / "حفظ كـ PDF" كوجهة.
+        function downloadReportPdf() {
+            const originalTitle = document.title;
+            const reportTitle = document.querySelector('.header h2') ?
+                document.querySelector('.header h2').innerText.trim().replace(/\s+/g, ' ') : 'تقرير';
+            const today = new Date().toISOString().slice(0, 10);
+            document.title = `${reportTitle}_${today}`;
+
+            window.print();
+
+            document.title = originalTitle;
+        }
+    </script>
+</body>
+</html>

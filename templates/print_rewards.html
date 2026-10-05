@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كشف المكافآت - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            .no-print { display: none; }
+            body { background: white; }
+            .print-container { padding: 0; }
+        }
+
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+        .print-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #28a745;
+        }
+        .report-header h1 {
+            color: #28a745;
+            font-weight: 800;
+            font-size: 2rem;
+        }
+        .report-header h3 {
+            color: #6c757d;
+            font-size: 1.2rem;
+        }
+        .info-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .info-item {
+            text-align: center;
+            padding: 10px;
+        }
+        .info-label {
+            font-weight: 700;
+            color: #28a745;
+        }
+        .info-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .table-custom th {
+            background: #28a745;
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .table-custom td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .table-custom tr:last-child td {
+            border-bottom: none;
+        }
+        .table-custom tfoot {
+            background: #e9ecef;
+            font-weight: 700;
+        }
+        .paid-badge {
+            background: #28a745;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .unpaid-badge {
+            background: #dc3545;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .signature-section {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px dashed #dee2e6;
+        }
+        .btn-print {
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        .btn-back {
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 30px;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="print-container">
+        <div class="no-print text-center mb-4">
+            <button onclick="window.print()" class="btn-print">
+                <i class="fas fa-print ms-2"></i> طباعة
+            </button>
+            <a href="{{ url_for('reward_history') }}" class="btn-back me-2">
+                <i class="fas fa-arrow-right ms-2"></i> عودة
+            </a>
+        </div>
+
+        <div class="report-header">
+            <h1>كشف مكافآت الحفظ</h1>
+            <h3>مركز أشبال القرآن لتحفيظ القرآن الكريم</h3>
+        </div>
+
+        <div class="info-section">
+            <div class="row">
+                <div class="col-md-4 info-item">
+                    <div class="info-label">الفترة</div>
+                    <div class="info-value">{{ period_start }} إلى {{ period_end }}</div>
+                </div>
+                <div class="col-md-4 info-item">
+                    <div class="info-label">قاعدة المكافآت</div>
+                    <div class="info-value">{{ rule.name }}</div>
+                </div>
+                <div class="col-md-4 info-item">
+                    <div class="info-label">تاريخ الطباعة</div>
+                    <div class="info-value">{{ now.strftime('%Y-%m-%d') }}</div>
+                </div>
+            </div>
+        </div>
+
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>اسم الطالب</th>
+                    <th>عدد الصفحات</th>
+                    <th>متوسط الحفظ</th>
+                    <th>درجة المرحلة</th>
+                    <th>الدرجة النهائية</th>
+                    <th>المكافأة/صفحة</th>
+                    <th>إجمالي المكافأة</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for calc in calculations %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td><strong>{{ calc.student.full_name }}</strong></td>
+                    <td>{{ calc.total_pages }}</td>
+                    <td>{{ calc.avg_memorization_score|round(2) }}</td>
+                    <td>{{ calc.phase_score }}/80</td>
+                    <td>{{ calc.final_score }}</td>
+                    <td>{{ calc.reward_per_page }} ريال</td>
+                    <td><strong>{{ calc.total_reward }} ريال</strong></td>
+                    <td>
+                        {% if calc.is_paid %}
+                        <span class="paid-badge">مدفوعة</span>
+                        {% else %}
+                        <span class="unpaid-badge">غير مدفوعة</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7" class="text-start"><strong>الإجمالي:</strong></td>
+                    <td><strong>{{ total_rewards }} ريال</strong></td>
+                    <td>
+                        <span class="paid-badge">مدفوع: {{ paid_count }}</span>
+                        <span class="unpaid-badge ms-1">غير مدفوع: {{ unpaid_count }}</span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>إجمالي الصفحات المحفوظة:</strong> {{ total_pages }} صفحة</p>
+                <p><strong>عدد الطلاب المستفيدين:</strong> {{ calculations|length }} طالب</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>المكافأة لكل صفحة:</strong> 
+                    {% for detail in rule.details %}
+                    ({{ detail.min_score }}-{{ detail.max_score }}: {{ detail.reward_per_page }} ريال)
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+
+        <div class="signature-section row">
+            <div class="col-md-4 text-center">
+                <p>_________________________________</p>
+                <p><strong>المدير</strong></p>
+            </div>
+            <div class="col-md-4 text-center">
+                <p>_________________________________</p>
+                <p><strong>المسؤول المالي</strong></p>
+            </div>
+            <div class="col-md-4 text-center">
+                <p>_________________________________</p>
+                <p><strong>المشرف</strong></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

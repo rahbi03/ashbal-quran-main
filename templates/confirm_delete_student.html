@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تأكيد حذف الطالب - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .mobile-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .warning-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.5);
+            text-align: center;
+        }
+        .warning-icon {
+            width: 80px;
+            height: 80px;
+            background: #dc3545;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 10px 25px rgba(220, 53, 69, 0.4);
+        }
+        .warning-icon i {
+            font-size: 2.5rem;
+            color: white;
+        }
+        .warning-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+        .student-name {
+            background: #f8f9fa;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .data-list {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: right;
+        }
+        .data-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .data-item:last-child {
+            border-bottom: none;
+        }
+        .data-item i {
+            width: 30px;
+            color: #fd7e14;
+        }
+        .warning-text {
+            background: #fff3cd;
+            border-right: 4px solid #ffc107;
+            padding: 0.8rem;
+            border-radius: 0.8rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border: none;
+            border-radius: 2rem;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            flex: 1;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4);
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            flex: 1;
+            text-decoration: none;
+            text-align: center;
+            transition: 0.2s;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            color: white;
+        }
+        .loading {
+            display: none;
+            margin-top: 1rem;
+            color: #6c757d;
+        }
+        .loading.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="warning-card">
+            <div class="warning-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h1 class="warning-title">تحذير!</h1>
+            <p class="text-muted">أنت على وشك حذف الطالب نهائياً</p>
+
+            <div class="student-name">
+                <i class="fas fa-user-graduate text-danger ms-2"></i>
+                {{ student.full_name }}
+            </div>
+
+            <div class="data-list">
+                <div class="data-item">
+                    <i class="fas fa-calendar-week"></i>
+                    <span>المقررات الأسبوعية: 
+                        <strong class="{% if has_plans %}text-danger{% else %}text-success{% endif %}">
+                            {% if has_plans %}موجودة{% else %}لا توجد{% endif %}
+                        </strong>
+                    </span>
+                </div>
+                <div class="data-item">
+                    <i class="fas fa-star"></i>
+                    <span>التقييمات: 
+                        <strong class="{% if has_evaluations %}text-danger{% else %}text-success{% endif %}">
+                            {% if has_evaluations %}موجودة{% else %}لا توجد{% endif %}
+                        </strong>
+                    </span>
+                </div>
+                <div class="data-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>التقارير اليومية: 
+                        <strong class="{% if has_reports %}text-danger{% else %}text-success{% endif %}">
+                            {% if has_reports %}موجودة{% else %}لا توجد{% endif %}
+                        </strong>
+                    </span>
+                </div>
+            </div>
+
+            {% if has_plans or has_evaluations or has_reports %}
+            <div class="warning-text">
+                <i class="fas fa-info-circle ms-2"></i>
+                <strong>تنبيه:</strong> هذا الطالب لديه بيانات مرتبطة. عند تأكيد الحذف، سيتم حذف جميع المقررات والتقييمات والتقارير اليومية المرتبطة به نهائياً.
+            </div>
+            {% else %}
+            <div class="warning-text" style="background: #d4edda; border-right-color: #28a745; color: #155724;">
+                <i class="fas fa-check-circle ms-2"></i>
+                هذا الطالب ليس لديه أي بيانات مرتبطة. يمكن حذفه بأمان.
+            </div>
+            {% endif %}
+
+            <div class="btn-group">
+                <form method="POST" id="deleteForm" style="flex: 1;">
+                    <button type="submit" class="btn-danger" id="confirmDeleteBtn">
+                        <i class="fas fa-trash-alt ms-2"></i> تأكيد الحذف
+                    </button>
+                </form>
+                <a href="{{ url_for('admin', tab='students') }}" class="btn-secondary">
+                    <i class="fas fa-times ms-2"></i> إلغاء
+                </a>
+            </div>
+            <div class="loading" id="loadingMessage">
+                <i class="fas fa-spinner fa-spin ms-2"></i> جاري حذف البيانات...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('deleteForm').addEventListener('submit', function(e) {
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            const loadingMsg = document.getElementById('loadingMessage');
+
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin ms-2"></i> جاري الحذف...';
+            loadingMsg.classList.add('show');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!-- add_plan.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>إضافة مقرر - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 0.5rem;
+        }
+        .mobile-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* رأس الصفحة */
+        .header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .header h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+        .header p {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin: 0.2rem 0 0;
+        }
+
+        /* مربعات الإدخال */
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.85rem;
+            margin-bottom: 0.2rem;
+        }
+        .form-control, .form-select {
+            border-radius: 2rem;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            background: white;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
+            border-color: #28a745;
+            outline: none;
+        }
+
+        /* أزرار اختيار النوع الرئيسية */
+        .plan-type-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .type-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 0.8rem 0.5rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-align: center;
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+        .type-btn.save {
+            background: #e8f5e9;
+            color: #28a745;
+            border-color: #28a745;
+        }
+        .type-btn.save.active {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        .type-btn.recite {
+            background: #e3f2fd;
+            color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .type-btn.recite.active {
+            background: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+        }
+        .type-btn.phase {
+            background: #fff3e0;
+            color: #fd7e14;
+            border-color: #fd7e14;
+        }
+        .type-btn.phase.active {
+            background: #fd7e14;
+            color: white;
+            border-color: #fd7e14;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(253, 126, 20, 0.3);
+        }
+        /* زر معطل */
+        .type-btn.phase.disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            filter: grayscale(0.4);
+            pointer-events: none;
+        }
+
+        /* مجموعة الحقول */
+        .field-group {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        .field-group h5 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        /* أزرار اختيار نوع السرد - بطاقات ملونة */
+        .sard-type-selector {
+            display: flex;
+            gap: 1rem;
+            margin: 0.5rem 0 1rem;
+            flex-wrap: wrap;
+        }
+        .sard-type-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 1rem 0.8rem;
+            border-radius: 1.5rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            background: #f8f9fa;
+            color: #6c757d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .sard-type-btn i {
+            font-size: 1.5rem;
+        }
+        .sard-type-btn .sard-title {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+        .sard-type-btn .sard-desc {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+        .sard-type-btn.full {
+            background: #e3f2fd;
+            color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .sard-type-btn.full.active {
+            background: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+        }
+        .sard-type-btn.review {
+            background: #fff3e0;
+            color: #fd7e14;
+            border-color: #fd7e14;
+        }
+        .sard-type-btn.review.active {
+            background: #fd7e14;
+            color: white;
+            border-color: #fd7e14;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(253, 126, 20, 0.3);
+        }
+
+        /* مربع المعلومات */
+        .info-box {
+            background: #e8f5e9;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1.2rem;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            border-right: 4px solid #28a745;
+        }
+
+        .phase-info-box {
+            background: #fff3e0;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+            border-right: 4px solid #fd7e14;
+        }
+
+        /* أزرار الحفظ والإلغاء */
+        .btn-group-bottom {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 2rem;
+        }
+        .btn-submit {
+            flex: 2;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            border-radius: 2rem;
+            padding: 0.8rem 1rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+        }
+        .btn-cancel {
+            flex: 1;
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            border: none;
+            border-radius: 2rem;
+            padding: 0.8rem 1rem;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-cancel:hover {
+            background: linear-gradient(135deg, #5a6268, #4e555b);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3);
+            color: white;
+        }
+
+        @media (max-width: 400px) {
+            .type-btn { font-size: 0.8rem; min-width: 80px; padding: 0.6rem 0.3rem; }
+            .sard-type-btn { min-width: 120px; padding: 0.8rem 0.5rem; }
+        }
+
+        /* Flash Toast */
+        .toast-overlay{position:fixed;inset:0;background:rgba(0,0,0,.20);display:flex;align-items:center;justify-content:center;z-index:9999;padding:12px;}
+        .toast-box{width:min(520px,95vw);background:#fff;border-radius:18px;padding:18px 16px;box-shadow:0 20px 50px rgba(0,0,0,.18);text-align:center;border:1px solid rgba(0,0,0,.06);}
+        .toast-icon{width:56px;height:56px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:rgba(253,126,20,.12);color:#fd7e14;font-size:26px;margin-bottom:10px;}
+        .toast-title{font-weight:800;margin:0 0 6px;color:#1f2937;font-size:1.15rem;}
+        .toast-text{margin:0;color:#4b5563;line-height:1.8;font-size:1.05rem;}
+        .d-none{display:none !important;}
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="header">
+            <h2><i class="fas fa-plus-circle ms-1"></i> إضافة مقرر جديد</h2>
+            {% if student %}
+            <p class="text-muted mt-2"><i class="fas fa-user-graduate ms-1"></i> الطالب: {{ student.full_name }}</p>
+            {% else %}
+            <p class="text-danger">لم يتم العثور على بيانات الطالب</p>
+            {% endif %}
+        </div>
+
+        {% if not student %}
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle ms-2"></i>
+            عذراً، لم يتم العثور على الطالب. الرجاء العودة والمحاولة مرة أخرى.
+        </div>
+        <div class="text-center">
+            <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-primary">العودة للوحة التحكم</a>
+        </div>
+        {% else %}
+        <form method="post" id="planForm" action="{{ url_for('add_plan', student_id=student.id) }}">
+            <div class="info-box">
+                <i class="fas fa-info-circle ms-1"></i> 
+                <strong>ملاحظة:</strong> المقرر يمتد من الأحد إلى السبت
+            </div>
+
+            <!-- أزرار اختيار النوع -->
+            <div class="plan-type-selector">
+                <div class="type-btn save" onclick="setActiveType('حفظ')">📖 حفظ</div>
+                <div class="type-btn recite" onclick="setActiveType('سرد')">🎙️ سرد</div>
+                <div class="type-btn phase {% if not phase_plan_enabled %}disabled{% endif %}" 
+                     onclick="{% if phase_plan_enabled %}setActiveType('تقييم مرحلة'){% else %}showPhaseDisabledToast(){% endif %}">
+                    ⭐ تقييم مرحلة
+                </div>
+            </div>
+            <input type="hidden" name="plan_type" id="plan_type" value="حفظ">
+
+            <!-- تاريخ البدء -->
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-calendar-alt ms-1"></i> تاريخ البدء (يجب أن يكون الأحد)</label>
+                <input type="date" name="start_date" class="form-control" value="{{ default_date }}" required>
+            </div>
+
+            <!-- حقول الحفظ -->
+            <div id="memorization_fields" class="field-group" style="display: none;">
+                <h5><i class="fas fa-book-open ms-1"></i> تفاصيل الحفظ</h5>
+                <div class="mb-3">
+                    <label class="form-label">الحفظ الجديد</label>
+                    <input type="text" name="new_memorization" class="form-control" placeholder="مثال: الآيات 1-10 من سورة البقرة">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">الحفظ القريب</label>
+                    <input type="text" name="recent_review" class="form-control" placeholder="مثال: سورة الملك كاملة">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">الحفظ القديم</label>
+                    <input type="text" name="previous_review" class="form-control" placeholder="مثال: جزء عم كاملاً">
+                </div>
+            </div>
+
+            <!-- حقول السرد -->
+            <div id="recitation_fields" class="field-group" style="display: none;">
+                <h5><i class="fas fa-microphone-alt ms-1"></i> تفاصيل السرد</h5>
+
+                <!-- اختيار نوع السرد - بطاقات ملونة -->
+                <label class="form-label">نوع السرد</label>
+                <div class="sard-type-selector">
+                    <div class="sard-type-btn full" onclick="selectSardType('full')">
+                        <i class="fas fa-book-open"></i>
+                        <div class="sard-title">سرد كامل</div>
+                        <div class="sard-desc">سرد كامل للحفظ المطلوب</div>
+                    </div>
+                    <div class="sard-type-btn review" onclick="selectSardType('review')">
+                        <i class="fas fa-layer-group"></i>
+                        <div class="sard-title">مراجعة (مقاطع)</div>
+                        <div class="sard-desc">مراجعة مقاطع محددة</div>
+                    </div>
+                </div>
+                <input type="hidden" name="sard_subtype" id="sard_subtype" value="full">
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-quote-right ms-1"></i> 
+                        <span id="revision_text_label">مقرر السرد الكامل</span>
+                    </label>
+                    <input type="text" name="revision_text" class="form-control" id="revision_text" 
+                           placeholder="مثال: سورة الكهف كاملة">
+                    <small class="text-muted" id="revision_text_hint">أدخل المقرر المطلوب سرده</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><i class="fas fa-sticky-note ms-1"></i> ملاحظات السرد (اختياري)</label>
+                    <textarea name="revision_notes" class="form-control" id="revision_notes" rows="2" 
+                              placeholder="تفاصيل إضافية عن السرد..."></textarea>
+                </div>
+            </div>
+
+            <!-- حقول تقييم المرحلة -->
+            <div id="phase_fields" class="field-group" style="display: none;">
+                <h5><i class="fas fa-star ms-1"></i> تقييم المرحلة</h5>
+                <div class="phase-info-box">
+                    <i class="fas fa-info-circle ms-1"></i>
+                    <strong>تنبيه:</strong> سيتم تقييم الطالب من 80 درجة. هذا المقرر مخصص لتقييم تقدم الطالب في جزء محدد.
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">وصف المرحلة</label>
+                    <input type="text" name="phase_evaluation_text" class="form-control" placeholder="مثال: تقييم جزء عم، تقييم سورة البقرة...">
+                    <small class="text-muted">أدخل وصفاً للمرحلة التي سيتم تقييمها</small>
+                </div>
+            </div>
+
+            <!-- ملاحظات عامة -->
+            <div class="field-group">
+                <h5><i class="fas fa-sticky-note ms-1"></i> ملاحظات</h5>
+                <textarea name="notes" class="form-control" rows="3" placeholder="ملاحظات عامة حول المقرر..."></textarea>
+            </div>
+
+            <div class="btn-group-bottom">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save ms-1"></i> حفظ المقرر
+                </button>
+                <a href="{{ url_for('view_student_plans', student_id=student.id) }}" class="btn-cancel">
+                    <i class="fas fa-times ms-1"></i> إلغاء
+                </a>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+
+    <!-- Flash Toast -->
+    <div id="phaseToastOverlay" class="toast-overlay d-none">
+        <div class="toast-box">
+            <div class="toast-icon"><i class="fas fa-info-circle"></i></div>
+            <div class="toast-title">تنبيه</div>
+            <p id="phaseToastText" class="toast-text"></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // تمرير قيمة تفعيل تقييم المرحلة من الخادم
+        const PHASE_PLAN_ENABLED = {{ "true" if phase_plan_enabled else "false" }};
+
+        function showFlash(message, ms = 3000) {
+            const overlay = document.getElementById('phaseToastOverlay');
+            const text = document.getElementById('phaseToastText');
+            if (!overlay || !text) return;
+            text.textContent = message;
+            overlay.classList.remove('d-none');
+            setTimeout(() => overlay.classList.add('d-none'), ms);
+        }
+
+        function showPhaseDisabledToast() {
+            showFlash('ميزة تقييم المرحلة غير مفعلة حالياً. يرجى التواصل مع الإدارة.', 4000);
+        }
+
+        function saveLastPlanType(type) {
+            try { localStorage.setItem('last_plan_type', type); } catch(e) {}
+        }
+
+        // دالة تفعيل نوع المقرر الرئيسي
+        function setActiveType(type) {
+            const saveBtn = document.querySelector('.type-btn.save');
+            const reciteBtn = document.querySelector('.type-btn.recite');
+            const phaseBtn = document.querySelector('.type-btn.phase');
+            const hiddenInput = document.getElementById('plan_type');
+            const memorizationFields = document.getElementById('memorization_fields');
+            const recitationFields = document.getElementById('recitation_fields');
+            const phaseFields = document.getElementById('phase_fields');
+
+            // منع اختيار تقييم مرحلة إذا كان غير مفعل
+            if (type === 'تقييم مرحلة' && !PHASE_PLAN_ENABLED) {
+                showFlash('ميزة تقييم المرحلة غير مفعلة حالياً. يرجى التواصل مع الإدارة.', 4000);
+                return;
+            }
+
+            if (saveBtn) saveBtn.classList.remove('active');
+            if (reciteBtn) reciteBtn.classList.remove('active');
+            if (phaseBtn) phaseBtn.classList.remove('active');
+
+            if (memorizationFields) memorizationFields.style.display = 'none';
+            if (recitationFields) recitationFields.style.display = 'none';
+            if (phaseFields) phaseFields.style.display = 'none';
+
+            if (type === 'حفظ') {
+                if (saveBtn) saveBtn.classList.add('active');
+                if (hiddenInput) hiddenInput.value = 'حفظ';
+                if (memorizationFields) memorizationFields.style.display = 'block';
+            } else if (type === 'سرد') {
+                if (reciteBtn) reciteBtn.classList.add('active');
+                if (hiddenInput) hiddenInput.value = 'سرد';
+                if (recitationFields) recitationFields.style.display = 'block';
+                // تعيين النوع الافتراضي للسرد
+                selectSardType('full');
+            } else if (type === 'تقييم مرحلة') {
+                if (phaseBtn) phaseBtn.classList.add('active');
+                if (hiddenInput) hiddenInput.value = 'تقييم مرحلة';
+                if (phaseFields) phaseFields.style.display = 'block';
+            }
+
+            saveLastPlanType(type);
+        }
+
+        // دالة اختيار نوع السرد
+        function selectSardType(type) {
+            const fullBtn = document.querySelector('.sard-type-btn.full');
+            const reviewBtn = document.querySelector('.sard-type-btn.review');
+            const hiddenInput = document.getElementById('sard_subtype');
+            const revisionTextLabel = document.getElementById('revision_text_label');
+            const revisionTextHint = document.getElementById('revision_text_hint');
+            const revisionText = document.getElementById('revision_text');
+
+            if (!fullBtn || !reviewBtn) return;
+
+            fullBtn.classList.remove('active');
+            reviewBtn.classList.remove('active');
+
+            if (type === 'full') {
+                fullBtn.classList.add('active');
+                if (hiddenInput) hiddenInput.value = 'full';
+                if (revisionTextLabel) revisionTextLabel.innerHTML = '<i class="fas fa-quote-right ms-1"></i> مقرر السرد الكامل';
+                if (revisionTextHint) revisionTextHint.textContent = 'أدخل المقرر الكامل المطلوب سرده (مثال: سورة الكهف كاملة)';
+                if (revisionText) revisionText.placeholder = 'مثال: سورة الكهف كاملة';
+            } else {
+                reviewBtn.classList.add('active');
+                if (hiddenInput) hiddenInput.value = 'review';
+                if (revisionTextLabel) revisionTextLabel.innerHTML = '<i class="fas fa-layer-group ms-1"></i> مقاطع المراجعة';
+                if (revisionTextHint) revisionTextHint.textContent = 'أدخل المقاطع المطلوب مراجعتها (مثال: الآيات 1-10 من سورة البقرة)';
+                if (revisionText) revisionText.placeholder = 'مثال: الآيات 1-10 من سورة البقرة';
+            }
+        }
+
+        // التحقق من صحة النموذج
+        document.addEventListener('DOMContentLoaded', function() {
+            const planForm = document.getElementById('planForm');
+            if (planForm) {
+                planForm.addEventListener('submit', function(e) {
+                    const hiddenInput = document.getElementById('plan_type');
+                    if (!hiddenInput || !hiddenInput.value) {
+                        e.preventDefault();
+                        showFlash('الرجاء اختيار نوع المقرر.', 3000);
+                        return false;
+                    }
+                    const startDate = document.querySelector('input[name="start_date"]');
+                    if (startDate && startDate.value) {
+                        const date = new Date(startDate.value);
+                        if (date.getDay() !== 0) {
+                            e.preventDefault();
+                            showFlash('تاريخ البدء يجب أن يكون الأحد', 3000);
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            }
+            // تفعيل النوع الافتراضي
+            setTimeout(function() { setActiveType('حفظ'); }, 100);
+        });
+    </script>
+</body>
+</html>

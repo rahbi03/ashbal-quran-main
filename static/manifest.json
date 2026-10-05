@@ -1,0 +1,47 @@
+{
+  "name": "أشبال القرآن — تطبيق الطالب",
+  "short_name": "أشبال القرآن",
+  "description": "تطبيق الطالب لمنصة أشبال القرآن — اعرض مقرراتك وسجل تقاريرك اليومية حتى بدون إنترنت",
+  "start_url": "/student",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f2f0eb",
+  "theme_color": "#1a5c40",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "prefer_related_applications": false,
+  "categories": ["education", "productivity"],
+  "display_override": ["window-controls-overlay", "standalone"],
+  "shortcuts": [
+    {
+      "name": "المقرر الحالي",
+      "short_name": "مقرري",
+      "description": "عرض المقرر الحالي والتقرير اليومي",
+      "url": "/student",
+      "icons": [{ "src": "/static/images/logo.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "إضافة تقرير",
+      "short_name": "تقرير",
+      "description": "إضافة تقرير يومي سريع",
+      "url": "/student",
+      "icons": [{ "src": "/static/images/logo.png", "sizes": "96x96" }]
+    }
+  ],
+  "icons": [
+    {
+      "src": "/static/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "splash_pages": null
+}

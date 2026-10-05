@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تقرير المقررات الأسبوعية - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .glass-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .header h2 {
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 1.6rem;
+        }
+        .header p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .form-card {
+            background: rgba(255,255,255,0.6);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+        .form-control, .form-select {
+            border-radius: 2rem;
+            padding: 0.6rem 1rem;
+            border: 1px solid #e1e8ed;
+            background: #f8fafc;
+        }
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.25);
+            border-color: #17a2b8;
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            border: none;
+            border-radius: 2rem;
+            padding: 0.6rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+        }
+
+        /* تبويبات */
+        .tabs-container {
+            margin-bottom: 1.5rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            border-radius: 1rem 1rem 0 0;
+        }
+        .tab-btn i {
+            margin-left: 0.5rem;
+        }
+        .tab-btn.active {
+            color: #17a2b8;
+            background: rgba(23, 162, 184, 0.1);
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #17a2b8;
+            border-radius: 3px;
+        }
+        .tab-btn:hover:not(.active) {
+            color: #2c3e50;
+            background: rgba(0,0,0,0.03);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* بطاقات الطلاب */
+        .student-item {
+            background: white;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem;
+            border-right: 4px solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .student-item:hover {
+            transform: translateX(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .student-item.missing {
+            border-right-color: #dc3545;
+        }
+        .student-item.has-plan {
+            border-right-color: #28a745;
+        }
+        .student-item h5 {
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+            font-size: 1rem;
+        }
+        .student-item .phone {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        .student-item .teacher-name {
+            font-size: 0.75rem;
+            color: #17a2b8;
+            background: #e7f3ff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .student-item .plan-type {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            background: #28a745;
+            color: white;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 1.5rem;
+        }
+        .empty-state.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .empty-state.warning {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .empty-state.info {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+        .info-box {
+            background: #e7f3ff;
+            border-right: 4px solid #17a2b8;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+        .btn-back {
+            background: #6c757d;
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: 0.2s;
+            margin-top: 1rem;
+        }
+        .btn-back:hover {
+            background: #5a6268;
+            color: white;
+        }
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .btn-whatsapp:hover {
+            background: #128C7E;
+            color: white;
+        }
+        .count-badge {
+            background: #17a2b8;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .count-badge.danger {
+            background: #dc3545;
+        }
+        .count-badge.success {
+            background: #28a745;
+        }
+        .summary-cards {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .summary-card {
+            flex: 1;
+            background: white;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .summary-card i {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+        .summary-card .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        @media (max-width: 768px) {
+            .glass-container { padding: 1rem; }
+            .student-item { flex-direction: column; text-align: center; gap: 0.5rem; }
+            .summary-cards { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-container">
+        <div class="header">
+            <h2><i class="fas fa-calendar-week text-info ms-2"></i> تقرير المقررات الأسبوعية</h2>
+            <p>عرض الطلاب الذين تم إضافة مقرر لهم والذين لم يتم إضافة مقرر</p>
+        </div>
+
+        <!-- نموذج البحث -->
+        <div class="form-card">
+            <form method="post">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <label class="form-label"><i class="fas fa-calendar-alt ms-1"></i> اختر التاريخ (الأحد)</label>
+                        <input type="date" name="report_date" class="form-control" 
+                               value="{{ selected_date.strftime('%Y-%m-%d') if selected_date else next_sunday.strftime('%Y-%m-%d') }}" 
+                               required>
+                        <small class="text-muted">يجب أن يكون التاريخ يوم الأحد</small>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label"><i class="fas fa-chalkboard-teacher ms-1"></i> اختر المعلم (اختياري)</label>
+                        <select name="teacher_id" class="form-select">
+                            <option value="">-- جميع المعلمين --</option>
+                            {% for teacher in teachers %}
+                            <option value="{{ teacher.id }}" {% if selected_teacher_id|int == teacher.id %}selected{% endif %}>
+                                {{ teacher.full_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-search ms-1"></i> عرض
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if selected_date %}
+            <!-- بطاقات الملخص -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <i class="fas fa-calendar-alt text-info"></i>
+                    <div class="number">{{ selected_date.strftime('%Y-%m-%d') }}</div>
+                    <small>تاريخ الأسبوع</small>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-user-graduate text-danger"></i>
+                    <div class="number text-danger">{{ students_without_plan|length }}</div>
+                    <small>بدون مقرر</small>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-user-check text-success"></i>
+                    <div class="number text-success">{{ students_with_plan|length }}</div>
+                    <small>مع مقرر</small>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-users text-primary"></i>
+                    <div class="number text-primary">{{ students_without_plan|length + students_with_plan|length }}</div>
+                    <small>إجمالي الطلاب</small>
+                </div>
+            </div>
+
+            <!-- التبويبات -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="missing">
+                        <i class="fas fa-exclamation-triangle text-danger"></i>
+                        الطلاب بدون مقرر
+                        <span class="badge bg-danger ms-1">{{ students_without_plan|length }}</span>
+                    </button>
+                    <button class="tab-btn" data-tab="has-plan">
+                        <i class="fas fa-check-circle text-success"></i>
+                        الطلاب مع مقرر
+                        <span class="badge bg-success ms-1">{{ students_with_plan|length }}</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- تبويب الطلاب بدون مقرر -->
+            <div id="tab-missing" class="tab-content active">
+                {% if students_without_plan %}
+                    <div class="info-box">
+                        <i class="fas fa-info-circle text-info ms-2"></i>
+                        <strong>عدد الطلاب الذين لم يتم إضافة مقرر لهم:</strong> 
+                        <span class="count-badge danger">{{ students_without_plan|length }}</span>
+                    </div>
+                    <div class="students-list">
+                        {% for student in students_without_plan %}
+                        <div class="student-item missing">
+                            <div>
+                                <h5><i class="fas fa-user-graduate text-danger ms-2"></i> {{ student.full_name }}</h5>
+                                {% if student.phone %}
+                                    <div class="phone"><i class="fas fa-phone ms-1"></i> {{ student.phone }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex gap-2">
+                                {% if student.phone %}
+                                    {% set whatsapp = student.phone|phone_to_whatsapp %}
+                                    {% if whatsapp %}
+                                        <a href="https://wa.me/{{ whatsapp }}" target="_blank" class="btn-whatsapp">
+                                            <i class="fab fa-whatsapp"></i> تواصل
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state success">
+                        <i class="fas fa-check-circle fa-3x mb-2"></i>
+                        <h5>جميع الطلاب لديهم مقررات أسبوعية</h5>
+                        <p class="mb-0">لا يوجد طلاب بدون مقرر في هذا الأسبوع</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- تبويب الطلاب مع مقرر -->
+            <div id="tab-has-plan" class="tab-content">
+                {% if students_with_plan %}
+                    <div class="info-box">
+                        <i class="fas fa-info-circle text-info ms-2"></i>
+                        <strong>عدد الطلاب الذين تم إضافة مقرر لهم:</strong> 
+                        <span class="count-badge success">{{ students_with_plan|length }}</span>
+                    </div>
+                    <div class="students-list">
+                        {% for item in students_with_plan %}
+                        <div class="student-item has-plan">
+                            <div>
+                                <h5><i class="fas fa-user-graduate text-success ms-2"></i> {{ item.student.full_name }}</h5>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
+                                    <span class="teacher-name">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                        المعلم: {{ item.teacher_name }}
+                                    </span>
+                                    <span class="plan-type">
+                                        <i class="fas fa-{{ 'save' if item.plan_type == 'حفظ' else 'microphone-alt' if item.plan_type == 'سرد' else 'feather-alt' }}"></i>
+                                        {{ item.plan_type }}
+                                    </span>
+                                </div>
+                                {% if item.student.phone %}
+                                    <div class="phone mt-1"><i class="fas fa-phone ms-1"></i> {{ item.student.phone }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex gap-2">
+                                {% if item.student.phone %}
+                                    {% set whatsapp = item.student.phone|phone_to_whatsapp %}
+                                    {% if whatsapp %}
+                                        <a href="https://wa.me/{{ whatsapp }}" target="_blank" class="btn-whatsapp">
+                                            <i class="fab fa-whatsapp"></i> تواصل
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state warning">
+                        <i class="fas fa-info-circle fa-3x mb-2"></i>
+                        <h5>لا يوجد طلاب مسجلين في هذا الأسبوع</h5>
+                        <p class="mb-0">لم يتم إضافة أي مقرر أسبوعي للطلاب</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        {% else %}
+            <div class="empty-state info">
+                <i class="fas fa-calendar-alt fa-3x mb-2"></i>
+                <h5>اختر تاريخاً لعرض التقرير</h5>
+                <p class="mb-0">يرجى اختيار يوم الأحد لعرض الطلاب الذين لديهم مقرر والذين ليس لديهم مقرر أسبوعي</p>
+            </div>
+        {% endif %}
+
+        <!-- أزرار التنقل -->
+        <div class="text-center mt-3">
+            <a href="{{ url_for('admin') }}" class="btn-back">
+                <i class="fas fa-arrow-right ms-1"></i> العودة للإدارة
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // التبديل بين التبويبات
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // إزالة الفئة النشطة من جميع الأزرار والمحتويات
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                // إضافة الفئة النشطة للزر الحالي
+                this.classList.add('active');
+
+                // عرض المحتوى المناسب
+                const tabId = this.dataset.tab;
+                if (tabId === 'missing') {
+                    document.getElementById('tab-missing').classList.add('active');
+                } else if (tabId === 'has-plan') {
+                    document.getElementById('tab-has-plan').classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تقرير المقررات الأسبوعية - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .glass-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .header h2 {
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 1.6rem;
+        }
+        .header p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .form-card {
+            background: rgba(255,255,255,0.6);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+        .form-control, .form-select {
+            border-radius: 2rem;
+            padding: 0.6rem 1rem;
+            border: 1px solid #e1e8ed;
+            background: #f8fafc;
+        }
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.25);
+            border-color: #17a2b8;
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            border: none;
+            border-radius: 2rem;
+            padding: 0.6rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+        }
+
+        /* تبويبات */
+        .tabs-container {
+            margin-bottom: 1.5rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6c757d;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            border-radius: 1rem 1rem 0 0;
+        }
+        .tab-btn i {
+            margin-left: 0.5rem;
+        }
+        .tab-btn.active {
+            color: #17a2b8;
+            background: rgba(23, 162, 184, 0.1);
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #17a2b8;
+            border-radius: 3px;
+        }
+        .tab-btn:hover:not(.active) {
+            color: #2c3e50;
+            background: rgba(0,0,0,0.03);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* بطاقات الطلاب */
+        .student-item {
+            background: white;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem;
+            border-right: 4px solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .student-item:hover {
+            transform: translateX(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .student-item.missing {
+            border-right-color: #dc3545;
+        }
+        .student-item.has-plan {
+            border-right-color: #28a745;
+        }
+        .student-item h5 {
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+            font-size: 1rem;
+        }
+        .student-item .phone {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        .student-item .teacher-name {
+            font-size: 0.75rem;
+            color: #17a2b8;
+            background: #e7f3ff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .student-item .plan-type {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            background: #28a745;
+            color: white;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 1.5rem;
+        }
+        .empty-state.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .empty-state.warning {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .empty-state.info {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+        .info-box {
+            background: #e7f3ff;
+            border-right: 4px solid #17a2b8;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+        .btn-back {
+            background: #6c757d;
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: 0.2s;
+            margin-top: 1rem;
+        }
+        .btn-back:hover {
+            background: #5a6268;
+            color: white;
+        }
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .btn-whatsapp:hover {
+            background: #128C7E;
+            color: white;
+        }
+        .count-badge {
+            background: #17a2b8;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .count-badge.danger {
+            background: #dc3545;
+        }
+        .count-badge.success {
+            background: #28a745;
+        }
+        .summary-cards {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .summary-card {
+            flex: 1;
+            background: white;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .summary-card i {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+        .summary-card .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        @media (max-width: 768px) {
+            .glass-container { padding: 1rem; }
+            .student-item { flex-direction: column; text-align: center; gap: 0.5rem; }
+            .summary-cards { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-container">
+        <div class="header">
+            <h2><i class="fas fa-calendar-week text-info ms-2"></i> تقرير المقررات الأسبوعية</h2>
+            <p>عرض الطلاب الذين تم إضافة مقرر لهم والذين لم يتم إضافة مقرر</p>
+        </div>
+
+        <!-- نموذج البحث -->
+        <div class="form-card">
+            <form method="post">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <label class="form-label"><i class="fas fa-calendar-alt ms-1"></i> اختر التاريخ (الأحد)</label>
+                        <input type="date" name="report_date" class="form-control" 
+                               value="{{ selected_date.strftime('%Y-%m-%d') if selected_date else next_sunday.strftime('%Y-%m-%d') }}" 
+                               required>
+                        <small class="text-muted">يجب أن يكون التاريخ يوم الأحد</small>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label"><i class="fas fa-chalkboard-teacher ms-1"></i> اختر المعلم (اختياري)</label>
+                        <select name="teacher_id" class="form-select">
+                            <option value="">-- جميع المعلمين --</option>
+                            {% for teacher in teachers %}
+                            <option value="{{ teacher.id }}" {% if selected_teacher_id|int == teacher.id %}selected{% endif %}>
+                                {{ teacher.full_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-search ms-1"></i> عرض
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {% if selected_date %}
+            <!-- بطاقات الملخص -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <i class="fas fa-calendar-alt text-info"></i>
+                    <div class="number">{{ selected_date.strftime('%Y-%m-%d') }}</div>
+                    <small>تاريخ الأسبوع</small>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-user-graduate text-danger"></i>
+                    <div class="number text-danger">{{ students_without_plan|length }}</div>
+                    <small>بدون مقرر</small>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-user-check text-success"></i>
+                    <div class="number text-success">{{ students_with_plan|length }}</div>
+                    <small>مع مقرر</small>
+                </div>
+                <div class="summary-card">
+                    <i class="fas fa-users text-primary"></i>
+                    <div class="number text-primary">{{ students_without_plan|length + students_with_plan|length }}</div>
+                    <small>إجمالي الطلاب</small>
+                </div>
+            </div>
+
+            <!-- التبويبات -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="missing">
+                        <i class="fas fa-exclamation-triangle text-danger"></i>
+                        الطلاب بدون مقرر
+                        <span class="badge bg-danger ms-1">{{ students_without_plan|length }}</span>
+                    </button>
+                    <button class="tab-btn" data-tab="has-plan">
+                        <i class="fas fa-check-circle text-success"></i>
+                        الطلاب مع مقرر
+                        <span class="badge bg-success ms-1">{{ students_with_plan|length }}</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- تبويب الطلاب بدون مقرر -->
+            <div id="tab-missing" class="tab-content active">
+                {% if students_without_plan %}
+                    <div class="info-box">
+                        <i class="fas fa-info-circle text-info ms-2"></i>
+                        <strong>عدد الطلاب الذين لم يتم إضافة مقرر لهم:</strong> 
+                        <span class="count-badge danger">{{ students_without_plan|length }}</span>
+                    </div>
+                    <div class="students-list">
+                        {% for student in students_without_plan %}
+                        <div class="student-item missing">
+                            <div>
+                                <h5><i class="fas fa-user-graduate text-danger ms-2"></i> {{ student.full_name }}</h5>
+                                {% if student.phone %}
+                                    <div class="phone"><i class="fas fa-phone ms-1"></i> {{ student.phone }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex gap-2">
+                                {% if student.phone %}
+                                    {% set whatsapp = student.phone|phone_to_whatsapp %}
+                                    {% if whatsapp %}
+                                        <a href="https://wa.me/{{ whatsapp }}" target="_blank" class="btn-whatsapp">
+                                            <i class="fab fa-whatsapp"></i> تواصل
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state success">
+                        <i class="fas fa-check-circle fa-3x mb-2"></i>
+                        <h5>جميع الطلاب لديهم مقررات أسبوعية</h5>
+                        <p class="mb-0">لا يوجد طلاب بدون مقرر في هذا الأسبوع</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- تبويب الطلاب مع مقرر -->
+            <div id="tab-has-plan" class="tab-content">
+                {% if students_with_plan %}
+                    <div class="info-box">
+                        <i class="fas fa-info-circle text-info ms-2"></i>
+                        <strong>عدد الطلاب الذين تم إضافة مقرر لهم:</strong> 
+                        <span class="count-badge success">{{ students_with_plan|length }}</span>
+                    </div>
+                    <div class="students-list">
+                        {% for item in students_with_plan %}
+                        <div class="student-item has-plan">
+                            <div>
+                                <h5><i class="fas fa-user-graduate text-success ms-2"></i> {{ item.student.full_name }}</h5>
+                                <div class="d-flex flex-wrap gap-2 mt-1">
+                                    <span class="teacher-name">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                        المعلم: {{ item.teacher_name }}
+                                    </span>
+                                    <span class="plan-type">
+                                        <i class="fas fa-{{ 'save' if item.plan_type == 'حفظ' else 'microphone-alt' if item.plan_type == 'سرد' else 'feather-alt' }}"></i>
+                                        {{ item.plan_type }}
+                                    </span>
+                                </div>
+                                {% if item.student.phone %}
+                                    <div class="phone mt-1"><i class="fas fa-phone ms-1"></i> {{ item.student.phone }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex gap-2">
+                                {% if item.student.phone %}
+                                    {% set whatsapp = item.student.phone|phone_to_whatsapp %}
+                                    {% if whatsapp %}
+                                        <a href="https://wa.me/{{ whatsapp }}" target="_blank" class="btn-whatsapp">
+                                            <i class="fab fa-whatsapp"></i> تواصل
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state warning">
+                        <i class="fas fa-info-circle fa-3x mb-2"></i>
+                        <h5>لا يوجد طلاب مسجلين في هذا الأسبوع</h5>
+                        <p class="mb-0">لم يتم إضافة أي مقرر أسبوعي للطلاب</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        {% else %}
+            <div class="empty-state info">
+                <i class="fas fa-calendar-alt fa-3x mb-2"></i>
+                <h5>اختر تاريخاً لعرض التقرير</h5>
+                <p class="mb-0">يرجى اختيار يوم الأحد لعرض الطلاب الذين لديهم مقرر والذين ليس لديهم مقرر أسبوعي</p>
+            </div>
+        {% endif %}
+
+        <!-- أزرار التنقل -->
+        <div class="text-center mt-3">
+            <a href="{{ url_for('admin') }}" class="btn-back">
+                <i class="fas fa-arrow-right ms-1"></i> العودة للإدارة
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // التبديل بين التبويبات
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // إزالة الفئة النشطة من جميع الأزرار والمحتويات
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                // إضافة الفئة النشطة للزر الحالي
+                this.classList.add('active');
+
+                // عرض المحتوى المناسب
+                const tabId = this.dataset.tab;
+                if (tabId === 'missing') {
+                    document.getElementById('tab-missing').classList.add('active');
+                } else if (tabId === 'has-plan') {
+                    document.getElementById('tab-has-plan').classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

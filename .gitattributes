@@ -1,0 +1,13 @@
+# توحيد نهايات الأسطر في المستودع (LF) لمنع فروق CRLF على Windows.
+* text=auto eol=lf
+
+# ملفات ثنائية
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.gif binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.zip binary

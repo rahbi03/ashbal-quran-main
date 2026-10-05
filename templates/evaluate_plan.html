@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تقييم المقرر - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: #f5f0eb;
+            padding: 0.5rem;
+            min-height: 100vh;
+            position: relative;
+        }
+        .mobile-container { max-width: 600px; margin: 0 auto; }
+        .header {
+            background: linear-gradient(135deg, #1a8a7a, #146b5e);
+            color: white;
+            padding: 1.1rem 1.3rem;
+            border-radius: 1.5rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 6px 18px rgba(26,138,122,.2);
+        }
+        .header h2 { font-size: 1.4rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: .5rem; }
+        .header p { margin: .25rem 0 0; opacity: .9; font-size: .88rem; }
+
+        .form-label { font-weight: 700; color: #374151; font-size: .88rem; display: block; margin-bottom: .3rem; }
+        .form-control {
+            border-radius: 1rem; padding: .65rem 1rem;
+            border: 1px solid #e5e7eb; background: #fafafa;
+            margin-bottom: .8rem; font-size: .88rem; transition: all .2s;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(26,138,122,.15); border-color: #1a8a7a; background: #fff;
+        }
+
+        .info-box {
+            background: #f0f7f5; border-radius: 1rem; padding: .75rem 1rem;
+            margin-bottom: 1rem; font-size: .88rem;
+            border-right: 4px solid #1a8a7a; display: flex; align-items: center; gap: .5rem;
+        }
+
+        .points-info {
+            background: #fef7ed; border-radius: 1rem; padding: 1rem;
+            margin-bottom: 1.2rem; border-right: 4px solid #d97706;
+        }
+        .points-info h6 { font-weight: 700; margin-bottom: .4rem; color: #92400e; font-size: .9rem; }
+        .points-info ul { margin-bottom: 0; font-size: .82rem; color: #78350f; }
+        .points-info li { margin-bottom: .25rem; }
+
+        .points-preview {
+            background: #ecfdf5; border-radius: 1rem; padding: .8rem;
+            margin: 1rem 0; text-align: center;
+        }
+        .points-preview .points-value { font-size: 1.5rem; font-weight: 700; color: #1a8a7a; }
+        .points-preview .stars-preview i { font-size: 1.2rem; margin: 0 2px; }
+
+        .score-slider-wrap {
+            display: flex; align-items: center; gap: .6rem; margin-bottom: .6rem;
+        }
+        .score-slider-wrap input[type="range"] {
+            flex: 1; height: 6px; -webkit-appearance: none;
+            background: linear-gradient(to left, #dc3545, #ffc107, #28a745);
+            border-radius: 3px; outline: none;
+        }
+        .score-slider-wrap input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+            background: #1a8a7a; cursor: pointer; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.15);
+        }
+        .score-slider-wrap input[type="range"]::-moz-range-thumb {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: #1a8a7a; cursor: pointer; border: 2px solid #fff;
+        }
+        .score-value {
+            min-width: 48px; text-align: center; font-weight: 700;
+            font-size: 1rem; color: #1a8a7a;
+        }
+
+        .pass-selector { display: flex; gap: .5rem; margin: .3rem 0 1rem; }
+        .pass-btn {
+            flex: 1; padding: .55rem; border-radius: 2rem; font-weight: 600;
+            border: 2px solid transparent; transition: all .2s; cursor: pointer; text-align: center;
+        }
+        .pass-btn.yes { background: #ecfdf5; color: #059669; border-color: #059669; }
+        .pass-btn.yes.active { background: #059669; color: #fff; }
+        .pass-btn.no { background: #fef2f2; color: #dc2626; border-color: #dc2626; }
+        .pass-btn.no.active { background: #dc2626; color: #fff; }
+
+        /* ---- صندوق ترحيل المقرر ---- */
+        .rollover-box {
+            background: #fef3c7; border: 2px solid #f59e0b; border-radius: 1rem;
+            padding: .8rem .9rem; margin: .3rem 0 1rem;
+            animation: rollFade .25s ease;
+        }
+        @keyframes rollFade { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+        .rollover-label { display: flex; align-items: flex-start; gap: .6rem; cursor: pointer; margin: 0; font-weight: 400; }
+        .rollover-label input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .rollover-check {
+            flex-shrink: 0; width: 22px; height: 22px; border-radius: .5rem;
+            border: 2px solid #d97706; background: #fff; position: relative;
+            transition: all .2s; margin-top: .1rem;
+        }
+        .rollover-label input:checked + .rollover-check { background: #d97706; border-color: #d97706; }
+        .rollover-label input:checked + .rollover-check::after {
+            content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: .8rem;
+        }
+        .rollover-label input:focus-visible + .rollover-check { box-shadow: 0 0 0 3px rgba(217,119,6,.3); }
+        .rollover-text { display: flex; flex-direction: column; line-height: 1.4; }
+        .rollover-text strong { color: #92400e; font-size: .9rem; font-weight: 700; }
+        .rollover-text small { color: #a16207; font-size: .76rem; }
+
+        .phase-info {
+            background: #fef7ed; border-radius: 1rem; padding: .75rem 1rem;
+            margin-bottom: 1rem; border-right: 4px solid #d97706;
+            font-size: .88rem; color: #92400e;
+        }
+
+        .btn-group-bottom { display: flex; gap: .5rem; margin-top: 1.5rem; }
+        .btn-submit {
+            flex: 2; background: linear-gradient(135deg, #1a8a7a, #146b5e); border: none;
+            border-radius: 2rem; padding: .8rem; color: #fff; font-weight: 700;
+            font-size: .95rem; transition: all .25s; cursor: pointer;
+            box-shadow: 0 6px 16px rgba(26,138,122,.25);
+        }
+        .btn-submit:disabled { opacity: .65; cursor: not-allowed; }
+        .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(26,138,122,.35); }
+        .btn-cancel {
+            flex: 1; background: #9ca3af; border-radius: 2rem; padding: .8rem;
+            color: #fff; text-decoration: none; text-align: center; font-weight: 600;
+            font-size: .95rem; transition: all .25s;
+        }
+        .btn-cancel:hover { background: #6b7280; transform: translateY(-2px); color: #fff; }
+
+        hr { margin: 1rem 0; border-top: 1px dashed #ddd; }
+        .badge-phase { background: #d97706; color: #fff; padding: .15rem .7rem; border-radius: 1rem; font-size: .78rem; }
+        .spinner-border-sm { width: 1rem; height: 1rem; border-width: .2em; margin-left: .5rem; }
+
+        .custom-toast {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+            min-width: 300px; max-width: 90%; background: #fff;
+            border-radius: 1rem; box-shadow: 0 10px 40px rgba(0,0,0,.2);
+            z-index: 9999; animation: slideIn .3s ease-out; direction: rtl;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translate(-50%,-50%) scale(.9); } to { opacity: 1; transform: translate(-50%,-50%) scale(1); } }
+        @keyframes slideOut { from { opacity: 1; transform: translate(-50%,-50%) scale(1); } to { opacity: 0; transform: translate(-50%,-50%) scale(.9); } }
+        .custom-toast.hide { animation: slideOut .3s ease-out forwards; }
+        .toast-header {
+            background: #1a8a7a; color: #fff; padding: 1rem;
+            border-radius: 1rem 1rem 0 0; display: flex; align-items: center; gap: .5rem;
+        }
+        .toast-header i { font-size: 1.5rem; }
+        .toast-header strong { flex: 1; font-size: 1.1rem; }
+        .toast-header .close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; padding: 0; line-height: 1; opacity: .8; transition: opacity .2s; }
+        .toast-header .close-btn:hover { opacity: 1; }
+        .toast-body { padding: 1rem; color: #333; font-size: 1rem; text-align: center; }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); z-index: 9998; animation: fadeIn .3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .overlay.hide { animation: fadeOut .3s ease-out forwards; }
+    </style>
+</head>
+<body data-plan-type="{{ plan.plan_type }}">
+    <div class="mobile-container">
+        <div class="header">
+            <h2><i class="fas fa-star"></i> تقييم المقرر</h2>
+            <p>
+                <i class="fas fa-user-graduate"></i> {{ plan.student.full_name }} | 
+                {% if plan.plan_type == 'تقييم مرحلة' %}
+                    <span class="badge-phase">{{ plan.plan_type }}</span>
+                {% else %}
+                    {{ plan.plan_type }}
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-info-circle"></i> تاريخ التقييم: {{ default_eval_date }}
+        </div>
+
+        <!-- نظام النقاط والنجوم -->
+        {% if plan.plan_type != 'قصيدة' %}
+        <div class="points-info">
+            <h6><i class="fas fa-star text-warning"></i> نظام النقاط والنجوم</h6>
+            <ul>
+                <li>⭐ كل 10 درجات = <strong>نقطة واحدة</strong></li>
+                <li>⭐ كل <strong>30 نقطة</strong> = نجمة واحدة 🌟 (الحد الأقصى 3 نجوم)</li>
+                <li>⭐ التقييم يضاف تلقائياً إلى رصيد الطالب التراكمي</li>
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" id="evalForm" onsubmit="disableSubmitButton(event)">
+            <input type="date" name="evaluation_date" class="form-control" value="{{ default_eval_date }}" required>
+
+            {% if plan.plan_type == 'حفظ' %}
+                <label class="form-label">الحفظ الجديد ({{ plan.new_memorization }})</label>
+                <div class="score-slider-wrap">
+                    <input type="range" name="new_score" min="0" max="40" value="35" required oninput="this.nextElementSibling.textContent=this.value;calculatePointsPreview()">
+                    <span class="score-value">35</span>
+                </div>
+
+                <div class="pass-selector" id="new-pass-selector">
+                    <div class="pass-btn yes active" data-pass="new_pass" data-value="true">يجاز</div>
+                    <div class="pass-btn no" data-pass="new_pass" data-value="false">لا يجاز</div>
+                </div>
+                <input type="hidden" name="new_pass" id="new_pass" value="true">
+
+                <label class="form-label">الحفظ القريب ({{ plan.recent_review }})</label>
+                <div class="score-slider-wrap">
+                    <input type="range" name="recent_score" min="0" max="20" value="18" required oninput="this.nextElementSibling.textContent=this.value;calculatePointsPreview()">
+                    <span class="score-value">18</span>
+                </div>
+
+                <label class="form-label">الحفظ القديم ({{ plan.previous_review }})</label>
+                <div class="score-slider-wrap">
+                    <input type="range" name="old_score" min="0" max="40" value="35" required oninput="this.nextElementSibling.textContent=this.value;calculatePointsPreview()">
+                    <span class="score-value">35</span>
+                </div>
+
+                <div class="pass-selector" id="old-pass-selector">
+                    <div class="pass-btn yes active" data-pass="old_pass" data-value="true">يجاز</div>
+                    <div class="pass-btn no" data-pass="old_pass" data-value="false">لا يجاز</div>
+                </div>
+                <input type="hidden" name="old_pass" id="old_pass" value="true">
+
+                <!-- الترحيل: يظهر عند فشل أي من الحفظ الجديد أو القديم -->
+                <div class="rollover-box" id="rolloverBox" style="display: none;">
+                    <label class="rollover-label">
+                        <input type="checkbox" name="rollover" id="rolloverCheck" value="1" checked>
+                        <span class="rollover-check"></span>
+                        <span class="rollover-text">
+                            <strong>ترحيل المقرر</strong>
+                            <small>نسخ المقرر الحالي ليصبح مقرر الأسبوع القادم تلقائياً</small>
+                        </span>
+                    </label>
+                </div>
+
+            {% elif plan.plan_type == 'سرد' %}
+                <label class="form-label">مقرر السرد ({{ plan.revision_text }})</label>
+
+                {% if plan.sard_subtype %}
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i> 
+                    نوع السرد: <strong>{{ 'سرد كامل' if plan.sard_subtype == 'full' else 'مراجعة (مقاطع)' }}</strong>
+                    {% if plan.revision_notes %}
+                    <br><small>ملاحظات: {{ plan.revision_notes }}</small>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="score-slider-wrap">
+                    <input type="range" name="revision_score" min="0" max="100" value="85" required oninput="this.nextElementSibling.textContent=this.value;calculatePointsPreview()">
+                    <span class="score-value">85</span>
+                </div>
+
+                <div class="pass-selector" id="revision-pass-selector">
+                    <div class="pass-btn yes active" data-pass="revision_pass" data-value="true">يجاز</div>
+                    <div class="pass-btn no" data-pass="revision_pass" data-value="false">لا يجاز</div>
+                </div>
+                <input type="hidden" name="revision_pass" id="revision_pass" value="true">
+
+                <!-- الترحيل: يظهر عند عدم إجازة السرد -->
+                <div class="rollover-box" id="sardRolloverBox" style="display: none;">
+                    <label class="rollover-label">
+                        <input type="checkbox" name="rollover" id="sardRolloverCheck" value="1" checked>
+                        <span class="rollover-check"></span>
+                        <span class="rollover-text">
+                            <strong>ترحيل المقرر</strong>
+                            <small>نسخ مقرر السرد الحالي ليصبح مقرر الأسبوع القادم تلقائياً</small>
+                        </span>
+                    </label>
+                </div>
+
+            {% elif plan.plan_type == 'تقييم مرحلة' %}
+                <div class="phase-info">
+                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                    <strong>تقييم المرحلة:</strong> الدرجة من 80، وسيتم إضافتها إلى 20% من متوسط درجات الحفظ
+                </div>
+
+                <label class="form-label">وصف المرحلة</label>
+                <input type="text" class="form-control" value="{{ plan.phase_evaluation_text or 'لم يحدد' }}" disabled>
+
+                <label class="form-label">درجة تقييم المرحلة (من 80)</label>
+                <div class="score-slider-wrap">
+                    <input type="range" name="phase_score" min="0" max="80" value="80" required oninput="this.nextElementSibling.textContent=this.value;calculatePointsPreview()">
+                    <span class="score-value">80</span>
+                </div>
+
+                <div class="pass-selector" id="phase-pass-selector">
+                    <div class="pass-btn yes active" data-pass="phase_pass" data-value="true">يجاز</div>
+                    <div class="pass-btn no" data-pass="phase_pass" data-value="false">لا يجاز</div>
+                </div>
+                <input type="hidden" name="phase_pass" id="phase_pass" value="true">
+
+            {% elif plan.plan_type == 'قصيدة' %}
+                <div class="phase-info" style="background:#eef2ff;border-color:#a5b4fc;">
+                    <i class="fas fa-feather-alt text-primary"></i>
+                    <strong>مقرر القصيدة:</strong>
+                    {% if plan.poem %}
+                    {{ plan.poem.poem_title or ('قصيدة ' ~ plan.poem.poem_number) }}
+                    <span class="text-muted">(الشاعر: {{ plan.poem.poet or 'غير محدد' }})</span>
+                    {% else %}لم يحدد{% endif %}
+                    <br><small>الأبيات: {{ plan.verse_start }} - {{ plan.verse_end }}</small>
+                </div>
+
+                <label class="form-label">هل أُجيز المقرر؟</label>
+                <div class="pass-selector" id="poem-pass-selector">
+                    <div class="pass-btn yes active" data-pass="poem_pass" data-value="true">أُجيز</div>
+                    <div class="pass-btn no" data-pass="poem_pass" data-value="false">لا يُجاز</div>
+                </div>
+                <input type="hidden" name="poem_pass" id="poem_pass" value="true">
+
+                <!-- الترحيل: يظهر فقط عند عدم إجازة القصيدة -->
+                <div class="rollover-box" id="poemRolloverBox" style="display: none;">
+                    <label class="rollover-label">
+                        <input type="checkbox" name="rollover" id="poemRolloverCheck" value="1" checked>
+                        <span class="rollover-check"></span>
+                        <span class="rollover-text">
+                            <strong>ترحيل القصيدة</strong>
+                            <small>نسخ القصيدة الحالية لتصبح مقرر الأسبوع القادم تلقائياً</small>
+                        </span>
+                    </label>
+                </div>
+            {% endif %}
+
+            <!-- معاينة النقاط والنجوم -->
+            <div id="pointsPreview" class="points-preview" style="display: none;">
+                <div class="row align-items-center">
+                    <div class="col-6">
+                        <div class="text-muted small">النقاط المتوقعة</div>
+                        <div class="points-value" id="previewPoints">0</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-muted small">النجوم المتوقعة</div>
+                        <div class="stars-preview" id="previewStars">
+                            <i class="far fa-star text-secondary"></i>
+                            <i class="far fa-star text-secondary"></i>
+                            <i class="far fa-star text-secondary"></i>
+                        </div>
+                    </div>
+                </div>
+                <small class="text-muted">* يتم حساب النقاط تلقائياً عند إدخال الدرجات</small>
+            </div>
+
+            <textarea name="notes" class="form-control" rows="3" placeholder="ملاحظات"></textarea>
+
+            <div class="btn-group-bottom">
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-check-circle"></i> حفظ
+                </button>
+                <a href="{{ url_for('view_student_plans', student_id=plan.student_id) }}" class="btn-cancel"><i class="fas fa-times"></i> إلغاء</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // دالة عرض رسالة Toast
+        function showToast(message, type = 'success') {
+            const existingToast = document.querySelector('.custom-toast');
+            const existingOverlay = document.querySelector('.overlay');
+            if (existingToast) existingToast.remove();
+            if (existingOverlay) existingOverlay.remove();
+
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            document.body.appendChild(overlay);
+
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+
+            const headerColor = type === 'success' ? '#28a745' : (type === 'error' ? '#dc3545' : '#ffc107');
+            const icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
+
+            toast.innerHTML = `
+                <div class="toast-header" style="background: ${headerColor};">
+                    <i class="fas ${icon}"></i>
+                    <strong>${type === 'success' ? 'تم بنجاح' : (type === 'error' ? 'خطأ' : 'تنبيه')}</strong>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div class="toast-body">
+                    ${message}
+                </div>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('hide');
+                overlay.classList.add('hide');
+                setTimeout(() => {
+                    if (toast.parentNode) toast.remove();
+                    if (overlay.parentNode) overlay.remove();
+                }, 300);
+            }, 3000);
+
+            const closeBtn = toast.querySelector('.close-btn');
+            if (closeBtn) {
+                closeBtn.onclick = () => {
+                    toast.classList.add('hide');
+                    overlay.classList.add('hide');
+                    setTimeout(() => {
+                        if (toast.parentNode) toast.remove();
+                        if (overlay.parentNode) overlay.remove();
+                    }, 300);
+                };
+            }
+        }
+
+        // دالة حساب النقاط والنجوم
+        function calculatePointsPreview() {
+            let totalScore = 0;
+            let planType = '{{ plan.plan_type }}';
+
+            if (planType === 'حفظ') {
+                const newScore = parseInt(document.querySelector('input[name="new_score"]')?.value) || 0;
+                const recentScore = parseInt(document.querySelector('input[name="recent_score"]')?.value) || 0;
+                const oldScore = parseInt(document.querySelector('input[name="old_score"]')?.value) || 0;
+                totalScore = newScore + recentScore + oldScore;
+            } else if (planType === 'سرد') {
+                totalScore = parseInt(document.querySelector('input[name="revision_score"]')?.value) || 0;
+            } else if (planType === 'تقييم مرحلة') {
+                totalScore = parseInt(document.querySelector('input[name="phase_score"]')?.value) || 0;
+            }
+
+            let points = 0;
+            let stars = 0;
+
+            if (planType === 'تقييم مرحلة') {
+                points = Math.floor(totalScore / 8);
+                stars = Math.min(3, Math.floor(points / 3));
+            } else {
+                points = Math.floor(totalScore / 10);
+                stars = 0;
+                if (points >= 9) stars = 3;
+                else if (points >= 6) stars = 2;
+                else if (points >= 3) stars = 1;
+            }
+
+            // عرض المعاينة
+            const previewDiv = document.getElementById('pointsPreview');
+            if (points > 0 || totalScore > 0) {
+                previewDiv.style.display = 'block';
+                document.getElementById('previewPoints').innerHTML = points;
+
+                const starsContainer = document.getElementById('previewStars');
+                starsContainer.innerHTML = '';
+                for (let i = 0; i < stars; i++) {
+                    starsContainer.innerHTML += '<i class="fas fa-star text-warning"></i>';
+                }
+                for (let i = stars; i < 3; i++) {
+                    starsContainer.innerHTML += '<i class="far fa-star text-secondary"></i>';
+                }
+            } else {
+                previewDiv.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupPassSelector('new-pass-selector', 'new_pass');
+            setupPassSelector('old-pass-selector', 'old_pass');
+            setupPassSelector('revision-pass-selector', 'revision_pass');
+            setupPassSelector('phase-pass-selector', 'phase_pass');
+            setupPassSelector('poem-pass-selector', 'poem_pass');
+
+            const flashMessage = sessionStorage.getItem('flashMessage');
+            const flashType = sessionStorage.getItem('flashType');
+            if (flashMessage) {
+                showToast(flashMessage, flashType || 'success');
+                sessionStorage.removeItem('flashMessage');
+                sessionStorage.removeItem('flashType');
+            }
+
+            calculatePointsPreview();
+            if (typeof syncRollover === 'function') syncRollover();
+        });
+
+        function setupPassSelector(selectorId, hiddenId) {
+            const container = document.getElementById(selectorId);
+            if (!container) return;
+            const btns = container.querySelectorAll('.pass-btn');
+            const hidden = document.getElementById(hiddenId);
+
+            btns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    btns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    hidden.value = this.dataset.value;
+                    if (typeof syncRollover === 'function') syncRollover();
+                });
+            });
+
+            const defaultBtn = Array.from(btns).find(btn => btn.dataset.value === hidden.value);
+            if (defaultBtn) defaultBtn.classList.add('active');
+        }
+
+        /* ---- الترحيل التلقائي عند الرسب ----
+         * يظهر صندوق «ترحيل المقرر» عند اختيار «لا يجاز» في الحفظ الجديد
+         * أو القديم، أو في السرد، أو «لا يُجاز» في القصيدة. كل نوع مقرر
+         * له صندوق خاص، فنربطه بمتغير نتيجة المرتبط به. */
+        const ROLLOVER_BINDINGS = {
+            'قصيدة': [['poem_pass', 'poemRolloverBox']],
+            'سرد':   [['revision_pass', 'sardRolloverBox']],
+            'حفظ':   [['new_pass', 'rolloverBox'], ['old_pass', 'rolloverBox']]
+        };
+
+        function syncRollover() {
+            const pairs = ROLLOVER_BINDINGS[document.body.dataset.planType] || [];
+            pairs.forEach(([inputId, boxId]) => {
+                const input = document.getElementById(inputId);
+                const box = document.getElementById(boxId);
+                if (!input || !box) return;
+                // أي جزء رسب ← إظهار الصندوق (ويبقى مفعّلاً افتراضياً)
+                const failed = input.value === 'false';
+                if (failed) box.style.display = 'block';
+                else if (pairs.every(([i]) => (document.getElementById(i) || {}).value !== 'false')) {
+                    box.style.display = 'none';
+                }
+            });
+        }
+
+        let isSubmitting = false;
+
+        function disableSubmitButton(event) {
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (isSubmitting || submitBtn.disabled) {
+                event.preventDefault();
+                return false;
+            }
+
+            const form = document.getElementById('evalForm');
+            if (!form.checkValidity()) {
+                return true;
+            }
+
+            isSubmitting = true;
+            submitBtn.disabled = true;
+
+            submitBtn.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                جاري الحفظ...
+            `;
+
+            return true;
+        }
+
+        window.addEventListener('pageshow', function(event) {
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn && submitBtn.disabled) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> حفظ';
+            }
+            isSubmitting = false;
+        });
+    </script>
+</body>
+</html>{% if false %}<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تقييم المقرر - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: #f5f0eb;
+            padding: 0.5rem;
+            min-height: 100vh;
+            position: relative;
+        }
+        .mobile-container { max-width: 600px; margin: 0 auto; }
+        .header {
+            background: linear-gradient(135deg, #1a8a7a, #146b5e);
+            color: white;
+            padding: 1.1rem 1.3rem;
+            border-radius: 1.5rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 6px 18px rgba(26,138,122,.2);
+        }
+        .header h2 { font-size: 1.4rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: .5rem; }
+        .header p { margin: .25rem 0 0; opacity: .9; font-size: .88rem; }
+
+        .form-label { font-weight: 700; color: #374151; font-size: .88rem; display: block; margin-bottom: .3rem; }
+        .form-control {
+            border-radius: 1rem; padding: .65rem 1rem;
+            border: 1px solid #e5e7eb; background: #fafafa;
+            margin-bottom: .8rem; font-size: .88rem; transition: all .2s;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(26,138,122,.15); border-color: #1a8a7a; background: #fff;
+        }
+
+        .info-box {
+            background: #f0f7f5; border-radius: 1rem; padding: .75rem 1rem;
+            margin-bottom: 1rem; font-size: .88rem;
+            border-right: 4px solid #1a8a7a; display: flex; align-items: center; gap: .5rem;
+        }
+
+        .points-info {
+            background: #fef7ed; border-radius: 1rem; padding: 1rem;
+            margin-bottom: 1.2rem; border-right: 4px solid #d97706;
+        }
+        .points-info h6 { font-weight: 700; margin-bottom: .4rem; color: #92400e; font-size: .9rem; }
+        .points-info ul { margin-bottom: 0; font-size: .82rem; color: #78350f; }
+        .points-info li { margin-bottom: .25rem; }
+
+        .points-preview {
+            background: #ecfdf5; border-radius: 1rem; padding: .8rem;
+            margin: 1rem 0; text-align: center;
+        }
+        .points-preview .points-value { font-size: 1.5rem; font-weight: 700; color: #1a8a7a; }
+        .points-preview .stars-preview i { font-size: 1.2rem; margin: 0 2px; }
+
+        .score-slider-wrap {
+            display: flex; align-items: center; gap: .6rem; margin-bottom: .6rem;
+        }
+        .score-slider-wrap input[type="range"] {
+            flex: 1; height: 6px; -webkit-appearance: none;
+            background: linear-gradient(to left, #dc3545, #ffc107, #28a745);
+            border-radius: 3px; outline: none;
+        }
+        .score-slider-wrap input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+            background: #1a8a7a; cursor: pointer; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.15);
+        }
+        .score-slider-wrap input[type="range"]::-moz-range-thumb {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: #1a8a7a; cursor: pointer; border: 2px solid #fff;
+        }
+        .score-value {
+            min-width: 48px; text-align: center; font-weight: 700;
+            font-size: 1rem; color: #1a8a7a;
+        }
+
+        .pass-selector { display: flex; gap: .5rem; margin: .3rem 0 1rem; }
+        .pass-btn {
+            flex: 1; padding: .55rem; border-radius: 2rem; font-weight: 600;
+            border: 2px solid transparent; transition: all .2s; cursor: pointer; text-align: center;
+        }
+        .pass-btn.yes { background: #ecfdf5; color: #059669; border-color: #059669; }
+        .pass-btn.yes.active { background: #059669; color: #fff; }
+        .pass-btn.no { background: #fef2f2; color: #dc2626; border-color: #dc2626; }
+        .pass-btn.no.active { background: #dc2626; color: #fff; }
+
+        /* ---- صندوق ترحيل المقرر ---- */
+        .rollover-box {
+            background: #fef3c7; border: 2px solid #f59e0b; border-radius: 1rem;
+            padding: .8rem .9rem; margin: .3rem 0 1rem;
+            animation: rollFade .25s ease;
+        }
+        @keyframes rollFade { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+        .rollover-label { display: flex; align-items: flex-start; gap: .6rem; cursor: pointer; margin: 0; font-weight: 400; }
+        .rollover-label input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .rollover-check {
+            flex-shrink: 0; width: 22px; height: 22px; border-radius: .5rem;
+            border: 2px solid #d97706; background: #fff; position: relative;
+            transition: all .2s; margin-top: .1rem;
+        }
+        .rollover-label input:checked + .rollover-check { background: #d97706; border-color: #d97706; }
+        .rollover-label input:checked + .rollover-check::after {
+            content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: .8rem;
+        }
+        .rollover-label input:focus-visible + .rollover-check { box-shadow: 0 0 0 3px rgba(217,119,6,.3); }
+        .rollover-text { display: flex; flex-direction: column; line-height: 1.4; }
+        .rollover-text strong { color: #92400e; font-size: .9rem; font-weight: 700; }
+        .rollover-text small { color: #a16207; font-size: .76rem; }
+
+        .phase-info {
+            background: #fef7ed; border-radius: 1rem; padding: .75rem 1rem;
+            margin-bottom: 1rem; border-right: 4px solid #d97706;
+            font-size: .88rem; color: #92400e;
+        }
+
+        .btn-group-bottom { display: flex; gap: .5rem; margin-top: 1.5rem; }
+        .btn-submit {
+            flex: 2; background: linear-gradient(135deg, #1a8a7a, #146b5e); border: none;
+            border-radius: 2rem; padding: .8rem; color: #fff; font-weight: 700;
+            font-size: .95rem; transition: all .25s; cursor: pointer;
+            box-shadow: 0 6px 16px rgba(26,138,122,.25);
+        }
+        .btn-submit:disabled { opacity: .65; cursor: not-allowed; }
+        .btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(26,138,122,.35); }
+        .btn-cancel {
+            flex: 1; background: #9ca3af; border-radius: 2rem; padding: .8rem;
+            color: #fff; text-decoration: none; text-align: center; font-weight: 600;
+            font-size: .95rem; transition: all .25s;
+        }
+        .btn-cancel:hover { background: #6b7280; transform: translateY(-2px); color: #fff; }
+
+        hr { margin: 1rem 0; border-top: 1px dashed #ddd; }
+        .badge-phase { background: #d97706; color: #fff; padding: .15rem .7rem; border-radius: 1rem; font-size: .78rem; }
+        .spinner-border-sm { width: 1rem; height: 1rem; border-width: .2em; margin-left: .5rem; }
+
+        .custom-toast {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+            min-width: 300px; max-width: 90%; background: #fff;
+            border-radius: 1rem; box-shadow: 0 10px 40px rgba(0,0,0,.2);
+            z-index: 9999; animation: slideIn .3s ease-out; direction: rtl;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translate(-50%,-50%) scale(.9); } to { opacity: 1; transform: translate(-50%,-50%) scale(1); } }
+        @keyframes slideOut { from { opacity: 1; transform: translate(-50%,-50%) scale(1); } to { opacity: 0; transform: translate(-50%,-50%) scale(.9); } }
+        .custom-toast.hide { animation: slideOut .3s ease-out forwards; }
+        .toast-header {
+            background: #1a8a7a; color: #fff; padding: 1rem;
+            border-radius: 1rem 1rem 0 0; display: flex; align-items: center; gap: .5rem;
+        }
+        .toast-header i { font-size: 1.5rem; }
+        .toast-header strong { flex: 1; font-size: 1.1rem; }
+        .toast-header .close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; padding: 0; line-height: 1; opacity: .8; transition: opacity .2s; }
+        .toast-header .close-btn:hover { opacity: 1; }
+        .toast-body { padding: 1rem; color: #333; font-size: 1rem; text-align: center; }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); z-index: 9998; animation: fadeIn .3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .overlay.hide { animation: fadeOut .3s ease-out forwards; }
+    </style>
+</head>
+<body data-plan-type="{{ plan.plan_type }}">
+    <div class="mobile-container">
+        <div class="header">
+            <h2><i class="fas fa-star"></i> تقييم المقرر</h2>
+            <p>
+                <i class="fas fa-user-graduate"></i> {{ plan.student.full_name }} | 
+                {% if plan.plan_type == 'تقييم مرحلة' %}
+                    <span class="badge-phase">{{ plan.plan_type }}</span>
+                {% else %}
+                    {{ plan.plan_type }}
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-info-circle"></i> تاريخ التقييم: {{ default_eval_date }}
+        </div>
+
+        <!-- نظام النقاط والنجوم -->
+        {% if plan.plan_type != 'قصيدة' %}
+        <div class="points-info">
+            <h6><i class="fas fa-star text-warning"></i> نظام النقاط والنجوم</h6>
+            <ul>
+                <li>⭐ كل 10 درجات = <strong>نقطة واحدة</strong></li>
+                <li>⭐ كل <strong>30 نقطة</strong> = نجمة واحدة 🌟 (الحد الأقصى 3 نجوم)</li>
+                <li>⭐ التقييم يضاف تلقائياً إلى رصيد الطالب التراكمي</li>
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" id="evalForm" onsubmit="disableSubmitButton(event)">
+            <input type="date" name="evaluation_date" class="form-control" value="{{ default_eval_date }}" required>
+
+            {% if plan.plan_type == 'حفظ' %}
+                <label class="form-label">الحفظ الجديد ({{ plan.new_memorization }})</label>
+                <div class="score-slider-wrap">
+                    <input type="range" name="new_score" min="0" max="40" value="35" required oninput="this.nextElementSibling.textContent=this.value;calculatePointsPreview()">
+                    <span class="score-value">35</span>
+                </div>
+
+                <div class="pass-selector" id="new-pass-selector">
+                    <div class="pass-btn yes active" data-pass="new_pass" data-value="true">يجاز</div>
+                    <div class="pass-btn no" data-pass="new_pass" data-value="false">لا يجاز</div>
+                </div>
+                <input type="hidden" name="new_pass" id="new_pass" value="true">
+
+                <label class="form-label">الحفظ القريب ({{ plan.recent_review }})</label>
+                <div class="score-slider-wrap">
+                    <input type="range" name="recent_score" min="0" max="20" value="18" required oninput="this.nextElementSibling.textContent=this.value;calculatePointsPreview()">
+                    <span class="score-value">18</span>
+                </div>
+
+                <label class="form-label">الحفظ القديم ({{ plan.previous_review }})</label>
+                <div class="score-slider-wrap">
+                    <input type="range" name="old_score" min="0" max="40" value="35" required oninput="this.nextElementSibling.textContent=this.value;calculatePointsPreview()">
+                    <span class="score-value">35</span>
+                </div>
+
+                <div class="pass-selector" id="old-pass-selector">
+                    <div class="pass-btn yes active" data-pass="old_pass" data-value="true">يجاز</div>
+                    <div class="pass-btn no" data-pass="old_pass" data-value="false">لا يجاز</div>
+                </div>
+                <input type="hidden" name="old_pass" id="old_pass" value="true">
+
+                <!-- الترحيل: يظهر عند فشل أي من الحفظ الجديد أو القديم -->
+                <div class="rollover-box" id="rolloverBox" style="display: none;">
+                    <label class="rollover-label">
+                        <input type="checkbox" name="rollover" id="rolloverCheck" value="1" checked>
+                        <span class="rollover-check"></span>
+                        <span class="rollover-text">
+                            <strong>ترحيل المقرر</strong>
+                            <small>نسخ المقرر الحالي ليصبح مقرر الأسبوع القادم تلقائياً</small>
+                        </span>
+                    </label>
+                </div>
+
+            {% elif plan.plan_type == 'سرد' %}
+                <label class="form-label">مقرر السرد ({{ plan.revision_text }})</label>
+
+                {% if plan.sard_subtype %}
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i> 
+                    نوع السرد: <strong>{{ 'سرد كامل' if plan.sard_subtype == 'full' else 'مراجعة (مقاطع)' }}</strong>
+                    {% if plan.revision_notes %}
+                    <br><small>ملاحظات: {{ plan.revision_notes }}</small>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="score-slider-wrap">
+                    <input type="range" name="revision_score" min="0" max="100" value="85" required oninput="this.nextElementSibling.textContent=this.value;calculatePointsPreview()">
+                    <span class="score-value">85</span>
+                </div>
+
+                <div class="pass-selector" id="revision-pass-selector">
+                    <div class="pass-btn yes active" data-pass="revision_pass" data-value="true">يجاز</div>
+                    <div class="pass-btn no" data-pass="revision_pass" data-value="false">لا يجاز</div>
+                </div>
+                <input type="hidden" name="revision_pass" id="revision_pass" value="true">
+
+                <!-- الترحيل: يظهر عند عدم إجازة السرد -->
+                <div class="rollover-box" id="sardRolloverBox" style="display: none;">
+                    <label class="rollover-label">
+                        <input type="checkbox" name="rollover" id="sardRolloverCheck" value="1" checked>
+                        <span class="rollover-check"></span>
+                        <span class="rollover-text">
+                            <strong>ترحيل المقرر</strong>
+                            <small>نسخ مقرر السرد الحالي ليصبح مقرر الأسبوع القادم تلقائياً</small>
+                        </span>
+                    </label>
+                </div>
+
+            {% elif plan.plan_type == 'تقييم مرحلة' %}
+                <div class="phase-info">
+                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                    <strong>تقييم المرحلة:</strong> الدرجة من 80، وسيتم إضافتها إلى 20% من متوسط درجات الحفظ
+                </div>
+
+                <label class="form-label">وصف المرحلة</label>
+                <input type="text" class="form-control" value="{{ plan.phase_evaluation_text or 'لم يحدد' }}" disabled>
+
+                <label class="form-label">درجة تقييم المرحلة (من 80)</label>
+                <div class="score-slider-wrap">
+                    <input type="range" name="phase_score" min="0" max="80" value="80" required oninput="this.nextElementSibling.textContent=this.value;calculatePointsPreview()">
+                    <span class="score-value">80</span>
+                </div>
+
+                <div class="pass-selector" id="phase-pass-selector">
+                    <div class="pass-btn yes active" data-pass="phase_pass" data-value="true">يجاز</div>
+                    <div class="pass-btn no" data-pass="phase_pass" data-value="false">لا يجاز</div>
+                </div>
+                <input type="hidden" name="phase_pass" id="phase_pass" value="true">
+
+            {% elif plan.plan_type == 'قصيدة' %}
+                <div class="phase-info" style="background:#eef2ff;border-color:#a5b4fc;">
+                    <i class="fas fa-feather-alt text-primary"></i>
+                    <strong>مقرر القصيدة:</strong>
+                    {% if plan.poem %}
+                    {{ plan.poem.poem_title or ('قصيدة ' ~ plan.poem.poem_number) }}
+                    <span class="text-muted">(الشاعر: {{ plan.poem.poet or 'غير محدد' }})</span>
+                    {% else %}لم يحدد{% endif %}
+                    <br><small>الأبيات: {{ plan.verse_start }} - {{ plan.verse_end }}</small>
+                </div>
+
+                <label class="form-label">هل أُجيز المقرر؟</label>
+                <div class="pass-selector" id="poem-pass-selector">
+                    <div class="pass-btn yes active" data-pass="poem_pass" data-value="true">أُجيز</div>
+                    <div class="pass-btn no" data-pass="poem_pass" data-value="false">لا يُجاز</div>
+                </div>
+                <input type="hidden" name="poem_pass" id="poem_pass" value="true">
+
+                <!-- الترحيل: يظهر فقط عند عدم إجازة القصيدة -->
+                <div class="rollover-box" id="poemRolloverBox" style="display: none;">
+                    <label class="rollover-label">
+                        <input type="checkbox" name="rollover" id="poemRolloverCheck" value="1" checked>
+                        <span class="rollover-check"></span>
+                        <span class="rollover-text">
+                            <strong>ترحيل القصيدة</strong>
+                            <small>نسخ القصيدة الحالية لتصبح مقرر الأسبوع القادم تلقائياً</small>
+                        </span>
+                    </label>
+                </div>
+            {% endif %}
+
+            <!-- معاينة النقاط والنجوم -->
+            <div id="pointsPreview" class="points-preview" style="display: none;">
+                <div class="row align-items-center">
+                    <div class="col-6">
+                        <div class="text-muted small">النقاط المتوقعة</div>
+                        <div class="points-value" id="previewPoints">0</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-muted small">النجوم المتوقعة</div>
+                        <div class="stars-preview" id="previewStars">
+                            <i class="far fa-star text-secondary"></i>
+                            <i class="far fa-star text-secondary"></i>
+                            <i class="far fa-star text-secondary"></i>
+                        </div>
+                    </div>
+                </div>
+                <small class="text-muted">* يتم حساب النقاط تلقائياً عند إدخال الدرجات</small>
+            </div>
+
+            <textarea name="notes" class="form-control" rows="3" placeholder="ملاحظات"></textarea>
+
+            <div class="btn-group-bottom">
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-check-circle"></i> حفظ
+                </button>
+                <a href="{{ url_for('view_student_plans', student_id=plan.student_id) }}" class="btn-cancel"><i class="fas fa-times"></i> إلغاء</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // دالة عرض رسالة Toast
+        function showToast(message, type = 'success') {
+            const existingToast = document.querySelector('.custom-toast');
+            const existingOverlay = document.querySelector('.overlay');
+            if (existingToast) existingToast.remove();
+            if (existingOverlay) existingOverlay.remove();
+
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            document.body.appendChild(overlay);
+
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+
+            const headerColor = type === 'success' ? '#28a745' : (type === 'error' ? '#dc3545' : '#ffc107');
+            const icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
+
+            toast.innerHTML = `
+                <div class="toast-header" style="background: ${headerColor};">
+                    <i class="fas ${icon}"></i>
+                    <strong>${type === 'success' ? 'تم بنجاح' : (type === 'error' ? 'خطأ' : 'تنبيه')}</strong>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div class="toast-body">
+                    ${message}
+                </div>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('hide');
+                overlay.classList.add('hide');
+                setTimeout(() => {
+                    if (toast.parentNode) toast.remove();
+                    if (overlay.parentNode) overlay.remove();
+                }, 300);
+            }, 3000);
+
+            const closeBtn = toast.querySelector('.close-btn');
+            if (closeBtn) {
+                closeBtn.onclick = () => {
+                    toast.classList.add('hide');
+                    overlay.classList.add('hide');
+                    setTimeout(() => {
+                        if (toast.parentNode) toast.remove();
+                        if (overlay.parentNode) overlay.remove();
+                    }, 300);
+                };
+            }
+        }
+
+        // دالة حساب النقاط والنجوم
+        function calculatePointsPreview() {
+            let totalScore = 0;
+            let planType = '{{ plan.plan_type }}';
+
+            if (planType === 'حفظ') {
+                const newScore = parseInt(document.querySelector('input[name="new_score"]')?.value) || 0;
+                const recentScore = parseInt(document.querySelector('input[name="recent_score"]')?.value) || 0;
+                const oldScore = parseInt(document.querySelector('input[name="old_score"]')?.value) || 0;
+                totalScore = newScore + recentScore + oldScore;
+            } else if (planType === 'سرد') {
+                totalScore = parseInt(document.querySelector('input[name="revision_score"]')?.value) || 0;
+            } else if (planType === 'تقييم مرحلة') {
+                totalScore = parseInt(document.querySelector('input[name="phase_score"]')?.value) || 0;
+            }
+
+            let points = 0;
+            let stars = 0;
+
+            if (planType === 'تقييم مرحلة') {
+                points = Math.floor(totalScore / 8);
+                stars = Math.min(3, Math.floor(points / 3));
+            } else {
+                points = Math.floor(totalScore / 10);
+                stars = 0;
+                if (points >= 9) stars = 3;
+                else if (points >= 6) stars = 2;
+                else if (points >= 3) stars = 1;
+            }
+
+            // عرض المعاينة
+            const previewDiv = document.getElementById('pointsPreview');
+            if (points > 0 || totalScore > 0) {
+                previewDiv.style.display = 'block';
+                document.getElementById('previewPoints').innerHTML = points;
+
+                const starsContainer = document.getElementById('previewStars');
+                starsContainer.innerHTML = '';
+                for (let i = 0; i < stars; i++) {
+                    starsContainer.innerHTML += '<i class="fas fa-star text-warning"></i>';
+                }
+                for (let i = stars; i < 3; i++) {
+                    starsContainer.innerHTML += '<i class="far fa-star text-secondary"></i>';
+                }
+            } else {
+                previewDiv.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupPassSelector('new-pass-selector', 'new_pass');
+            setupPassSelector('old-pass-selector', 'old_pass');
+            setupPassSelector('revision-pass-selector', 'revision_pass');
+            setupPassSelector('phase-pass-selector', 'phase_pass');
+            setupPassSelector('poem-pass-selector', 'poem_pass');
+
+            const flashMessage = sessionStorage.getItem('flashMessage');
+            const flashType = sessionStorage.getItem('flashType');
+            if (flashMessage) {
+                showToast(flashMessage, flashType || 'success');
+                sessionStorage.removeItem('flashMessage');
+                sessionStorage.removeItem('flashType');
+            }
+
+            calculatePointsPreview();
+            if (typeof syncRollover === 'function') syncRollover();
+        });
+
+        function setupPassSelector(selectorId, hiddenId) {
+            const container = document.getElementById(selectorId);
+            if (!container) return;
+            const btns = container.querySelectorAll('.pass-btn');
+            const hidden = document.getElementById(hiddenId);
+
+            btns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    btns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    hidden.value = this.dataset.value;
+                    if (typeof syncRollover === 'function') syncRollover();
+                });
+            });
+
+            const defaultBtn = Array.from(btns).find(btn => btn.dataset.value === hidden.value);
+            if (defaultBtn) defaultBtn.classList.add('active');
+        }
+
+        /* ---- الترحيل التلقائي عند الرسب ----
+         * يظهر صندوق «ترحيل المقرر» عند اختيار «لا يجاز» في الحفظ الجديد
+         * أو القديم، أو في السرد، أو «لا يُجاز» في القصيدة. كل نوع مقرر
+         * له صندوق خاص، فنربطه بمتغير نتيجة المرتبط به. */
+        const ROLLOVER_BINDINGS = {
+            'قصيدة': [['poem_pass', 'poemRolloverBox']],
+            'سرد':   [['revision_pass', 'sardRolloverBox']],
+            'حفظ':   [['new_pass', 'rolloverBox'], ['old_pass', 'rolloverBox']]
+        };
+
+        function syncRollover() {
+            const pairs = ROLLOVER_BINDINGS[document.body.dataset.planType] || [];
+            pairs.forEach(([inputId, boxId]) => {
+                const input = document.getElementById(inputId);
+                const box = document.getElementById(boxId);
+                if (!input || !box) return;
+                // أي جزء رسب ← إظهار الصندوق (ويبقى مفعّلاً افتراضياً)
+                const failed = input.value === 'false';
+                if (failed) box.style.display = 'block';
+                else if (pairs.every(([i]) => (document.getElementById(i) || {}).value !== 'false')) {
+                    box.style.display = 'none';
+                }
+            });
+        }
+
+        let isSubmitting = false;
+
+        function disableSubmitButton(event) {
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (isSubmitting || submitBtn.disabled) {
+                event.preventDefault();
+                return false;
+            }
+
+            const form = document.getElementById('evalForm');
+            if (!form.checkValidity()) {
+                return true;
+            }
+
+            isSubmitting = true;
+            submitBtn.disabled = true;
+
+            submitBtn.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                جاري الحفظ...
+            `;
+
+            return true;
+        }
+
+        window.addEventListener('pageshow', function(event) {
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn && submitBtn.disabled) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> حفظ';
+            }
+            isSubmitting = false;
+        });
+    </script>
+</body>
+</html>{% endif %}

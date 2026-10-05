@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#28a745">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تسجيل الدخول - أشبال القرآن</title>
+
+    <!-- Bootstrap 5 RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+
+    <!-- خطوط جوجل العربية -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Animate.css للحركات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease;
+        }
+
+        /* الشعار - بدون بطاقة */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+            border: 4px solid rgba(255,255,255,0.5);
+        }
+
+        .logo-icon i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 0.2rem;
+        }
+
+        .logo-sub {
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* عنوان الصفحة */
+        .page-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .page-title i {
+            margin-left: 0.5rem;
+        }
+
+        /* تنسيق الحقول - شفافة على الخلفية */
+        .form-label {
+            font-weight: 600;
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .form-control, .form-select {
+            border-radius: 2rem;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            color: #2c3e50;
+        }
+
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.3);
+            border-color: white;
+            background: white;
+        }
+
+        /* تنسيق خيارات المستخدم */
+        .role-selector {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 2px solid rgba(255,255,255,0.5);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .role-btn.student.active {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .role-btn.teacher.active {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .role-btn i {
+            margin-left: 0.5rem;
+        }
+
+        /* زر تسجيل الدخول */
+        .btn-login {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.9rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            margin: 1.5rem 0 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #20c997, #28a745);
+        }
+
+        .btn-login i {
+            font-size: 1.2rem;
+        }
+
+        /* رابط العودة */
+        .back-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .back-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .back-link a:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-3px);
+        }
+
+        /* رسائل الخطأ */
+        .alert {
+            border-radius: 2rem;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            border: none;
+            animation: shake 0.5s ease;
+            background: rgba(248, 215, 218, 0.95);
+            color: #721c24;
+            border: 2px solid rgba(220, 53, 69, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .alert i {
+            margin-left: 0.5rem;
+        }
+
+        /* الحركات */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* تحسين للشاشات الصغيرة */
+        @media (max-width: 400px) {
+            .logo-icon {
+                width: 70px;
+                height: 70px;
+            }
+
+            .logo-icon i {
+                font-size: 2.3rem;
+            }
+
+            .logo-text {
+                font-size: 1.8rem;
+            }
+
+            .logo-sub {
+                font-size: 0.9rem;
+            }
+
+            .role-btn {
+                font-size: 0.9rem;
+                padding: 0.7rem;
+            }
+
+            .btn-login {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- الشعار - مباشرة على الخلفية -->
+        <div class="logo-section animate__animated animate__fadeInDown">
+            <div class="logo-icon">
+                <i class="fas fa-quran"></i>
+            </div>
+            <div class="logo-text">أشبال القرآن</div>
+            <div class="logo-sub">منصة تعليم وحفظ القرآن الكريم</div>
+        </div>
+
+        <!-- عنوان الصفحة -->
+        <h2 class="page-title animate__animated animate__fadeIn">
+            <i class="fas fa-lock"></i>
+            تسجيل الدخول
+        </h2>
+
+        <!-- رسالة الخطأ -->
+        {% if error %}
+        <div class="alert animate__animated animate__shakeX">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- نموذج تسجيل الدخول -->
+        <form method="post" id="loginForm" class="animate__animated animate__fadeInUp">
+            <!-- أزرار اختيار نوع المستخدم -->
+            <div class="role-selector">
+                <div class="role-btn student active" data-role="student">
+                    <i class="fas fa-user-graduate"></i> طالب
+                </div>
+                <div class="role-btn teacher" data-role="teacher">
+                    <i class="fas fa-chalkboard-teacher"></i> معلم
+                </div>
+            </div>
+            <input type="hidden" name="role" id="role" value="student">
+
+            <!-- حقل اسم المستخدم -->
+            <label class="form-label">
+                <i class="fas fa-user ms-1"></i>
+                اسم المستخدم
+            </label>
+            <input type="text" name="username" class="form-control" 
+                   placeholder="أدخل اسم المستخدم" required>
+
+            <!-- حقل كلمة المرور -->
+            <label class="form-label">
+                <i class="fas fa-lock ms-1"></i>
+                كلمة المرور
+            </label>
+            <input type="password" name="password" class="form-control" 
+                   placeholder="أدخل كلمة المرور" required>
+
+            <!-- زر تسجيل الدخول -->
+            <button type="submit" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i>
+                دخول
+            </button>
+
+            <!-- رابط العودة -->
+            <div class="back-link">
+                <a href="/">
+                    <i class="fas fa-arrow-right"></i>
+                    العودة للصفحة الرئيسية
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentBtn = document.querySelector('.role-btn.student');
+            const teacherBtn = document.querySelector('.role-btn.teacher');
+            const hiddenInput = document.getElementById('role');
+
+            function setActiveRole(role) {
+                if (role === 'student') {
+                    studentBtn.classList.add('active');
+                    teacherBtn.classList.remove('active');
+                    hiddenInput.value = 'student';
+                } else {
+                    teacherBtn.classList.add('active');
+                    studentBtn.classList.remove('active');
+                    hiddenInput.value = 'teacher';
+                }
+            }
+
+            studentBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                setActiveRole('student');
+            });
+
+            teacherBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                setActiveRole('teacher');
+            });
+
+            // التحقق من صحة النموذج
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                const username = document.querySelector('input[name="username"]').value.trim();
+                const password = document.querySelector('input[name="password"]').value.trim();
+
+                if (!username || !password) {
+                    e.preventDefault();
+                    askAlert('الرجاء إدخال اسم المستخدم وكلمة المرور');
+                }
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/confirm-modal.js') }}"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#28a745">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تسجيل الدخول - أشبال القرآن</title>
+
+    <!-- Bootstrap 5 RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+
+    <!-- خطوط جوجل العربية -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Animate.css للحركات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease;
+        }
+
+        /* الشعار - بدون بطاقة */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+            border: 4px solid rgba(255,255,255,0.5);
+        }
+
+        .logo-icon i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 0.2rem;
+        }
+
+        .logo-sub {
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* عنوان الصفحة */
+        .page-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .page-title i {
+            margin-left: 0.5rem;
+        }
+
+        /* تنسيق الحقول - شفافة على الخلفية */
+        .form-label {
+            font-weight: 600;
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .form-control, .form-select {
+            border-radius: 2rem;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            color: #2c3e50;
+        }
+
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.3);
+            border-color: white;
+            background: white;
+        }
+
+        /* تنسيق خيارات المستخدم */
+        .role-selector {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 2px solid rgba(255,255,255,0.5);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .role-btn.student.active {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .role-btn.teacher.active {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .role-btn i {
+            margin-left: 0.5rem;
+        }
+
+        /* زر تسجيل الدخول */
+        .btn-login {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.9rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            margin: 1.5rem 0 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #20c997, #28a745);
+        }
+
+        .btn-login i {
+            font-size: 1.2rem;
+        }
+
+        /* رابط العودة */
+        .back-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .back-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .back-link a:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-3px);
+        }
+
+        /* رسائل الخطأ */
+        .alert {
+            border-radius: 2rem;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            border: none;
+            animation: shake 0.5s ease;
+            background: rgba(248, 215, 218, 0.95);
+            color: #721c24;
+            border: 2px solid rgba(220, 53, 69, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .alert i {
+            margin-left: 0.5rem;
+        }
+
+        /* الحركات */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* تحسين للشاشات الصغيرة */
+        @media (max-width: 400px) {
+            .logo-icon {
+                width: 70px;
+                height: 70px;
+            }
+
+            .logo-icon i {
+                font-size: 2.3rem;
+            }
+
+            .logo-text {
+                font-size: 1.8rem;
+            }
+
+            .logo-sub {
+                font-size: 0.9rem;
+            }
+
+            .role-btn {
+                font-size: 0.9rem;
+                padding: 0.7rem;
+            }
+
+            .btn-login {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- الشعار - مباشرة على الخلفية -->
+        <div class="logo-section animate__animated animate__fadeInDown">
+            <div class="logo-icon">
+                <i class="fas fa-quran"></i>
+            </div>
+            <div class="logo-text">أشبال القرآن</div>
+            <div class="logo-sub">منصة تعليم وحفظ القرآن الكريم</div>
+        </div>
+
+        <!-- عنوان الصفحة -->
+        <h2 class="page-title animate__animated animate__fadeIn">
+            <i class="fas fa-lock"></i>
+            تسجيل الدخول
+        </h2>
+
+        <!-- رسالة الخطأ -->
+        {% if error %}
+        <div class="alert animate__animated animate__shakeX">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- نموذج تسجيل الدخول -->
+        <form method="post" id="loginForm" class="animate__animated animate__fadeInUp">
+            <!-- أزرار اختيار نوع المستخدم -->
+            <div class="role-selector">
+                <div class="role-btn student active" data-role="student">
+                    <i class="fas fa-user-graduate"></i> طالب
+                </div>
+                <div class="role-btn teacher" data-role="teacher">
+                    <i class="fas fa-chalkboard-teacher"></i> معلم
+                </div>
+            </div>
+            <input type="hidden" name="role" id="role" value="student">
+
+            <!-- حقل اسم المستخدم -->
+            <label class="form-label">
+                <i class="fas fa-user ms-1"></i>
+                اسم المستخدم
+            </label>
+            <input type="text" name="username" class="form-control" 
+                   placeholder="أدخل اسم المستخدم" required>
+
+            <!-- حقل كلمة المرور -->
+            <label class="form-label">
+                <i class="fas fa-lock ms-1"></i>
+                كلمة المرور
+            </label>
+            <input type="password" name="password" class="form-control" 
+                   placeholder="أدخل كلمة المرور" required>
+
+            <!-- زر تسجيل الدخول -->
+            <button type="submit" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i>
+                دخول
+            </button>
+
+            <!-- رابط العودة -->
+            <div class="back-link">
+                <a href="/">
+                    <i class="fas fa-arrow-right"></i>
+                    العودة للصفحة الرئيسية
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentBtn = document.querySelector('.role-btn.student');
+            const teacherBtn = document.querySelector('.role-btn.teacher');
+            const hiddenInput = document.getElementById('role');
+
+            function setActiveRole(role) {
+                if (role === 'student') {
+                    studentBtn.classList.add('active');
+                    teacherBtn.classList.remove('active');
+                    hiddenInput.value = 'student';
+                } else {
+                    teacherBtn.classList.add('active');
+                    studentBtn.classList.remove('active');
+                    hiddenInput.value = 'teacher';
+                }
+            }
+
+            studentBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                setActiveRole('student');
+            });
+
+            teacherBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                setActiveRole('teacher');
+            });
+
+            // التحقق من صحة النموذج
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                const username = document.querySelector('input[name="username"]').value.trim();
+                const password = document.querySelector('input[name="password"]').value.trim();
+
+                if (!username || !password) {
+                    e.preventDefault();
+                    askAlert('الرجاء إدخال اسم المستخدم وكلمة المرور');
+                }
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/confirm-modal.js') }}"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#28a745">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تسجيل الدخول - أشبال القرآن</title>
+
+    <!-- Bootstrap 5 RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+
+    <!-- خطوط جوجل العربية -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Animate.css للحركات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease;
+        }
+
+        /* الشعار - بدون بطاقة */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+            border: 4px solid rgba(255,255,255,0.5);
+        }
+
+        .logo-icon i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 0.2rem;
+        }
+
+        .logo-sub {
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* عنوان الصفحة */
+        .page-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .page-title i {
+            margin-left: 0.5rem;
+        }
+
+        /* تنسيق الحقول - شفافة على الخلفية */
+        .form-label {
+            font-weight: 600;
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .form-control, .form-select {
+            border-radius: 2rem;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            color: #2c3e50;
+        }
+
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.3);
+            border-color: white;
+            background: white;
+        }
+
+        /* تنسيق خيارات المستخدم */
+        .role-selector {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 2px solid rgba(255,255,255,0.5);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .role-btn.student.active {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .role-btn.teacher.active {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .role-btn i {
+            margin-left: 0.5rem;
+        }
+
+        /* زر تسجيل الدخول */
+        .btn-login {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.9rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            margin: 1.5rem 0 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #20c997, #28a745);
+        }
+
+        .btn-login i {
+            font-size: 1.2rem;
+        }
+
+        /* رابط العودة */
+        .back-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .back-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .back-link a:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-3px);
+        }
+
+        /* رسائل الخطأ */
+        .alert {
+            border-radius: 2rem;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            border: none;
+            animation: shake 0.5s ease;
+            background: rgba(248, 215, 218, 0.95);
+            color: #721c24;
+            border: 2px solid rgba(220, 53, 69, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .alert i {
+            margin-left: 0.5rem;
+        }
+
+        /* الحركات */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* تحسين للشاشات الصغيرة */
+        @media (max-width: 400px) {
+            .logo-icon {
+                width: 70px;
+                height: 70px;
+            }
+
+            .logo-icon i {
+                font-size: 2.3rem;
+            }
+
+            .logo-text {
+                font-size: 1.8rem;
+            }
+
+            .logo-sub {
+                font-size: 0.9rem;
+            }
+
+            .role-btn {
+                font-size: 0.9rem;
+                padding: 0.7rem;
+            }
+
+            .btn-login {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- الشعار - مباشرة على الخلفية -->
+        <div class="logo-section animate__animated animate__fadeInDown">
+            <div class="logo-icon">
+                <i class="fas fa-quran"></i>
+            </div>
+            <div class="logo-text">أشبال القرآن</div>
+            <div class="logo-sub">منصة تعليم وحفظ القرآن الكريم</div>
+        </div>
+
+        <!-- عنوان الصفحة -->
+        <h2 class="page-title animate__animated animate__fadeIn">
+            <i class="fas fa-lock"></i>
+            تسجيل الدخول
+        </h2>
+
+        <!-- رسالة الخطأ -->
+        {% if error %}
+        <div class="alert animate__animated animate__shakeX">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- نموذج تسجيل الدخول -->
+        <form method="post" id="loginForm" class="animate__animated animate__fadeInUp">
+            <!-- أزرار اختيار نوع المستخدم -->
+            <div class="role-selector">
+                <div class="role-btn student active" data-role="student">
+                    <i class="fas fa-user-graduate"></i> طالب
+                </div>
+                <div class="role-btn teacher" data-role="teacher">
+                    <i class="fas fa-chalkboard-teacher"></i> معلم
+                </div>
+            </div>
+            <input type="hidden" name="role" id="role" value="student">
+
+            <!-- حقل اسم المستخدم -->
+            <label class="form-label">
+                <i class="fas fa-user ms-1"></i>
+                اسم المستخدم
+            </label>
+            <input type="text" name="username" class="form-control" 
+                   placeholder="أدخل اسم المستخدم" required>
+
+            <!-- حقل كلمة المرور -->
+            <label class="form-label">
+                <i class="fas fa-lock ms-1"></i>
+                كلمة المرور
+            </label>
+            <input type="password" name="password" class="form-control" 
+                   placeholder="أدخل كلمة المرور" required>
+
+            <!-- زر تسجيل الدخول -->
+            <button type="submit" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i>
+                دخول
+            </button>
+
+            <!-- رابط العودة -->
+            <div class="back-link">
+                <a href="/">
+                    <i class="fas fa-arrow-right"></i>
+                    العودة للصفحة الرئيسية
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentBtn = document.querySelector('.role-btn.student');
+            const teacherBtn = document.querySelector('.role-btn.teacher');
+            const hiddenInput = document.getElementById('role');
+
+            function setActiveRole(role) {
+                if (role === 'student') {
+                    studentBtn.classList.add('active');
+                    teacherBtn.classList.remove('active');
+                    hiddenInput.value = 'student';
+                } else {
+                    teacherBtn.classList.add('active');
+                    studentBtn.classList.remove('active');
+                    hiddenInput.value = 'teacher';
+                }
+            }
+
+            studentBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                setActiveRole('student');
+            });
+
+            teacherBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                setActiveRole('teacher');
+            });
+
+            // التحقق من صحة النموذج
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                const username = document.querySelector('input[name="username"]').value.trim();
+                const password = document.querySelector('input[name="password"]').value.trim();
+
+                if (!username || !password) {
+                    e.preventDefault();
+                    askAlert('الرجاء إدخال اسم المستخدم وكلمة المرور');
+                }
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/confirm-modal.js') }}"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#28a745">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تسجيل الدخول - أشبال القرآن</title>
+
+    <!-- Bootstrap 5 RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+
+    <!-- خطوط جوجل العربية -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Animate.css للحركات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease;
+        }
+
+        /* الشعار - بدون بطاقة */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+            border: 4px solid rgba(255,255,255,0.5);
+        }
+
+        .logo-icon i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 0.2rem;
+        }
+
+        .logo-sub {
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* عنوان الصفحة */
+        .page-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .page-title i {
+            margin-left: 0.5rem;
+        }
+
+        /* تنسيق الحقول - شفافة على الخلفية */
+        .form-label {
+            font-weight: 600;
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .form-control, .form-select {
+            border-radius: 2rem;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            color: #2c3e50;
+        }
+
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 4px rgba(255,255,255,0.3);
+            border-color: white;
+            background: white;
+        }
+
+        /* تنسيق خيارات المستخدم */
+        .role-selector {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 1rem;
+            border: 2px solid rgba(255,255,255,0.5);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-align: center;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .role-btn.student.active {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .role-btn.teacher.active {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .role-btn i {
+            margin-left: 0.5rem;
+        }
+
+        /* زر تسجيل الدخول */
+        .btn-login {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.9rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            margin: 1.5rem 0 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #20c997, #28a745);
+        }
+
+        .btn-login i {
+            font-size: 1.2rem;
+        }
+
+        /* رابط العودة */
+        .back-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .back-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .back-link a:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-3px);
+        }
+
+        /* رسائل الخطأ */
+        .alert {
+            border-radius: 2rem;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            border: none;
+            animation: shake 0.5s ease;
+            background: rgba(248, 215, 218, 0.95);
+            color: #721c24;
+            border: 2px solid rgba(220, 53, 69, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .alert i {
+            margin-left: 0.5rem;
+        }
+
+        /* الحركات */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* تحسين للشاشات الصغيرة */
+        @media (max-width: 400px) {
+            .logo-icon {
+                width: 70px;
+                height: 70px;
+            }
+
+            .logo-icon i {
+                font-size: 2.3rem;
+            }
+
+            .logo-text {
+                font-size: 1.8rem;
+            }
+
+            .logo-sub {
+                font-size: 0.9rem;
+            }
+
+            .role-btn {
+                font-size: 0.9rem;
+                padding: 0.7rem;
+            }
+
+            .btn-login {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- الشعار - مباشرة على الخلفية -->
+        <div class="logo-section animate__animated animate__fadeInDown">
+            <div class="logo-icon">
+                <i class="fas fa-quran"></i>
+            </div>
+            <div class="logo-text">أشبال القرآن</div>
+            <div class="logo-sub">منصة تعليم وحفظ القرآن الكريم</div>
+        </div>
+
+        <!-- عنوان الصفحة -->
+        <h2 class="page-title animate__animated animate__fadeIn">
+            <i class="fas fa-lock"></i>
+            تسجيل الدخول
+        </h2>
+
+        <!-- رسالة الخطأ -->
+        {% if error %}
+        <div class="alert animate__animated animate__shakeX">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- نموذج تسجيل الدخول -->
+        <form method="post" id="loginForm" class="animate__animated animate__fadeInUp">
+            <!-- أزرار اختيار نوع المستخدم -->
+            <div class="role-selector">
+                <div class="role-btn student active" data-role="student">
+                    <i class="fas fa-user-graduate"></i> طالب
+                </div>
+                <div class="role-btn teacher" data-role="teacher">
+                    <i class="fas fa-chalkboard-teacher"></i> معلم
+                </div>
+            </div>
+            <input type="hidden" name="role" id="role" value="student">
+
+            <!-- حقل اسم المستخدم -->
+            <label class="form-label">
+                <i class="fas fa-user ms-1"></i>
+                اسم المستخدم
+            </label>
+            <input type="text" name="username" class="form-control" 
+                   placeholder="أدخل اسم المستخدم" required>
+
+            <!-- حقل كلمة المرور -->
+            <label class="form-label">
+                <i class="fas fa-lock ms-1"></i>
+                كلمة المرور
+            </label>
+            <input type="password" name="password" class="form-control" 
+                   placeholder="أدخل كلمة المرور" required>
+
+            <!-- زر تسجيل الدخول -->
+            <button type="submit" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i>
+                دخول
+            </button>
+
+            <!-- رابط العودة -->
+            <div class="back-link">
+                <a href="/">
+                    <i class="fas fa-arrow-right"></i>
+                    العودة للصفحة الرئيسية
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentBtn = document.querySelector('.role-btn.student');
+            const teacherBtn = document.querySelector('.role-btn.teacher');
+            const hiddenInput = document.getElementById('role');
+
+            function setActiveRole(role) {
+                if (role === 'student') {
+                    studentBtn.classList.add('active');
+                    teacherBtn.classList.remove('active');
+                    hiddenInput.value = 'student';
+                } else {
+                    teacherBtn.classList.add('active');
+                    studentBtn.classList.remove('active');
+                    hiddenInput.value = 'teacher';
+                }
+            }
+
+            studentBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                setActiveRole('student');
+            });
+
+            teacherBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                setActiveRole('teacher');
+            });
+
+            // التحقق من صحة النموذج
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                const username = document.querySelector('input[name="username"]').value.trim();
+                const password = document.querySelector('input[name="password"]').value.trim();
+
+                if (!username || !password) {
+                    e.preventDefault();
+                    askAlert('الرجاء إدخال اسم المستخدم وكلمة المرور');
+                }
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/confirm-modal.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>تعديل مقرر - أشبال القرآن</title>
+    <!-- Bootstrap 5 RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <!-- خطوط جوجل العربية -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css للحركات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0.5rem;
+        }
+        .mobile-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: white;
+            padding: 1.2rem;
+            border-radius: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+            animation: fadeInDown 0.6s ease;
+        }
+        .header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header div {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.3rem;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .form-label {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .form-label i {
+            color: #fd7e14;
+        }
+
+        .form-control, .form-select {
+            border-radius: 3rem;
+            padding: 0.7rem 1.2rem;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: #f8fafc;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25);
+            border-color: #ffc107;
+            background: white;
+        }
+
+        .field-group {
+            background: #f8fafc;
+            border-radius: 1.8rem;
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .field-group h5 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .field-group h5 i {
+            color: #fd7e14;
+        }
+
+        .btn-group-bottom {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 2rem;
+        }
+        .btn-submit {
+            flex: 2;
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            border: none;
+            border-radius: 3rem;
+            padding: 0.9rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 193, 7, 0.4);
+        }
+        .btn-cancel {
+            flex: 1;
+            background: #6c757d;
+            border-radius: 3rem;
+            padding: 0.9rem;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+        }
+        .btn-cancel:hover {
+            background: #5a6268;
+            transform: translateY(-3px);
+            color: white;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border-radius: 3rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            border-right: 5px solid #dc3545;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .plan-info {
+            background: #fff3cd;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            border-right: 5px solid #ffc107;
+        }
+
+        .phase-info-box {
+            background: #fff3e0;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+            border-right: 4px solid #fd7e14;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <script>
+        function toggleFields() {
+            var t = document.getElementById('plan_type').value;
+            document.getElementById('memorization_fields').style.display = (t === 'حفظ') ? 'block' : 'none';
+            document.getElementById('recitation_fields').style.display = (t === 'سرد') ? 'block' : 'none';
+            document.getElementById('phase_fields').style.display = (t === 'تقييم مرحلة') ? 'block' : 'none';
+        }
+        window.onload = function() {
+            if (document.getElementById('plan_type')) {
+                toggleFields();
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="header animate__animated animate__fadeInDown">
+            <h2><i class="fas fa-edit"></i> تعديل المقرر</h2>
+            {% if plan and plan.student %}
+            <div><i class="fas fa-user-graduate"></i> {{ plan.student.full_name }}</div>
+            {% endif %}
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="mb-3">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category=='success' else ('danger' if category=='error' else 'warning') }} rounded-4 py-2" style="font-size:.85rem;">
+                <i class="fas fa-{{ 'check-circle' if category=='success' else 'exclamation-triangle' }} ms-1"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if not plan %}
+        <div class="error-message animate__animated animate__shakeX">
+            <i class="fas fa-exclamation-triangle"></i>
+            عذراً، لم يتم العثور على بيانات المقرر
+        </div>
+        <div class="text-center">
+            <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-primary btn-lg rounded-pill px-4">
+                <i class="fas fa-arrow-right"></i> العودة للوحة التحكم
+            </a>
+        </div>
+        {% else %}
+        <div class="content-card animate__animated animate__fadeInUp">
+            <div class="plan-info">
+                <i class="fas fa-calendar-alt ms-1"></i> تاريخ البدء: {{ plan.start_date }}
+                {% if plan.plan_type == 'حفظ' %}
+                <span class="badge bg-success ms-2">حفظ</span>
+                {% elif plan.plan_type == 'سرد' %}
+                <span class="badge bg-primary ms-2">سرد</span>
+                {% elif plan.plan_type == 'قصيدة' %}
+                <span class="badge bg-secondary ms-2">قصيدة</span>
+                {% else %}
+                <span class="badge bg-warning ms-2">تقييم مرحلة</span>
+                {% endif %}
+            </div>
+
+            {% if plan.plan_type == 'قصيدة' %}
+            {% set _vs = plan.verse_start or 1 %}
+            {% set _max_count = ((plan.poem.verse_count or (_vs + 1)) - _vs + 1) if plan.poem else 1 %}
+            {% set _cur_count = (plan.verse_end or _vs) - _vs + 1 %}
+            <div class="alert alert-light border rounded-4 py-3">
+                <h6 class="fw-bold"><i class="fas fa-feather-alt text-primary ms-1"></i> مقرر القصيدة</h6>
+                <div class="mb-1">
+                    <span class="text-muted">القصيدة:</span>
+                    <strong>
+                        {% if plan.poem %}{{ plan.poem.poem_title or ('قصيدة ' ~ plan.poem.poem_number) }}
+                        · {{ plan.poem.poet or 'غير محدد' }}
+                        {% else %}لم يحدد{% endif %}
+                    </strong>
+                </div>
+                <div class="mb-1">
+                    <span class="text-muted">أول بيت:</span>
+                    <strong>{{ _vs }}</strong>
+                    <span class="text-muted ms-1">· آخر بيت للمقرر:</span>
+                    <strong id="poemEndPreview">{{ plan.verse_end or _vs }}</strong>
+                </div>
+                <hr>
+                <label class="form-label"><i class="fas fa-align-left ms-1"></i> عدد الأبيات للمقرر</label>
+                <input type="number" name="verse_count" id="verse_count" min="1"
+                       max="{{ _max_count }}" value="{{ _cur_count }}"
+                       class="form-control mb-2" required
+                       oninput="updatePoemEnd()">
+                <p class="text-muted small mb-0">
+                    <i class="fas fa-info-circle ms-1"></i>
+                    يمكن تعديل التاريخ وعدد الأبيات فقط لتصحيح خطأ الإدخال — لا يمكن تغيير القصيدة نفسها.
+                </p>
+            </div>
+
+            <script>
+            function updatePoemEnd() {
+                var vs = {{ _vs }};
+                var countEl = document.getElementById('verse_count');
+                var preview = document.getElementById('poemEndPreview');
+                if (!countEl || !preview) return;
+                var count = parseInt(countEl.value, 10);
+                if (!count || count < 1) count = 1;
+                preview.textContent = vs + count - 1;
+            }
+            </script>
+            {% endif %}
+
+            <form method="post">
+                {% if plan.plan_type != 'قصيدة' %}
+                <label class="form-label">
+                    <i class="fas fa-tag"></i> نوع المقرر
+                </label>
+                <select name="plan_type" id="plan_type" class="form-select" onchange="toggleFields()" required>
+                    <option value="حفظ" {% if plan.plan_type == 'حفظ' %}selected{% endif %}>حفظ</option>
+                    <option value="سرد" {% if plan.plan_type == 'سرد' %}selected{% endif %}>سرد</option>
+                    <option value="تقييم مرحلة" {% if plan.plan_type == 'تقييم مرحلة' %}selected{% endif %}>⭐ تقييم مرحلة</option>
+                </select>
+                {% endif %}
+
+                <label class="form-label">
+                    <i class="fas fa-calendar-alt"></i> تاريخ البدء
+                </label>
+                <input type="date" name="start_date" class="form-control" value="{{ plan.start_date }}" required>
+
+                <!-- حقول الحفظ -->
+                <div id="memorization_fields" style="display: none;">
+                    <div class="field-group">
+                        <h5><i class="fas fa-book"></i> تفاصيل الحفظ</h5>
+                        <input type="text" name="new_memorization" class="form-control" 
+                               placeholder="الحفظ الجديد" value="{{ plan.new_memorization or '' }}">
+                        <input type="text" name="recent_review" class="form-control" 
+                               placeholder="المراجعة القريبة" value="{{ plan.recent_review or '' }}">
+                        <input type="text" name="previous_review" class="form-control" 
+                               placeholder="المراجعة البعيدة" value="{{ plan.previous_review or '' }}">
+                    </div>
+                </div>
+
+                <!-- حقول السرد -->
+                <div id="recitation_fields" style="display: none;">
+                    <div class="field-group">
+                        <h5><i class="fas fa-microphone-alt"></i> تفاصيل السرد</h5>
+                        <div class="mb-3">
+                            <label class="form-label">نوع السرد</label>
+                            <select name="sard_subtype" class="form-select">
+                                <option value="full" {% if plan.sard_subtype == 'full' %}selected{% endif %}>سرد كامل</option>
+                                <option value="review" {% if plan.sard_subtype == 'review' %}selected{% endif %}>مراجعة (مقاطع)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">مقرر السرد</label>
+                            <input type="text" name="revision_text" class="form-control" 
+                                   placeholder="مقرر السرد" value="{{ plan.revision_text or '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات السرد</label>
+                            <textarea name="revision_notes" class="form-control" rows="2" 
+                                      placeholder="تفاصيل إضافية عن السرد...">{{ plan.revision_notes or '' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- حقول تقييم المرحلة -->
+                <div id="phase_fields" style="display: none;">
+                    <div class="field-group">
+                        <h5><i class="fas fa-star"></i> تقييم المرحلة</h5>
+                        <div class="phase-info-box">
+                            <i class="fas fa-info-circle ms-1"></i>
+                            <strong>تنبيه:</strong> سيتم تقييم الطالب من 80 درجة. هذا المقرر مخصص لتقييم تقدم الطالب في جزء محدد.
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">وصف المرحلة</label>
+                            <input type="text" name="phase_evaluation_text" class="form-control" 
+                                   placeholder="وصف المرحلة" value="{{ plan.phase_evaluation_text or '' }}">
+                            <small class="text-muted">أدخل وصفاً للمرحلة التي سيتم تقييمها</small>
+                        </div>
+                    </div>
+                </div>
+
+                <label class="form-label">
+                    <i class="fas fa-sticky-note"></i> ملاحظات
+                </label>
+                <textarea name="notes" class="form-control" rows="3" placeholder="ملاحظات">{{ plan.notes or '' }}</textarea>
+
+                <div class="btn-group-bottom">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> حفظ التغييرات
+                    </button>
+                    <a href="{{ url_for('view_student_plans', student_id=plan.student_id) }}" class="btn-cancel">
+                        <i class="fas fa-times"></i> إلغاء
+                    </a>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

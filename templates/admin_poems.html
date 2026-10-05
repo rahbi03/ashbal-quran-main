@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>القصائد | لوحة الإدارة - أشبال القرآن</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg:#0f1117; --surface:#1a1d27; --surface-2:#22263a; --surface-3:#2b3050;
+            --border:rgba(255,255,255,.07); --border-soft:rgba(255,255,255,.04);
+            --accent:#6c63ff; --teal:#00d4aa; --red:#ff6b6b; --gold:#ffd93d; --blue:#4facfe;
+            --text-1:#f0f2ff; --text-2:#9ba3bf; --text-3:#5a6280;
+            --grad-purple:linear-gradient(135deg,#6c63ff,#a855f7);
+            --grad-teal:linear-gradient(135deg,#00d4aa,#00b4d8);
+            --shadow-sm:0 2px 8px rgba(0,0,0,.3); --shadow-md:0 8px 24px rgba(0,0,0,.4);
+            --shadow-lg:0 16px 48px rgba(0,0,0,.5);
+            --radius-sm:10px; --radius-md:16px; --radius-lg:24px; --radius-xl:32px;
+        }
+        *{box-sizing:border-box}
+        body{margin:0;min-height:100vh;padding:.75rem;color:var(--text-1);font-family:'Tajawal','Cairo',sans-serif;background:var(--bg);
+            background-image:radial-gradient(ellipse 800px 500px at 18% 4%,rgba(108,99,255,.08),transparent 70%),radial-gradient(ellipse 600px 400px at 85% 85%,rgba(0,212,170,.045),transparent 70%)}
+        .wrap{max-width:1200px;margin:0 auto}
+        .topbar{display:flex;align-items:center;justify-content:space-between;gap:.7rem;flex-wrap:wrap;padding:.65rem 1.2rem;margin-bottom:1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm)}
+        .brand{display:flex;align-items:center;gap:.45rem;font-size:1.05rem;font-weight:800;background:var(--grad-purple);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        .brand i{-webkit-text-fill-color:#8f88ff}
+        .topbar-actions{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+        .chip,.qbtn,.abtn{display:inline-flex;align-items:center;gap:.35rem;border-radius:99px;font-weight:700;text-decoration:none;transition:transform .2s,filter .2s,border-color .2s,background .2s}
+        .chip{padding:.3rem .85rem;font-size:.76rem;border:1px solid var(--border)}
+        .chip:hover,.qbtn:hover,.abtn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+        .chip-purple{background:rgba(108,99,255,.15);color:#a89fff;border-color:rgba(108,99,255,.25)}
+        .chip-gray{background:rgba(255,255,255,.07);color:var(--text-2)}
+        .chip-red{background:rgba(255,107,107,.15);color:#ff9f9f;border-color:rgba(255,107,107,.25)}
+        .hero{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;padding:1.2rem 1.35rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)}
+        .eyebrow{margin:0 0 .35rem;color:#a89fff;font-size:.72rem;font-weight:800;letter-spacing:1px}
+        h1{margin:0;font-size:clamp(1.2rem,3vw,1.7rem);font-weight:800;letter-spacing:-.3px}
+        .hero-copy{color:var(--text-2);font-size:.8rem;margin:.35rem 0 0}
+        .hero-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+        .qbtn{padding:.52rem 1rem;color:#fff;border:0;font-size:.78rem;cursor:pointer;font-family:inherit}
+        .qbtn-purple{background:var(--grad-purple);box-shadow:0 4px 14px rgba(108,99,255,.25)}
+        .qbtn-gray{background:linear-gradient(135deg,#3a3f5c,#2b3050);color:var(--text-1)}
+        .summary{display:flex;align-items:center;gap:.65rem;margin-bottom:.8rem;padding:.7rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md)}
+        .summary-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(0,212,170,.12);color:#5fffc5}
+        .summary strong{display:block;font-size:1rem;line-height:1.15}.summary small{color:var(--text-3);font-size:.7rem}
+        .poem-list{display:grid;gap:.5rem}
+        .poem-card{display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;padding:.75rem 1rem;background:var(--surface-2);border:1px solid var(--border);border-right:3px solid var(--accent);border-radius:var(--radius-md);transition:transform .2s,border-color .2s,background .2s}
+        .poem-card:hover{transform:translateY(-2px);background:var(--surface-3);border-color:rgba(108,99,255,.32)}
+        .poem-main{display:flex;align-items:center;gap:.7rem;min-width:190px;flex:1}
+        .poem-num{width:38px;height:38px;display:grid;place-items:center;flex:none;border-radius:11px;background:rgba(108,99,255,.16);color:#b0aaff;border:1px solid rgba(108,99,255,.25);font-size:.86rem;font-weight:800}
+        .poem-title{margin:0;color:var(--text-1);font-size:.88rem;font-weight:800}
+        .poem-meta{display:flex;align-items:center;gap:.35rem;margin-top:.2rem;color:var(--text-3);font-size:.7rem}
+        .poem-meta i{color:#7b769e;font-size:.65rem}
+        .poem-details{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+        .badge-info{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .62rem;border-radius:99px;font-size:.68rem;font-weight:700;white-space:nowrap;border:1px solid var(--border)}
+        .badge-verses{background:rgba(79,172,254,.1);color:#8fd4ff;border-color:rgba(79,172,254,.2)}
+        .badge-usage{background:rgba(0,212,170,.1);color:#5fffc5;border-color:rgba(0,212,170,.18)}
+        .row-actions{display:flex;gap:.35rem;align-items:center}
+        .abtn{padding:.3rem .68rem;font-size:.68rem;border:1px solid;cursor:pointer;font-family:inherit;white-space:nowrap}
+        .abtn-gold{background:rgba(255,217,61,.13);color:#ffe680;border-color:rgba(255,217,61,.25)}
+        .abtn-red{background:rgba(255,107,107,.13);color:#ff9f9f;border-color:rgba(255,107,107,.25)}
+        .empty{padding:2.8rem 1rem;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);color:var(--text-3)}
+        .empty-icon{width:58px;height:58px;display:grid;place-items:center;margin:0 auto .8rem;border-radius:18px;background:rgba(108,99,255,.1);color:#8f88ff;font-size:1.45rem}
+        .empty h3{margin:0 0 .35rem;color:var(--text-1);font-size:1rem;font-weight:800}.empty p{margin:0;font-size:.78rem}
+        .toast-wrap{position:fixed;top:1rem;left:50%;z-index:1056;display:flex;flex-direction:column;gap:.5rem;width:min(92%,420px);transform:translateX(-50%)}
+        .toast-item{display:flex;align-items:center;gap:.6rem;padding:.7rem 1rem;border-radius:var(--radius-md);font-size:.82rem;font-weight:700;box-shadow:var(--shadow-md);border-right:4px solid}
+        .t-success{background:#0d2818;border-color:#43e97b;color:#7fffb0}.t-error{background:#2a0a0a;border-color:#ff6b6b;color:#ff9f9f}.t-warning{background:#2a1e00;border-color:#ffd93d;color:#ffe680}.t-info{background:#0a1a2a;border-color:#4facfe;color:#8fd4ff}
+        .modal-content{color:var(--text-1);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg)}
+        .modal-header{padding:1rem 1.2rem;border-bottom:1px solid var(--border);border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+        .modal-title{font-size:.95rem;font-weight:800}.modal-body{padding:1.2rem}.modal-footer{gap:.5rem;padding:.8rem 1.2rem;border-top:1px solid var(--border)}
+        .f-label{display:block;margin-bottom:.3rem;color:var(--text-2);font-size:.75rem;font-weight:700}
+        .f-control{width:100%;padding:.55rem .8rem;color:var(--text-1);background:var(--surface-3);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:.82rem;transition:border-color .2s,box-shadow .2s}
+        .f-control:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,99,255,.15)}.f-control::placeholder{color:var(--text-3)}
+        .btn-submit,.btn-cancel{padding:.5rem 1.2rem;border-radius:99px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;transition:transform .2s,filter .2s}
+        .btn-submit{color:#fff;background:var(--grad-purple);border:0}.btn-cancel{color:var(--text-2);background:var(--surface-3);border:1px solid var(--border)}.btn-submit:hover,.btn-cancel:hover{transform:translateY(-1px);filter:brightness(1.1)}
+        @media(max-width:640px){body{padding:.5rem}.topbar{border-radius:var(--radius-lg);padding:.65rem .8rem}.brand{font-size:.9rem}.topbar-actions{width:100%}.topbar-actions .chip{flex:1;justify-content:center}.hero{align-items:stretch;padding:1rem}.hero-actions{width:100%}.hero-actions>*{flex:1;justify-content:center}.poem-card{align-items:flex-start}.poem-details{width:100%;padding-right:2.85rem}.row-actions{margin-right:auto}.summary{margin-bottom:.65rem}}
+        @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+    </style>
+</head>
+<body>
+    <div class="toast-wrap" id="toastWrap">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}
+        <div class="toast-item t-{{ 'success' if category=='success' else ('error' if category=='error' else ('warning' if category=='warning' else 'info')) }}">
+            <i class="fas fa-{{ 'check-circle' if category=='success' else ('times-circle' if category=='error' else ('exclamation-triangle' if category=='warning' else 'info-circle')) }}" aria-hidden="true"></i><span>{{ message }}</span>
+        </div>
+        {% endfor %}{% endif %}
+    {% endwith %}
+    </div>
+    <main class="wrap">
+        <nav class="topbar" aria-label="التنقل الإداري">
+            <a class="brand" href="{{ url_for('admin') }}"><i class="fas fa-quran" aria-hidden="true"></i> أشبال القرآن</a>
+            <div class="topbar-actions">
+                <span class="chip chip-purple"><i class="fas fa-user-cog" aria-hidden="true"></i> {{ current_user.username }}</span>
+                <a href="{{ url_for('change_password') }}" class="chip chip-gray"><i class="fas fa-key" aria-hidden="true"></i> كلمة المرور</a>
+                <a href="{{ url_for('logout') }}" class="chip chip-red"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> خروج</a>
+            </div>
+        </nav>
+        <section class="hero">
+            <div>
+                <p class="eyebrow">المحتوى التعليمي / المكتبة</p>
+                <h1><i class="fas fa-feather-alt" style="color:#a89fff;font-size:.85em" aria-hidden="true"></i> إدارة القصائد</h1>
+                <p class="hero-copy">نظّم القصائد المتاحة للمعلمين في مقررات الحفظ.</p>
+            </div>
+            <div class="hero-actions">
+                <a href="{{ url_for('admin') }}" class="qbtn qbtn-gray"><i class="fas fa-arrow-right" aria-hidden="true"></i> لوحة التحكم</a>
+                <button type="button" class="qbtn qbtn-purple" data-bs-toggle="modal" data-bs-target="#poemModal" onclick="resetForm()"><i class="fas fa-plus" aria-hidden="true"></i> إضافة قصيدة</button>
+            </div>
+        </section>
+        <section class="summary" aria-label="ملخص القصائد">
+            <div class="summary-icon"><i class="fas fa-layer-group" aria-hidden="true"></i></div>
+            <div><strong>{{ poems|length }}</strong><small> قصيدة مسجلة في المكتبة</small></div>
+        </section>
+        {% if poems %}
+        <section class="poem-list" aria-label="قائمة القصائد">
+        {% for poem in poems %}
+            <article class="poem-card">
+                <div class="poem-main">
+                    <div class="poem-num" aria-label="رقم القصيدة">{{ poem.poem_number or '-' }}</div>
+                    <div>
+                        <h2 class="poem-title">{% if poem.poem_title %}{{ poem.poem_title }}{% else %}قصيدة {{ poem.poem_number }}{% endif %}</h2>
+                        <div class="poem-meta"><i class="fas fa-user" aria-hidden="true"></i><span>{{ poem.poet or 'الشاعر غير محدد' }}</span></div>
+                    </div>
+                </div>
+                <div class="poem-details">
+                    <span class="badge-info badge-verses"><i class="fas fa-align-left" aria-hidden="true"></i>{{ poem.verse_count or 0 }} بيت</span>
+                    <span class="badge-info badge-usage"><i class="fas fa-book-open" aria-hidden="true"></i>{{ usages.get(poem.id, 0) }} مقرر</span>
+                    <div class="row-actions">
+                        <button type="button" class="abtn abtn-gold" aria-label="تعديل القصيدة" onclick='openEdit({{ poem.id }}, {{ (poem.poem_number or "")|tojson }}, {{ (poem.poem_title or "")|tojson }}, {{ (poem.poet or "")|tojson }}, {{ (poem.verse_count or "")|tojson }})'><i class="fas fa-pen" aria-hidden="true"></i><span>تعديل</span></button>
+                        <form method="POST" action="{{ url_for('delete_admin_poem', poem_id=poem.id) }}" data-confirm="هل أنت متأكد من حذف هذه القصيدة؟">
+                            <button type="submit" class="abtn abtn-red" aria-label="حذف القصيدة"><i class="fas fa-trash" aria-hidden="true"></i><span>حذف</span></button>
+                        </form>
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+        </section>
+        {% else %}
+        <section class="empty">
+            <div class="empty-icon"><i class="fas fa-feather-alt" aria-hidden="true"></i></div>
+            <h3>لا توجد قصائد بعد</h3>
+            <p>أضف أول قصيدة ليتمكن المعلمون من إنشاء مقررات الحفظ لها.</p>
+        </section>
+        {% endif %}
+    </main>
+    <div class="modal fade" id="poemModal" tabindex="-1" aria-labelledby="poemModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="poemModalTitle"><i class="fas fa-plus-circle" aria-hidden="true"></i> إضافة قصيدة</h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="إغلاق"></button>
+                </div>
+                <form id="poemForm" method="POST" action="{{ url_for('admin_poems') }}">
+                    <div class="modal-body">
+                        <div class="mb-3"><label class="f-label" for="poem_number">رقم القصيدة</label><input type="number" name="poem_number" id="poem_number" class="f-control" min="1" step="1"></div>
+                        <div class="mb-3"><label class="f-label" for="poem_title">اسم القصيدة</label><input type="text" name="poem_title" id="poem_title" class="f-control" placeholder="مثال: بانت سعاد"></div>
+                        <div class="mb-3"><label class="f-label" for="poet">الشاعر</label><input type="text" name="poet" id="poet" class="f-control" placeholder="مثال: كعب بن زهير"></div>
+                        <div><label class="f-label" for="verse_count">عدد الأبيات</label><input type="number" name="verse_count" id="verse_count" class="f-control" min="1" step="1" required></div>
+                    </div>
+                    <div class="modal-footer"><button type="button" class="btn-cancel" data-bs-dismiss="modal">إلغاء</button><button type="submit" class="btn-submit" id="poemSubmitBtn"><i class="fas fa-check" aria-hidden="true"></i> حفظ</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/confirm-modal.js') }}"></script>
+    <script>
+    function resetForm() {
+        document.getElementById('poemForm').action = "{{ url_for('admin_poems') }}";
+        ['poem_number','poem_title','poet','verse_count'].forEach(function(id){ document.getElementById(id).value = ''; });
+        document.getElementById('poemModalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> إضافة قصيدة';
+        document.getElementById('poemSubmitBtn').innerHTML = '<i class="fas fa-check"></i> حفظ';
+    }
+    function openEdit(id, num, title, poet, verses) {
+        document.getElementById('poemForm').action = "{{ url_for('admin_poems') }}".replace('poems', 'poems/edit/' + id);
+        document.getElementById('poem_number').value = num;
+        document.getElementById('poem_title').value = title;
+        document.getElementById('poet').value = poet;
+        document.getElementById('verse_count').value = verses;
+        document.getElementById('poemModalTitle').innerHTML = '<i class="fas fa-pen"></i> تعديل القصيدة';
+        document.getElementById('poemSubmitBtn').innerHTML = '<i class="fas fa-check"></i> حفظ التعديل';
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('poemModal')).show();
+    }
+    </script>
+</body>
+</html>

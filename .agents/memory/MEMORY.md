@@ -1,0 +1,2 @@
+- [Persistent login lifecycle](auth-session-lifecycle.md) — use server-issued cookies, avoid caching private pages, and preserve Flask-Login's remember-cookie deletion on logout.
+- [Teacher access to shared student work](teacher-student-access.md) — assignment governs visibility and edits; linked teachers may edit each other's plans and evaluations.

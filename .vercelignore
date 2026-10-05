@@ -1,0 +1,16 @@
+# ما لا يُرفع إلى Vercel مع الدالة
+.git
+.github
+.agents
+screenshots
+__pycache__
+*.bak
+*_probe.db
+instance
+.env
+.env.*
+!.env.example
+uv.lock
+INSTALL.md
+*.md
+main.py.bak
