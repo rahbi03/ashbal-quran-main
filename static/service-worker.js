@@ -5,7 +5,7 @@
  * =====================================================
  */
 
-const SW_VERSION = 'v5';
+const SW_VERSION = 'v6';
 const CACHE_STATIC  = `quran-static-${SW_VERSION}`;   // أصول لا تتغير
 const CACHE_PAGES   = `quran-pages-${SW_VERSION}`;    // صفحات HTML
 const CACHE_API     = `quran-api-${SW_VERSION}`;      // استجابات API
@@ -19,6 +19,8 @@ const STATIC_ASSETS = [
   '/static/images/logo.png',
   '/static/pwa-db.js',
   '/static/pwa-sync.js',
+  '/static/js/csrf.js',
+  '/static/js/confirm-modal.js',
   // Bootstrap RTL من CDN
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',

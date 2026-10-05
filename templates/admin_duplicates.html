@@ -427,7 +427,7 @@ function confirmDelete(isEvaluated, hasReports, href) {
         ? '⚠️ هذا المقرر يحتوي على تقارير يومية.\nهل تريد حذفه وحذف تقاريره معه؟'
         : 'هل تريد حذف هذا المقرر؟';
     askConfirm(msg).then(function (ok) {
-        if (ok) window.location.href = href;
+        if (ok) { if (window.__aqGo) { window.__aqGo(href); } else { window.location.href = href; } }
     });
     return false;
 }
@@ -863,7 +863,7 @@ function confirmDelete(isEvaluated, hasReports, href) {
         ? '⚠️ هذا المقرر يحتوي على تقارير يومية.\nهل تريد حذفه وحذف تقاريره معه؟'
         : 'هل تريد حذف هذا المقرر؟';
     askConfirm(msg).then(function (ok) {
-        if (ok) window.location.href = href;
+        if (ok) { if (window.__aqGo) { window.__aqGo(href); } else { window.location.href = href; } }
     });
     return false;
 }

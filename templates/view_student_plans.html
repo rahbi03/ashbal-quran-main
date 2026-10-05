@@ -1016,7 +1016,7 @@ function toggleCollapse(bodyId, btnId) {
 function confirmDelete(planId) {
   const href = "{{ url_for('delete_plan', plan_id=0) }}".replace('0', planId);
   askConfirm('هل أنت متأكد من حذف هذا المقرر؟').then(function(ok) {
-    if (ok) window.location.href = href;
+    if (ok) { if (window.__aqGo) { window.__aqGo(href); } else { window.location.href = href; } }
   });
 }
 
@@ -2032,7 +2032,7 @@ function toggleCollapse(bodyId, btnId) {
 function confirmDelete(planId) {
   const href = "{{ url_for('delete_plan', plan_id=0) }}".replace('0', planId);
   askConfirm('هل أنت متأكد من حذف هذا المقرر؟').then(function(ok) {
-    if (ok) window.location.href = href;
+    if (ok) { if (window.__aqGo) { window.__aqGo(href); } else { window.location.href = href; } }
   });
 }
 

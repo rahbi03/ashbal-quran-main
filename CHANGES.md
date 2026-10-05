@@ -15,7 +15,13 @@
 | `.env.example` | توضيح Transaction pooler (6543) و`sslmode=require` |
 | `.gitignore` | تجاهل `public/` (ناتج البناء) |
 | `static/pwa-sync.js` | منع فقدان البيانات الصامت عند الانقطاع |
-| `static/service-worker.js` | رفع الإصدار إلى `v5` |
+| `static/service-worker.js` | رفع الإصدار إلى `v6` وإضافة ملفات الأمان للكاش |
+| `pyproject.toml` | إضافة `flask-wtf` |
+| `requirements.txt` | إضافة `flask-wtf` |
+| `templates/add_phase_evaluation.html` | إصلاح `now()` التي كانت تسبب خطأ 500 |
+| `templates/admin_duplicates.html` | تحويل الحذف إلى POST عبر `__aqGo` |
+| `templates/view_student_plans.html` | تحويل الحذف إلى POST عبر `__aqGo` |
+| `static/js/confirm-modal.js` | نسخة واحدة نظيفة تدعم POST |
 
 ## ملفات جديدة (أضفها)
 
@@ -24,6 +30,7 @@
 | `vercel.json` | إعدادات دالة Vercel والرؤوس وحدود الحزمة |
 | `build.py` | نسخ `static/` إلى `public/static/` وقت البناء (كاش CDN) |
 | `.vercelignore` | ملفات لا تُرفع مع الدالة |
+| `static/js/csrf.js` | جسر CSRF يُحقن في كل الصفحات (نماذج + fetch + روابط الحذف) |
 | `VERCEL_DEPLOY.md` | دليل النشر خطوة بخطوة |
 | `push_to_github.ps1` | سكربت رفع آمن إلى GitHub |
 | `CHANGES.md` | هذا الملف |

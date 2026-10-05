@@ -12,6 +12,7 @@ import pytz
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, session, jsonify, Blueprint, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_wtf.csrf import CSRFProtect, CSRFError, generate_csrf
 from sqlalchemy import inspect, exc, func, and_, or_
 from sqlalchemy.orm import joinedload, lazyload, selectinload
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -78,6 +79,32 @@ if IS_SERVERLESS or os.environ.get('VERCEL_ENV'):
     app.config['SESSION_COOKIE_SECURE'] = True
     app.config['REMEMBER_COOKIE_SECURE'] = True
     app.config['PREFERRED_URL_SCHEME'] = 'https'
+
+# ------------------ حماية CSRF ------------------
+# لا نضع حدًا زمنيًا لصلاحية الرمز: الجلسات هنا تدوم سنة، وتقارير PWA قد
+# تُزامَن بعد ساعات من حفظها دون اتصال، فانتهاء الرمز كان سيُبطل المزامنة.
+app.config['WTF_CSRF_TIME_LIMIT'] = None
+app.config['WTF_CSRF_SSL_STRICT'] = False  # ProxyFix يتكفّل بمعرفة الأصل https
+# مسارات JSON للمزامنة يُرسلها Service Worker (قد لا يملك رمز CSRF)، فنستثنيها
+# من الحماية الاعتيادية عبر @csrf.exempt ونحميها بشرط ترويسة X-Sync-Request.
+csrf = CSRFProtect(app)
+
+
+@app.before_request
+def guard_json_api():
+    """حماية مسارات المزامنة من CSRF عبر شرط ترويسة مخصّصة.
+
+    المتصفح لا يسمح لموقع خارجي بإرسال ترويسة مخصّصة دون موافقة CORS، وهي
+    غير مفعّلة هنا، لذلك اشتراط X-Sync-Request يمنع الطلبات المزوّرة
+    المبنية على الكوكيز. تشمل الحماية POST/PUT/PATCH/DELETE فقط.
+    """
+    if not request.path.startswith('/api/'):
+        return None
+    if request.method in ('GET', 'HEAD', 'OPTIONS'):
+        return None
+    if request.headers.get('X-Sync-Request') == 'true':
+        return None
+    return jsonify({'success': False, 'error': 'طلب غير مصرح'}), 403
 
 # ------------------ إعدادات اتصال قاعدة البيانات ------------------
 
@@ -267,23 +294,112 @@ def _run_sequence_sync():
 # ------------------ إعداد Flask-Login ------------------
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.session_protection = None          # تقليل الفحوصات الأمنية لتحسين الأداء
+login_manager.session_protection = 'basic'       # كشف سرقة الجلسة مع إبقاء الأداء
 login_manager.login_view = 'home'                 # إذا احتاج تسجيل دخول يُوجه للصفحة الرئيسية
 
 @login_manager.unauthorized_handler
 def login_required_redirect():
     return redirect(url_for('home'))
 
+# ------------------ تحديد محاولات تسجيل الدخول ------------------
+# عدّاد في الذاكرة لكل (IP + اسم مستخدم). كافٍ لكبح التخمين؛ لا يحتاج جدولاً.
+_login_attempts: dict = {}
+_login_lock = threading.Lock()
+_LOGIN_MAX_ATTEMPTS = 8
+_LOGIN_WINDOW_SECONDS = 900  # 15 دقيقة
+
+
+def _client_ip() -> str:
+    # ProxyFix يضبط remote_addr من X-Forwarded-For على Vercel.
+    return request.remote_addr or 'unknown'
+
+
+def _login_blocked(ip: str, username: str) -> bool:
+    key = f'{ip}|{username.lower()}'
+    now = time.time()
+    with _login_lock:
+        rec = _login_attempts.get(key)
+        if not rec:
+            return False
+        count, first = rec
+        if now - first > _LOGIN_WINDOW_SECONDS:
+            _login_attempts.pop(key, None)
+            return False
+        return count >= _LOGIN_MAX_ATTEMPTS
+
+
+def _login_failed(ip: str, username: str) -> None:
+    key = f'{ip}|{username.lower()}'
+    now = time.time()
+    with _login_lock:
+        count, first = _login_attempts.get(key, (0, now))
+        if now - first > _LOGIN_WINDOW_SECONDS:
+            count, first = 0, now
+        _login_attempts[key] = (count + 1, first)
+        # تنظيف بسيط للذاكرة
+        if len(_login_attempts) > 5000:
+            _login_attempts.clear()
+
+
+def _login_succeeded(ip: str, username: str) -> None:
+    with _login_lock:
+        _login_attempts.pop(f'{ip}|{username.lower()}', None)
+
 @app.after_request
 def prevent_private_page_cache(response):
-    # الصفحات العامة (بلا جلسة) قد تُخزَّن مؤقتًا لتسريع الفتح، أما الصفحات
-    # الخاصة التي تحمل جلسة دخول فتبقى private, no-store كما كان.
+    # كل صفحة HTML تحمل الآن رمز CSRF الخاص بالجلسة (يُحقن أدناه)، لذلك لا
+    # يجوز تخزينها في كاش مشترك وإلا تسرّب رمز جلسة مستخدم لآخر. نُبقيها
+    # private مع سماح بسيط لكاش المتصفح الخاص (back/forward) لتحسين التنقّل.
     if response.mimetype == 'text/html':
-        if request.endpoint in ('home', 'offline_page'):
-            response.headers['Cache-Control'] = 'public, max-age=300'
-        else:
-            response.headers['Cache-Control'] = 'private, no-store'
+        response.headers['Cache-Control'] = 'private, max-age=0, must-revalidate'
     return response
+
+
+@app.after_request
+def inject_csrf_into_pages(response):
+    """يحقن وسم CSRF وسكربت الجسر في كل صفحة HTML تلقائيًا.
+
+    القوالب (39) لا تشترك في base.html، فحقن السكربت هنا يغطّيها كلها دون
+    تعديل أي قالب. السكربت يضيف الحقل المخفي إلى كل نموذج ويضع الترويسة على
+    طلبات fetch/XHR، ويحوّل روابط الحذف/التبديل إلى طلبات POST.
+    """
+    if response.mimetype != 'text/html' or response.direct_passthrough:
+        return response
+    if response.status_code >= 400:
+        return response
+    try:
+        html = response.get_data(as_text=True)
+    except Exception:
+        return response
+    if 'name="csrf-token"' in html:
+        return response
+
+    try:
+        token = generate_csrf()
+    except Exception:
+        return response
+
+    snippet = (
+        '<meta name="csrf-token" content="' + token + '">'
+        '<script src="/static/js/csrf.js" defer></script>'
+    )
+    if '</head>' in html:
+        html = html.replace('</head>', snippet + '</head>', 1)
+    elif '<body' in html:
+        html = html.replace('<body', snippet + '<body', 1)
+    else:
+        return response
+    response.set_data(html)
+    return response
+
+
+@app.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    """استجابة واضحة عند فشل التحقق من CSRF بدل صفحة 400 الجافة."""
+    if request.path.startswith('/api/'):
+        return jsonify({'success': False, 'error': 'رمز CSRF غير صالح'}), 400
+    flash('انتهت صلاحية الجلسة أو الطلب غير موثوق. أعد المحاولة.', 'error')
+    return redirect(request.referrer or url_for('home'))
 
 # ------------------ سياق القوالب ------------------
 
@@ -374,7 +490,10 @@ def handle_db_error(error):
         db.session.rollback()
         flash('انتهت الجلسة. يرجى إعادة تسجيل الدخول.', 'warning')
         return redirect(url_for('logout'))
-    return str(error), 500
+    # لا نُسرّب تفاصيل الاستثناء للعميل؛ تُسجَّل في الخادم فقط.
+    logger.error("Database OperationalError: %s", error)
+    flash('حدث خطأ مؤقت في الاتصال بقاعدة البيانات. أعد المحاولة.', 'error')
+    return redirect(url_for('home'))
 
 def find_duplicate_plans():
     """
@@ -1220,35 +1339,49 @@ def home():
     return render_template('home.html', error=error)
 @app.route('/login', methods=['POST'])
 def do_login():
-    username = request.form['username']
-    password = request.form['password']
+    username = request.form.get('username', '')
+    password = request.form.get('password', '')
+
+    # تحديد محاولات الدخول: يمنع تخمين كلمات المرور.
+    ip = _client_ip()
+    if _login_blocked(ip, username):
+        flash('محاولات دخول كثيرة خاطئة. حاول بعد قليل.', 'error')
+        return redirect(url_for('home'))
 
     user = Student.query.filter_by(username=username).first()
     if user and check_password_hash(user.password, password):
         if not user.is_active or user.is_suspended:
             flash('تم تعطيل هذا الحساب. يرجى التواصل مع الإدارة.', 'error')
             return redirect(url_for('home'))
+        _login_succeeded(ip, username)
         login_user(user, remember=True)
         session.permanent = True
         return redirect(url_for('student_dashboard'))
 
     user = Teacher.query.filter_by(username=username, is_active=True).first()
     if user and check_password_hash(user.password, password):
+        _login_succeeded(ip, username)
         login_user(user, remember=True)
         session.permanent = True
         return redirect(url_for('teacher_dashboard'))
 
     user = Admin.query.filter_by(username=username).first()
     if user and check_password_hash(user.password, password):
+        _login_succeeded(ip, username)
         login_user(user, remember=True)
         session.permanent = True
         return redirect(url_for('admin'))
 
+    _login_failed(ip, username)
     return redirect(url_for('home', error='بيانات الدخول غير صحيحة'))
+
+
 @app.route('/logout')
 def logout():
-    session.clear()
+    # ترتيب مهم: logout_user أولاً (يضع علامة حذف كوكي "تذكّرني" في الجلسة)،
+    # ثم نُفرغ الجلسة. عكس الترتيب يمحو العلامة فيبقى تسجيل الدخول التلقائي.
     logout_user()
+    session.clear()
     return redirect(url_for('home'))
 
 # ------------------ لوحة الطالب ------------------
@@ -1869,7 +2002,7 @@ def add_teacher():
     return redirect(url_for('admin', tab=tab))
 
 
-@app.route('/delete_teacher/<int:id>')
+@app.route('/delete_teacher/<int:id>', methods=['POST'])
 @login_required
 def delete_teacher(id):
     if not isinstance(current_user, Admin):
@@ -1906,7 +2039,7 @@ def edit_teacher(id):
     return render_template('edit_teacher.html', teacher=teacher)
 
 
-@app.route('/toggle_teacher_report_permission/<int:teacher_id>')
+@app.route('/toggle_teacher_report_permission/<int:teacher_id>', methods=['POST'])
 @login_required
 def toggle_teacher_report_permission(teacher_id):
     if not isinstance(current_user, Admin):
@@ -1919,7 +2052,7 @@ def toggle_teacher_report_permission(teacher_id):
     return redirect(url_for('admin', tab=request.args.get('tab', 'teachers')))
 
 
-@app.route('/toggle_teacher_add_plan_permission/<int:teacher_id>')
+@app.route('/toggle_teacher_add_plan_permission/<int:teacher_id>', methods=['POST'])
 @login_required
 def toggle_teacher_add_plan_permission(teacher_id):
     """تبديل صلاحية إضافة المقررات للمعلم"""
@@ -1937,7 +2070,7 @@ def toggle_teacher_add_plan_permission(teacher_id):
     return redirect(url_for('admin', tab=request.args.get('tab', 'teachers')))
 
 
-@app.route('/toggle_teacher_add_poem_plan_permission/<int:teacher_id>')
+@app.route('/toggle_teacher_add_poem_plan_permission/<int:teacher_id>', methods=['POST'])
 @login_required
 def toggle_teacher_add_poem_plan_permission(teacher_id):
     """تبديل صلاحية إضافة مقررات القصائد للمعلم."""
@@ -1993,7 +2126,7 @@ def assign_teacher_students():
         return redirect(url_for('admin', tab=tab))
 
 
-@app.route('/delete_assignment/<int:teacher_id>')
+@app.route('/delete_assignment/<int:teacher_id>', methods=['POST'])
 @login_required
 def delete_assignment(teacher_id):
     if not isinstance(current_user, Admin):
@@ -2389,7 +2522,7 @@ def edit_plan(plan_id):
 
 
 
-@app.route('/delete_plan/<int:plan_id>')
+@app.route('/delete_plan/<int:plan_id>', methods=['POST'])
 @login_required
 def delete_plan(plan_id):
     plan = WeeklyPlan.query.get_or_404(plan_id)
@@ -3104,7 +3237,7 @@ def edit_reward_rule(rule_id):
         db.session.commit()
         flash('تم تعديل قاعدة المكافآت بنجاح', 'success')
         return redirect(url_for('admin_reward_rules'))
-@app.route('/admin/toggle_reward_rule/<int:rule_id>')
+@app.route('/admin/toggle_reward_rule/<int:rule_id>', methods=['POST'])
 @login_required
 def toggle_reward_rule(rule_id):
         """تفعيل/تعطيل قاعدة مكافآت"""
@@ -3119,7 +3252,7 @@ def toggle_reward_rule(rule_id):
         status = 'مفعلة' if rule.is_active else 'معطلة'
         flash(f'تم {status} قاعدة المكافآت بنجاح', 'success')
         return redirect(url_for('admin_reward_rules'))
-@app.route('/admin/delete_reward_rule/<int:rule_id>')
+@app.route('/admin/delete_reward_rule/<int:rule_id>', methods=['POST'])
 @login_required
 def delete_reward_rule(rule_id):
         """حذف قاعدة مكافآت"""
@@ -4628,7 +4761,7 @@ def edit_admin(id):
     db.session.commit()
     flash('تم تعديل المستخدم بنجاح', 'success')
     return redirect(url_for('admin', tab='admins'))
-@app.route('/admin/delete_admin/<int:id>')
+@app.route('/admin/delete_admin/<int:id>', methods=['POST'])
 @login_required
 def delete_admin(id):
     if not isinstance(current_user, Admin) or not current_user.is_super_admin:
@@ -5418,7 +5551,7 @@ def admin_duplicates():
 # ─────────────────────────────────────────────────────────────
 # 2. حذف مقرر مكرر
 # ─────────────────────────────────────────────────────────────
-@app.route('/admin/duplicates/delete/<int:plan_id>')
+@app.route('/admin/duplicates/delete/<int:plan_id>', methods=['POST'])
 @login_required
 def admin_delete_duplicate_plan(plan_id):
     if not isinstance(current_user, Admin):
@@ -5577,6 +5710,7 @@ def api_sync_status():
 
 # ─── /api/sync/reports ────────────────────────────────────────────────
 @app.route('/api/sync/reports', methods=['POST'])
+@csrf.exempt
 @login_required
 def api_sync_reports():
     if not isinstance(current_user, Student):
@@ -5696,6 +5830,7 @@ def api_sync_reports():
 
 # ─── /api/sync/plans ──────────────────────────────────────────────────
 @app.route('/api/sync/plans', methods=['POST'])
+@csrf.exempt
 @login_required
 def api_sync_plans():
     if not isinstance(current_user, Teacher):
@@ -5750,6 +5885,7 @@ def api_sync_plans():
 
 # ─── /api/sync/evaluations ────────────────────────────────────────────
 @app.route('/api/sync/evaluations', methods=['POST'])
+@csrf.exempt
 @login_required
 def api_sync_evaluations():
     if not isinstance(current_user, Teacher):
