@@ -35,6 +35,18 @@
 | `push_to_github.ps1` | سكربت رفع آمن إلى GitHub |
 | `CHANGES.md` | هذا الملف |
 
+## تفكيك القوالب المكرّرة
+
+كانت 13 قالباً تحتوي تكراراً كاملاً (المستند نفسه مكرّر مرتين إلى أربع مرات):
+
+| النوع | الملفات | الوصف | الإجراء |
+|---|---|---|---|
+| كود ميت | `admin.html`, `admin_duplicates.html`, `edit_evaluation.html`, `evaluate_plan.html`, `student_dashboard.html`, `view_plan_details.html`, `view_student_plans.html` | نسخة ثانية داخل `{% if false %}` (لا تُعرض أبدًا) | حُذفت |
+| مستندات ملتصقة | `login.html`, `add_weekly_plan.html`, `admin_calculate_rewards.html`, `admin_reward_results.html`, `admin_reward_rules.html`, `missing_plans.html` | 2–4 مستندات HTML كاملة ملتصقة، تُرسل للمتصفح معًا | أُبقيت نسخة واحدة |
+
+النتيجة: **916 ك.ب → 430 ك.ب** (توفير 53% في هذه الملفات)، وصفحات نظيفة
+بمستند HTML واحد (`<!DOCTYPE>` واحد) بدل أربعة.
+
 ## ملفات محذوفة
 
 | الملف | السبب |
