@@ -1,48 +1,44 @@
 # -*- coding: utf-8 -*-
-"""app.py — ملف دخول تشخيصي مؤقت.
+"""app.py — ملف دخول تشخيصي مؤقت (بلا أي استيراد خارجي).
 
-Vercel يكتشف ملفات الدخول بالترتيب: app.py قبل main.py. هذا الملف يحاول
-استيراد التطبيق الحقيقي من main.py، وإن فشل يعرض نص الخطأ الكامل في الاستجابة
-حتى نرى السبب الحقيقي (لأن الخطأ في بيئة Vercel لا يظهر لنا محليًا).
+الهدف: كشف سبب FUNCTION_INVOCATION_FAILED. لأن استيراد flask في الأعلى يُسقط
+الدالة قبل أن نطبع أي شيء، نستخدم هنا WSGI خامًا (stdlib فقط) ثم نحاول تحميل
+التطبيق الحقيقي داخل try/except ونعرض الخطأ في الاستجابة.
 
-⚠️ ملف مؤقت للتشخيص فقط — يُحذف بعد معرفة السبب.
+⚠️ مؤقت للتشخيص — يُحذف بعد تحديد السبب.
 """
 import os
 import sys
 import traceback
 
-from flask import Flask
-
-# اطبع معلومات البيئة في سجلات Vercel
-print("=== DIAG app.py ===", flush=True)
-print("python:", sys.version, flush=True)
-print("cwd:", os.getcwd(), flush=True)
-print("VERCEL:", os.environ.get("VERCEL"), flush=True)
-print("DATABASE_URL set:", bool(os.environ.get("DATABASE_URL")), flush=True)
-print("SESSION_SECRET set:", bool(os.environ.get("SESSION_SECRET")), flush=True)
+_DIAG = None
+_APP = None
 
 try:
-    import main as _main  # noqa: F401
-    from main import app  # noqa: F401
-    print("=== DIAG import main OK ===", flush=True)
+    import main as _main           # يجرّب استيراد التطبيق الحقيقي
+    _APP = _main.app
+    _DIAG = "OK: imported main.app successfully"
 except Exception:
-    _tb = traceback.format_exc()
-    print("=== DIAG import main FAILED ===", flush=True)
-    print(_tb, flush=True)
+    _DIAG = traceback.format_exc()
 
-    app = Flask(__name__)
-    app.secret_key = "diag"
+_ENV = (
+    f"python: {sys.version}\n"
+    f"executable: {sys.executable}\n"
+    f"cwd: {os.getcwd()}\n"
+    f"VERCEL: {os.environ.get('VERCEL')}\n"
+    f"DATABASE_URL set: {bool(os.environ.get('DATABASE_URL'))}\n"
+    f"SESSION_SECRET set: {bool(os.environ.get('SESSION_SECRET'))}\n"
+    f"sys.path[:5]: {sys.path[:5]}\n"
+)
 
-    @app.route("/", defaults={"path": ""})
-    @app.route("/<path:path>")
-    def _diag(path):
-        import platform
-        info = (
-            f"python: {sys.version}\n"
-            f"cwd: {os.getcwd()}\n"
-            f"VERCEL: {os.environ.get('VERCEL')}\n"
-            f"DATABASE_URL set: {bool(os.environ.get('DATABASE_URL'))}\n"
-            f"SESSION_SECRET set: {bool(os.environ.get('SESSION_SECRET'))}\n\n"
-            f"=== TRACEBACK ===\n{_tb}"
-        )
-        return f"<pre>{info}</pre>", 500
+if _APP is not None:
+    # نجح الاستيراد: خدمة عادية عبر التطبيق الحقيقي
+    app = _APP
+else:
+    def app(environ, start_response):
+        body = f"=== DIAG (import failed) ===\n{_ENV}\n=== TRACEBACK ===\n{_DIAG}\n".encode("utf-8")
+        start_response("500 Internal Server Error", [
+            ("Content-Type", "text/plain; charset=utf-8"),
+            ("Content-Length", str(len(body))),
+        ])
+        return [body]
