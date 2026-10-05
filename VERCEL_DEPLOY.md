@@ -51,16 +51,50 @@ python -c "import secrets; print(secrets.token_hex(32))"
 ### الطريقة الثانية: Vercel CLI
 ```bash
 npm i -g vercel
+vercel login          # سجّل الدخول بحسابك (مرة واحدة)
 cd ashbal-quran-main
-vercel          # معاينة
-vercel --prod   # الإنتاج
+vercel                # معاينة
+vercel --prod         # الإنتاج
 ```
+> لا تستخدم `vercel deploy --temporary`: غير متاح للحسابات العادية.
+> يجب تسجيل الدخول أولًا، ثم النشر يتطلب وجود متغيّرات البيئة في مشروع Vercel.
+
+## 4.1 التحقق قبل النشر (Pre-flight)
+
+يمكن تشغيل هذه الفحوص محليًا قبل الرفع لتجنّب فشل البناء:
+
+```bash
+# 1) تثبيت التبعيات في بيئة نظيفة (كما يفعل Vercel)
+python -m venv .venv
+.venv\Scripts\activate          # ويندوز
+pip install -r requirements.txt
+
+# 2) تشغيل أمر البناء (ينسخ static/ إلى public/static/)
+python build.py
+
+# 3) التحقق من استيراد نقطة الدخول
+set VERCEL=1
+set SESSION_SECRET=test
+set DATABASE_URL=sqlite:///./_test.db
+python -c "import main; print(main.app); print(len(list(main.app.url_map.iter_rules())), 'routes')"
+
+# 4) اختبار أول طلب
+python -c "import main; c=main.app.test_client(); print(c.get('/healthz').status_code)"
+```
+
+المتوقّع: `81 routes`، و`/healthz` يعيد `200`.
+
+### المصدر المعتمد للتبعيات
+`requirements.txt` هو المصدر المعتمد، وقد وُحّدت إصداراته مع `pyproject.toml`.
+حُذف `uv.lock` القديم لأنه كان لا يضمّ `flask-wtf` وكان سيفشل البناء إن اختاره Vercel.
 
 ## 5. أول تشغيل
 
 - عند أول طلب تُنشئ الدالة الجداول الناقصة وحساب الأدمن الافتراضي تلقائيًا.
 - **غيّر كلمة مرور الأدمن فورًا** (الافتراضية `admin` / `1`).
 - تحقّق من الجاهزية عبر: `https://<موقعك>/healthz` (يجب أن يعيد `{"status":"ok"}`).
+- تابع سجلات الدالة من: Vercel → مشروعك → **Logs**. أول طلب قد يستغرق ثوانٍ
+  (تهيئة القاعدة)، ثم تصبح الاستجابات سريعة.
 
 ## 6. ما تغيّر ليتوافق مع Vercel
 

@@ -7,10 +7,11 @@ __pycache__
 *.bak
 *_probe.db
 instance
+# ناتج بناء يُولَّد من static/ عبر build.py
+public
 .env
 .env.*
 !.env.example
-uv.lock
 INSTALL.md
 *.md
 main.py.bak
